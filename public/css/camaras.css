@@ -1,0 +1,116 @@
+.camaras {
+  max-width: 940px;
+  margin: 0 auto;
+}
+
+.camaras > div {
+    border: 3px solid rgb(128 101 65);
+    border-radius: 5px;
+    background-color: rgb(179 163 141 / 50%);
+    padding: 1em;
+    color: #007bff;
+}.camaras {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+.uno {
+  grid-column: 1;
+  grid-row: 1;
+}
+.dos { 
+  grid-column: 2;
+  grid-row: 1;
+}
+.tres {
+  grid-column: 3;
+  grid-row: 1;
+}
+.cuatro {
+  grid-column: 1;
+  grid-row: 2;
+}
+.cinco {
+  grid-column: 2;
+  grid-row: 2;
+}
+.seis {
+  grid-column: 3;
+  grid-row: 2;
+}
+.siete {
+    grid-column: 1;
+    grid-row: 3;
+}
+.ocho {
+    grid-column: 2;
+    grid-row: 3;
+}
+.nueve {
+    grid-column: 3;
+    grid-row: 3;
+}
+.diez {
+    grid-column: 1;
+    grid-row: 4;
+}
+.once {
+    grid-column: 2;
+    grid-row: 4;
+}
+.doce {
+    grid-column: 3;
+    grid-row: 4;
+}
+.trece {
+    grid-column: 1;
+    grid-row: 5;
+}
+.catorce {
+    grid-column: 2;
+    grid-row: 5;
+}
+.quince {
+    grid-column: 3;
+    grid-row: 5;
+}
+.dieciseis {
+    grid-column: 1;
+    grid-row: 6;
+}
+.diecisiete {
+    grid-column: 2;
+    grid-row: 6;
+}
+.dieciocho {
+    grid-column: 3;
+    grid-row: 6;
+}
+.diecinueve {
+    grid-column: 1;
+    grid-row: 7;
+}
+.veinte {
+    grid-column: 2;
+    grid-row: 7;
+}
+.veintiuno {
+    grid-column: 3;
+    grid-row: 7;
+}
+.veintidos {
+    grid-column: 1;
+    grid-row: 8;
+}
+.veintitres {
+    grid-column: 2;
+    grid-row: 8;
+}
+.veinticuatro {
+    grid-column: 3;
+    grid-row: 8;
+}
+
+
+
