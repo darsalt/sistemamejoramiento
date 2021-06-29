@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Campania;
+use App\CampaniaSemillado;
+use App\Semillado;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SemilladoController extends Controller
 {
@@ -133,4 +138,101 @@ public function repicadas(Request $request,$id)
         }
     }
 
+    public function ordenes($campActiva = 0){
+        $semillados = Semillado::where('idcampania', $campActiva)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->paginate(10);
+        $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
+        $campaniasCruzamiento = Campania::where('estado', 1)->get();
+
+        return view('admin.semillados.ordenes', compact('semillados', 'campaniasSemillado', 'campaniasCruzamiento', 'campActiva'));
+    }
+
+    private function getUltimaOrden($campaniaSemillado){
+        $ultimoSemillado = Semillado::where('idcampania', $campaniaSemillado)->orderByDesc('numero')->first();
+
+        return $ultimoSemillado ? $ultimoSemillado->numero : 0;
+    }
+
+    // Obtener el numero de la ultima orden de semillado
+    public function getUltimaOrdenAjax(Request $request){
+        return response()->json($this->getUltimaOrden($request->campania));
+    }
+
+    // Almacenar una nueva orden de semillado
+    public function saveSemillado(Request $request){
+        try{
+            $semillado = new Semillado();
+    
+            $semillado->numero = $this->getUltimaOrden($request->campSemillado) + 1;
+            $semillado->fechasemillado = $request->fechaSemillado;
+            $semillado->idcampania = $request->campSemillado;
+            $semillado->idcruzamiento = $request->nroCruza;
+            $semillado->gramos = $request->cantGramos;
+            $semillado->cajones = $request->cantCajones;
+
+            $semilla = $semillado->cruzamiento->semilla;
+            $semilla->stockactual = $semilla->stockactual - $semillado->gramos;
+            $semilla->save();
+            
+            $semillado->save();
+
+            return Semillado::where('idsemillado', $semillado->idsemillado)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->first();
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+        
+    }
+
+    // Editar un semillado
+    public function editSemillado(Request $request){
+        try{
+            $semillado = Semillado::where('idsemillado', $request->idSemillado)->first();
+    
+            $semillado->fechasemillado = $request->fechaSemillado;
+            $semillado->idcampania = $request->campSemillado;
+            $semillado->idcruzamiento = $request->nroCruza;
+            $semillado->cajones = $request->cantCajones;
+
+            $semilla = $semillado->cruzamiento->semilla;
+            $semilla->stockactual += $semillado->gramos;
+            $semilla->stockactual -= $request->cantGramos;
+            $semillado->gramos = $request->cantGramos;
+            $semilla->save();
+            
+            $semillado->save();
+
+            session(['exito' => 'exito']);
+
+            return Semillado::with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->get();
+        }
+        catch(Exception $e){
+            return response()->json($e->getMessage());
+        }
+        
+    }
+
+    public function getSemillados(Request $request){
+        return response()->json(Semillado::where('idcampania', $request->campania)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campania'])->get());
+    }
+
+    public function getSemillado(Request $request){
+        return Semillado::with(['campania', 'cruzamiento.campaniaCruzamiento', 'cruzamiento.semilla'])->find($request->id);
+    }
+
+    public function delete(Request $request, $id = 0){
+        try{
+            $semillado = Semillado::where('idsemillado', $id)->first();
+
+            $semilla = $semillado->cruzamiento->semilla;
+            $semilla->stockactual += $semillado->gramos;
+            $semilla->save();
+    
+            $semillado->delete();
+
+            return redirect()->back()->with('exito', 'exito');
+        }
+        catch(Exception $e){
+            return redirect()->back()->with('error', 'error');
+        }
+    }
 }

@@ -8,7 +8,7 @@ class Variedad extends Model
     protected $table = 'variedades';
     protected $primaryKey = 'idvariedad';
 
-    protected $filliable = [
+    protected $fillable = [
     	'idvariedad',
         'nombre',
         'madre',

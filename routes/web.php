@@ -25,10 +25,6 @@ Route::get('/admin/inventario/egreso', function () {
 //    return view('admin.semillados.index');
 //});
 
-Route::get('/admin/semillados/ordenes', function () {
-    return view('admin.semillados.ordenes');
-});
-
 Route::get('/admin/semillados/repicadas', function () {
     return view('admin.semillados.repicadas');
 });
@@ -55,9 +51,6 @@ Route::get('admin', function () {
 Route::resource("admin/niveles", "NivelesController")->parameters(["niveles"=>"nivel"]);
 
 Route::resource('admin/tachos','TachoController');
-Route::resource('admin/ubicaciones','UbicacionController');
-
-
 Route::resource('admin/variedades','VariedadController')->parameters(["variedades"=>"variedad"]);
 Route::resource('admin/exportaciones','ExportacionController')->parameters(["exportaciones"=>"exportacion"]);
 Route::resource('admin/tareas','TareaController')->parameters(["tareas"=>"tarea"]);
@@ -76,14 +69,6 @@ Route::get('tallosTacho/{id}', 'CruzamientoController@tallosTacho');
 //Route::resource('admin/camaras','CamaraController');
 Route::get('admin/camaras/campania', 'CamaraController@cambiarCampania');
 Route::get('admin/marcotado/campania', 'MarcotadoController@cambiarCampania');
-Route::get('admin/ubicaciones', 'UbicacionController@index');
-
-Route::resource('admin/ambientes', 'AmbienteController');
-Route::resource('admin/subambientes', 'SubambienteController');
-
-Route::get('admin/sectores', 'SectorController@index');
-
-
 
 Route::get('admin/camaras', 'CamaraController@index');
 Route::get('admin/camaras/{id}', 'CamaraController@CambiarCamara');
@@ -275,9 +260,10 @@ Route::get('admin/camaras/{id}/{idCa}', 'CamaraController@CambiarCamara');
 Route::resource('admin/inventario', 'InventarioController');
 
 //Route::get('/admin/podergerminativo/edit/{campania}','CruzamientoController@ubicacionesasociadas');
-Route::get('/admin/semillados/ordenes/{campania}','SemilladoController@semillados');
+Route::get('/admin/semillados/ordenes/{campania?}','SemilladoController@ordenes')->name('semillados.ordenes');
 Route::get('/admin/semillados/repicadas/{campania}','SemilladoController@repicadas');
 Route::get('/admin/semillados','SemilladoController@index');
+Route::delete('/admin/semillados/{semillado?}', 'SemilladoController@delete')->name('semillados.delete');
 //Route::get('/admin/semillados', function () {
 //    return view('admin.semillados.index');
 //});
@@ -293,4 +279,13 @@ Route::get('/rconphp', function () {
 //Route::post('admin/cruzamientos/import','CruzamientoController@import')->name('cruzamientos.import');
 //Route::get('admin/podergerminativo','CruzamientoController@importForm');
 //Route::post('podergerminativo/datos','CruzamientoController@import')->name('cruzamientos.import');
+
+// Rutas Ajax - (Darfe Facundo)
+Route::get('ajax/cruzamientos/getCruzamientos', 'CruzamientoController@getCruzamientos')->name('ajax.cruzamientos.getCruzamientos');
+Route::get('ajax/semillados/getUltimaOrden', 'SemilladoController@getUltimaOrdenAjax')->name('ajax.semillados.getUltimaOrden');
+Route::get('ajax/semillas/getSemilla', 'InventarioController@getSemilla')->name('ajax.semillas.getSemilla');
+Route::post('ajax/semillados/saveSemillado', 'SemilladoController@saveSemillado')->name('ajax.semillados.saveSemillado');
+Route::get('ajax/semillados/getSemillados', 'SemilladoController@getSemillados')->name('ajax.semillados.getSemillados');
+Route::get('ajax/semillados/getSemillado', 'SemilladoController@getSemillado')->name('ajax.semillados.getSemillado');
+Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')->name('ajax.semillados.editSemillado');
 

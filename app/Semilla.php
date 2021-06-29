@@ -8,6 +8,7 @@ class Semilla extends Model
 {
     protected $table = 'semillas';
     protected $primaryKey = 'idsemilla';
+    public $timestamps = false;
 
     protected $filliable = [
     	'idsemilla',

@@ -8,6 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
+  @yield('metadatos')
 
   <title>Mejoramiento</title>
 
@@ -30,6 +31,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   
   <!--Css Grid-->
   <link rel="stylesheet" href="{{asset('css/camaras.css')}}">
+  <link rel="stylesheet" href="{{asset('css/styles.css')}}">
 
 <style>
    .wrapper > ul#results li {
@@ -164,48 +166,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{{url('admin/ambientes')}}" class="nav-link">
-              <i class="nav-icon fas fa-map-marker"></i>
-              <p>
-              Ubicaciones
-              <i class="right fas fa-angle-left"></i>
-              </p>
+
+          <!--
+             <a href="{{url('admin/lotes')}}" class="nav-link">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <i class="far fa-circle nav-icon"></i>
+              <p>Lotes</p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview">
-                <a href="{{url('admin/ambientes')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Ambientes
-                  </p>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview">
-                <a href="{{url('admin/subambientes')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Subambientes
-                  </p>
-                </a>
-              </li>
-            </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview">
-                <a href="{{url('admin/sector')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Sectores
-                  </p>
-                </a>
-              </li>
-            </ul>
-
-          </li>
-
-          <li class="nav-item">
+             <a href="{{url('admin/inspecciones')}}" class="nav-link">
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="nav-icon fas fa-glasses"></i>
+                <p>Inspecciones</p>
+            </a> -->
+        <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
@@ -655,13 +628,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{asset('adminlte/plugins/moment/moment.min.js')}}"></script>
 <script src="{{asset('adminlte/plugins/inputmask/min/jquery.inputmask.bundle.min.js')}}"></script>
 
-<!-- jQuery -->
-<script src="{{asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
-<!-- Bootstrap 4 -->
 <!-- Select2 -->
 <script src="{{asset('adminlte/plugins/select2/js/select2.full.min.js')}}"></script>
 <!-- Bootstrap4 Duallistbox -->
 <script src="{{asset('adminlte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
+
+<!--jQuery Validate-->
+<script src="{{asset('js/jquery.validate.min.js')}}"></script>
+<script src="{{asset('js/validaciones/idiomas/es_AR.js')}}"></script>
 
 <script src="{{asset('dist/handsontable.full.js')}}"></script>
 

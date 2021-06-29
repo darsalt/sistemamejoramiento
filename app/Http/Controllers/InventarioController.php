@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Inventario;
 use App\Cruzamiento;
-
+use App\Semilla;
 use App\TalloCruzamiento;
 use App\Tallo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use DB;
+use Illuminate\Support\Facades\Log;
 
 class InventarioController extends Controller
 {
@@ -402,6 +403,11 @@ class InventarioController extends Controller
         return response()->json();
     }
 
+    // Obtener la semilla segun el id de cruzamiento dado
+    public function getSemilla(Request $request){
+        $semilla = Semilla::where('idcruzamiento', $request->cruzamiento)->first();
 
+        return response()->json($semilla);
+    }
 
 }

@@ -8,9 +8,8 @@ class Campania extends Model
     protected $table = 'campanias';
     protected $primaryKey = 'id';
 
-    protected $filliable = [
+    protected $fillable = [
     	'id',
-        'nombre',
         'nombre',
         'fechainicio',
         'fechafin',

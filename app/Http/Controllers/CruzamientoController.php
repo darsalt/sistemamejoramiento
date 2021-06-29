@@ -419,5 +419,11 @@ class CruzamientoController extends Controller
         return view('admin.cruzamientos.import', ['numRows'=>$import->getRowCount()]);
     }
 
+    // Obtener cruzamientos segun la campania elegida
+    public function getCruzamientos(Request $request){
+        $cruzamientos = Cruzamiento::where('idcampania', $request->campania)->with('madre')->with('padre')->get();
+
+        return response()->json($cruzamientos);
+    }
 
 }
