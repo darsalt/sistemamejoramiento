@@ -37,7 +37,7 @@ class SemilladoController extends Controller
         ->select('c.idcampania')
         ->paginate('100');
 
-        dd($inventario);
+        //dd($inventario);
 
         $data = '';
 

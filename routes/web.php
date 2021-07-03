@@ -81,6 +81,12 @@ Route::post('guardar-cantidad-tallo', ['as'=>'guardar-cantidad-tallo','uses'=>'M
 Route::get('admin/marcotado/{id}','MarcotadoController@show');
 Route::resource('admin/marcotado','MarcotadoController');
 
+Route::resource('admin/ambientes', 'AmbienteController');
+Route::resource('admin/subambientes', 'SubambienteController');
+Route::resource('admin/sectores', 'SectorController');
+Route::get('buscarSubambientesConIdAmbiente/{id}','SubambienteController@buscarSubambienteConIdAmbiente');
+
+
 
 
 //Route::get('admin/ubicacionesexpo', 'UbicacionController@index');

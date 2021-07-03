@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-	{!! Form::open(array('url'=>'admin/campanias','method'=>'GET','autocomplete'=>'off','role'=>'search')) !!}
+	{!! Form::open(array('url'=>'admin/sectores','method'=>'GET','autocomplete'=>'off','role'=>'search')) !!}
 		<div class="form-group">
 			<div class="input-group">
 				<input type="text" class="form-control" name="searchText" placeholder="Buscar..." value="{{$searchText}}"/>&nbsp;

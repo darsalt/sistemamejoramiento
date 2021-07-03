@@ -96,5 +96,17 @@ class SubambienteController extends Controller
          return Excel::download(new SubambienteExport, 'subambiente.xlsx');
      }
 
+     public function buscarSubambienteConIdAmbiente($id)
+     {
+ 
+             $subambiente=DB::table('subambientes as s')
+             ->select('s.id','s.nombre')
+             ->where('s.id','=',$id)
+             ->get();
+              return response()->json($subambiente);
+ 
+             
+     }
+
 
 }

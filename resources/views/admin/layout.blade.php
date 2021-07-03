@@ -166,6 +166,46 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{url('admin/ambientes')}}" class="nav-link">
+              <i class="nav-icon fas fa-map-marker"></i>
+              <p>
+              Ubicaciones
+              <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/ambientes')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ambientes
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/subambientes')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Subambientes
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/sectores')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Sectores
+                  </p>
+                </a>
+              </li>
+            </ul>
+
+          </li>
 
           <!--
              <a href="{{url('admin/lotes')}}" class="nav-link">
@@ -387,23 +427,22 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-
-            <ul class="nav nav-treeview">
-              <li class="nav-item has-treeview">
-                <a href="{{url('admin/semillados')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>
-                    Inventario semillados
-                  </p>
-                </a>
-              </li>
-            </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
                 <a href="{{url('admin/campaniasemillado')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Campañas Semillados
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/semillados')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventario semillados
                   </p>
                 </a>
               </li>

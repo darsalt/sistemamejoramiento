@@ -1,11 +1,11 @@
 @extends('admin.layout')
-@section('titulo', 'Campañas')
+@section('titulo', 'Sector')
 @section('content')
 
 <div class="row">
 	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-		<h3>Listado de Campañas <a href="campanias/create">&nbsp;<button class="btn btn-success">Nuevo</button></a></h3>
-		@include('admin.campanias.search')
+		<h3>Listado de Sectores <a href="sectores/create">&nbsp;<button class="btn btn-success">Nuevo</button></a></h3>
+		@include('admin.sectores.search')
 	</div>
 </div>
 
@@ -15,28 +15,30 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Nombre</th>
-					<th>Fecha Inicio</th>
-					<th>Fecha Fin</th>
+					<th>Ambiente</th>
+					<th>Subambiente</th>
+
 					<th>Operaciones</th>
 				</thead>
-               @foreach ($campanias as $c)
+               @foreach ($sector as $c)
 				<tr>
 					<td>{{ $c->nombre}}</td>
-					<td>{{ $c->fechainicio}}</td>
-					<td>{{ $c->fechafin}}</td>
+					<td>{{ $c->nombreambiente}}</td>
+					<td>{{ $c->nombresubambiente}}</td>
+
 					<td>
  					    <a href="" data-target="#view" data-toggle="modal"> 
 					   	<i class="fa fa-search fa-lg"></i></a>&nbsp;&nbsp;
-						<a href="{{URL::action('CampaniaController@edit',$c->id)}}"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;
+						<a href="{{URL::action('SectorController@edit',$c->id)}}"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;
 					    <a href="" data-target="#modal-delete-{{$c->id}}" data-toggle="modal">  <i class="fa fa-trash fa-lg"></i></a>
 					</td>
 				</tr>
-				@include('admin.campanias.modal')
+				@include('admin.sectores.modal')
 				@endforeach
 			</table>
 		</div>
-		{{$campanias->render()}}
+		{{$sector->render()}}
 	</div>
 </div>
-@include('admin.campanias.view')
+@include('admin.sectores.view')
 @endsection

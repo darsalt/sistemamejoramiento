@@ -23,19 +23,25 @@ class SectorController extends Controller
     {
     	if($request){
     		$query=trim($request->get('searchText'));
-    		$sector=DB::table('sector as t')
-            ->select('t.*')
-            ->where ('nombre','like','%'.$query.'%') 
+    		$sector=DB::table('sectores as t')
+            ->leftjoin('subambientes as s','t.id','=','s.id')
+            ->leftjoin('ambientes as a','t.id','=','a.id')
+            ->select('t.*','a.nombre as nombreambiente','s.nombre as nombresubambiente')
+            ->where ('t.nombre','like','%'.$query.'%') 
     		->where ('t.estado','=',1)
     		->orderBy('id','asc')
     		->paginate('10');
-    		return view('admin.sector.index',["sector"=>$sector,"searchText"=>$query]);
+    		return view('admin.sectores.index',["sector"=>$sector,"searchText"=>$query]);
     	}
     }
 
     public function create()
-    {           
-    	return view ("admin.sector.create");
+    {        
+        $ambientes = DB::table('ambientes as v')
+        ->select('v.id','v.nombre')
+        //->where('v.estado','=','0')
+        ->get();
+    	return view ("admin.sectores.create",["ambientes"=>$ambientes]);   
     }
 
     public function store(SectorFormRequest $request)
@@ -43,12 +49,13 @@ class SectorController extends Controller
             $sector=new Sector;
             $sector->nombre=$request->get('nombre');
             $sector->comentarios=$request->get('comentarios');
+            //$sector->idambiente=$request->get('idambiente');
             $sector->idsubambiente=$request->get('idsubambiente');
             $sector->estado=1;
             $sector->save();
 
     	
-    	return Redirect::to('admin/sector');
+    	return Redirect::to('admin/sectores');
     }
 
     public function show($id)
@@ -56,9 +63,27 @@ class SectorController extends Controller
     	return view("admin.sector.show",["sector"=>Sector::findOrFail($id)]);
     }
 
-     public function edit(Sector $sector)
+
+
+    public function edit($id)
     {
-            return view('admin.sector.edit',compact('sector'));
+        $ambientes = DB::table('ambientes as v')
+        ->select('v.id','v.nombre')
+        //->where('v.estado','=','0')
+        ->get();
+        $subambientes = DB::table('subambientes as v')
+        ->select('v.id','v.nombre')
+        //->where('v.estado','=','0')
+        ->get();
+        $sector = DB::table('sectores as s')
+        ->leftjoin('subambientes as t','t.id','=','s.idsubambiente')
+        ->leftjoin('ambientes as a','t.idambiente','=','a.id')
+        ->select('s.id','s.nombre','s.comentarios','idsubambiente','idambiente')
+        ->where('s.id','=',$id)
+        ->get()
+        ->first();
+        return view('admin.sectores.edit',compact($sector),["ambientes"=>$ambientes,"subambientes"=>$subambientes,"sector"=>$sector]);
+
     }
 
     public function update(SectorFormRequest $request,$id)
@@ -68,7 +93,7 @@ class SectorController extends Controller
         $sector->comentarios=$request->get('comentarios');
         $sector->idsubambiente=$request->get('idsubambiente');
         $sector->update();
-        return Redirect::to('admin/sector');
+        return Redirect::to('admin/sectores');
     }
 
     public function destroy($id)
@@ -76,7 +101,7 @@ class SectorController extends Controller
     	$sector=Sector::findOrFail($id);
     	$sector->estado='0';//baja
       	$sector->update();
-    	return Redirect::to('admin/sector');
+    	return Redirect::to('admin/sectores');
     }
 
 
