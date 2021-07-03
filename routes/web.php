@@ -295,3 +295,4 @@ Route::get('ajax/semillados/getSemillados', 'SemilladoController@getSemillados')
 Route::get('ajax/semillados/getSemillado', 'SemilladoController@getSemillado')->name('ajax.semillados.getSemillado');
 Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')->name('ajax.semillados.editSemillado');
 
+Route::resource('admin/individual/campaniaseedling','CampaniaSeedlingController');

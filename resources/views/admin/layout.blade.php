@@ -204,7 +204,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
             </ul>
-
           </li>
 
           <!--
@@ -528,6 +527,45 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
           </li>  
+          <li class="nav-item">
+            <a href="{{url('admin/ambientes')}}" class="nav-link">
+              <i class="nav-icon fas fa-map-marker"></i>
+              <p>
+              Etapa Individual
+              <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/individual/campaniaseedling')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Campañas de Seedling
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/individual/inventario')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventario
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/individual/seleccion')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Selección
+                  </p>
+                </a>
+              </li>
+            </ul>
+          </li>
 
 
           <!-- <li class="nav-item has-treeview">
