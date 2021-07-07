@@ -32,7 +32,7 @@
             <div class="form-group">
                   <label for="ambiente">Ambiente</label>
                     <select name="idambiente" id="idambiente" class="select2" style="width: 100%;" class="form-control" required>
-                        <option value="0">Ninguno</option>
+                        <option value="0">Seleccione un Ambiente</option>
                         @foreach ($ambientes as $ambiente)
                             <option value="{{$ambiente->id}}">
                                 {{$ambiente->nombre }}
@@ -92,6 +92,8 @@ $(document).ready(function() {
 
                     var sel = $("#idsubambiente");
                     var selected="";
+                    //console.log(data); 
+
                     sel.empty();
                     sel.append('<option value="" >Seleccione un Subambiente</option>');
                     for (var i=0; i<data.length; i++) {

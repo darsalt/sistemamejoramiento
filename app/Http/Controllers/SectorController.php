@@ -24,13 +24,15 @@ class SectorController extends Controller
     	if($request){
     		$query=trim($request->get('searchText'));
     		$sector=DB::table('sectores as t')
-            ->leftjoin('subambientes as s','t.id','=','s.id')
-            ->leftjoin('ambientes as a','t.id','=','a.id')
+            ->join('subambientes as s','t.idsubambiente','=','s.id')
+            ->join('ambientes as a','s.idambiente','=','a.id')
             ->select('t.*','a.nombre as nombreambiente','s.nombre as nombresubambiente')
             ->where ('t.nombre','like','%'.$query.'%') 
     		->where ('t.estado','=',1)
     		->orderBy('id','asc')
     		->paginate('10');
+
+            //dd($sector);
     		return view('admin.sectores.index',["sector"=>$sector,"searchText"=>$query]);
     	}
     }
@@ -39,7 +41,7 @@ class SectorController extends Controller
     {        
         $ambientes = DB::table('ambientes as v')
         ->select('v.id','v.nombre')
-        //->where('v.estado','=','0')
+        ->where('v.estado','=','1')
         ->get();
     	return view ("admin.sectores.create",["ambientes"=>$ambientes]);   
     }
@@ -69,11 +71,11 @@ class SectorController extends Controller
     {
         $ambientes = DB::table('ambientes as v')
         ->select('v.id','v.nombre')
-        //->where('v.estado','=','0')
+        ->where('v.estado','=','1')
         ->get();
         $subambientes = DB::table('subambientes as v')
         ->select('v.id','v.nombre')
-        //->where('v.estado','=','0')
+        ->where('v.estado','=','1')
         ->get();
         $sector = DB::table('sectores as s')
         ->leftjoin('subambientes as t','t.id','=','s.idsubambiente')
