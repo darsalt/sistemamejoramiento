@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\LoteFormRequest;
 use DB;
 use App\Exports\LotesExport;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class LoteController extends Controller
@@ -153,5 +154,13 @@ class LoteController extends Controller
 
         return view("admin.importaciones.evaluaciones",compact("importacion"),["importacion"=>$importacion,"evaluacionesasociadas"=>$evaluacionesasociadas]);
 
+    }
+
+    public function getLotesDadoSubambiente(Request $request){
+        $lotes = Lote::where('idsubambiente', $request->subambiente)->get();
+
+        Log::debug($lotes);
+
+        return response()->json($lotes);
     }
 }

@@ -16,4 +16,8 @@ class Lote extends Model
     protected $guarded  = [
     	
     ];
+
+    public function subambiente(){
+        return $this->belongsTo('App\Subambiente', 'idsubambiente', 'id');
+    }
 }

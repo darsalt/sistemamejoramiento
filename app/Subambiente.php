@@ -21,4 +21,8 @@ class Subambiente extends Model
     protected $guarded  = [
     	
     ];
+
+    public function ambiente(){
+        return $this->belongsTo('App\Ambiente', 'idambiente', 'id');
+    }
 }

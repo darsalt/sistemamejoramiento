@@ -1,7 +1,6 @@
 $(document).ready(function(){
     $('#campSemillado').val(config.data.campActiva);
     
-    console.log(config.session.exito);
     if(config.session.exito)
         mostrarMensajeExito();
 

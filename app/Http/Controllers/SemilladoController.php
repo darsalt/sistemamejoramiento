@@ -212,7 +212,7 @@ public function repicadas(Request $request,$id)
     }
 
     public function getSemillados(Request $request){
-        return response()->json(Semillado::where('idcampania', $request->campania)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campania'])->get());
+        return response()->json(Semillado::where('idcampania', $request->campania)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->get());
     }
 
     public function getSemillado(Request $request){

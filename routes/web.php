@@ -296,3 +296,13 @@ Route::get('ajax/semillados/getSemillado', 'SemilladoController@getSemillado')->
 Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')->name('ajax.semillados.editSemillado');
 
 Route::resource('admin/individual/campaniaseedling','CampaniaSeedlingController');
+Route::get('admin/individual/seleccion/{campania?}', 'EtapaIndividualController@index')->name('individual.index');
+Route::delete('admin/individual/{seedling?}', 'EtapaIndividualController@delete')->name('individual.delete');
+
+// Rutas Ajax para seedling
+Route::get('ajax/individual/getUltimaParcela', 'EtapaIndividualController@getUltimaParcelaAjax')->name('ajax.individual.getUltimaParcela');
+Route::get('ajax/subambientes/getSubambientesDadoAmbiente', 'SubambienteController@getSubambientesDadoAmbiente')->name('ajax.subambientes.getSubambientesDadoAmbiente');
+Route::get('ajax/lotes/getLotesDadoSubambiente', 'LoteController@getLotesDadoSubambiente')->name('ajax.lotes.getLotesDadoSubambiente');
+Route::post('ajax/individual/saveSeedling', 'EtapaIndividualController@saveSeedling')->name('ajax.individual.saveSeedling');
+Route::get('ajax/individual/getSeedling', 'EtapaIndividualController@getSeedling')->name('ajax.individual.getSeedling');
+Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedling')->name('ajax.individual.editSeedling');
