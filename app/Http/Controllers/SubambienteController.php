@@ -38,7 +38,7 @@ class SubambienteController extends Controller
     {           
         $ambientes = DB::table('ambientes as v')
         ->select('v.id','v.nombre')
-        //->where('v.estado','=','0')
+        ->where('v.estado','=','1')
         ->get();
 
     	return view ("admin.subambientes.create",["ambientes"=>$ambientes]);
@@ -52,8 +52,7 @@ class SubambienteController extends Controller
             $subambiente->idambiente=$request->get('idambiente');
             $subambiente->estado=1;
             $subambiente->save();
-
-    	
+   	
     	return Redirect::to('admin/subambientes');
     }
 
@@ -66,7 +65,7 @@ class SubambienteController extends Controller
     {
         $ambientes = DB::table('ambientes as v')
         ->select('v.id','v.nombre')
-        //->where('v.estado','=','0')
+        ->where('v.estado','=','1')
         ->get();
         return view('admin.subambientes.edit',compact('subambiente'),["ambientes"=>$ambientes]);
 
@@ -101,7 +100,7 @@ class SubambienteController extends Controller
  
              $subambiente=DB::table('subambientes as s')
              ->select('s.id','s.nombre')
-             ->where('s.id','=',$id)
+             ->where('s.idambiente','=',$id)
              ->get();
               return response()->json($subambiente);
  
