@@ -175,7 +175,8 @@ public function repicadas(Request $request,$id)
             
             $semillado->save();
 
-            return Semillado::where('idsemillado', $semillado->idsemillado)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->first();
+            return Semillado::where('idsemillado', $semillado->idsemillado)
+            ->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento', 'cruzamiento.madre', 'cruzamiento.padre'])->first();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());

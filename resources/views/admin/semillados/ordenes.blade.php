@@ -36,91 +36,90 @@
 
 <div class="row">
     <div class="col-12">
-        <div class="table-responsive">
-            <!--Tabla con el formulario para el registro del semillado-->
-            <form action="" class="form" id="formSemillado" operation="insert">
-                <input type="number" hidden value=0 id="idSemillado" name="idSemillado">
-                <table class="table table-striped table-bordered table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th>Campaña semillado</th>
-                            <th>Campaña de cruzamiento</th>
-                            <th>Fecha de semillado</th>
-                            <th>Cruza</th>
-                            <th>Orden</th>
-                            <th>Stock actual</th>
-                            <th>Gramos</th>
-                            <th>Poder germinativo</th>
-                            <th>Plantas</th>
-                            <th>Cajones</th>
-                            <th></th>
-                        </tr> 
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td width="15%">
-                                <select name="campSemillado" id="campSemillado" class="form-control">
-                                    <option value="0" selected>(Ninguna)</option>
-                                    @foreach ($campaniasSemillado as $campania)
-                                        <option value="{{$campania->id}}">{{$campania->nombre}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td width="15%">
-                                <select name="campCruzamiento" id="campCruzamiento" class="form-control">
-                                    <option value="0" selected>(Ninguna)</option>
-                                    @foreach ($campaniasCruzamiento as $campania)
-                                        <option value="{{$campania->id}}">{{$campania->nombre}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="date" class="form-control" name="fechaSemillado" id="fechaSemillado">
-                            </td>
-                            <td width="20%">
-                                <select name="nroCruza" id="nroCruza" class="form-control"></select>
-                            </td>
-                            <td>
-                                <p id="nroOrden"></p>
-                            </td>
-                            <td>
-                                <p id="stockActual"></p>
-                            </td>
-                            <td>
-                                <input type="number" id="cantGramos" name="cantGramos" class="form-control">
-                            </td>
-                            <td>
-                                <p id="poderGerminativo"></p>
-                            </td>
-                            <td>
-                                <p id="cantPlantas"></p>
-                            </td>
-                            <td>
-                                <input type="number" id="cantCajones" name="cantCajones" class="form-control">
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
-        </div>
+        <!--Tabla con el formulario para el registro del semillado-->
+        <form action="" class="form" id="formSemillado" operation="insert">
+            <input type="number" hidden value=0 id="idSemillado" name="idSemillado">
+            <table class="table table-striped table-bordered table-condensed table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>Campaña semillado</th>
+                        <th>Orden</th>
+                        <th>Campaña cruzamiento</th>
+                        <th>Cruza</th>
+                        <th>Fecha de semillado</th>
+                        <th>Stock actual</th>
+                        <th>Gramos</th>
+                        <th>PG</th>
+                        <th>Plantas</th>
+                        <th>Cajones</th>
+                        <th></th>
+                    </tr> 
+                </thead>
+                <tbody>
+                    <tr>
+                        <td width="15%">
+                            <select name="campSemillado" id="campSemillado" class="form-control">
+                                <option value="0" selected>(Ninguna)</option>
+                                @foreach ($campaniasSemillado as $campania)
+                                    <option value="{{$campania->id}}">{{$campania->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <p id="nroOrden"></p>
+                        </td>
+                        <td width="15%">
+                            <select name="campCruzamiento" id="campCruzamiento" class="form-control">
+                                <option value="0" selected>(Ninguna)</option>
+                                @foreach ($campaniasCruzamiento as $campania)
+                                    <option value="{{$campania->id}}">{{$campania->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td width="20%">
+                            <select name="nroCruza" id="nroCruza" class="form-control"></select>
+                        </td>
+                        <td>
+                            <input type="date" class="form-control" name="fechaSemillado" id="fechaSemillado">
+                        </td>    
+                        <td>
+                            <p id="stockActual"></p>
+                        </td>
+                        <td>
+                            <input type="number" id="cantGramos" name="cantGramos" class="form-control">
+                        </td>
+                        <td>
+                            <p id="poderGerminativo"></p>
+                        </td>
+                        <td>
+                            <p id="cantPlantas"></p>
+                        </td>
+                        <td>
+                            <input type="number" id="cantCajones" name="cantCajones" class="form-control">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12">
+        <div class="table-responsive">
             <!--Tabla con los datos segun la campaña seleccionada-->
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaOrdenes">
                 <thead>
-                    <th>Orden</th>
                     <th>Campaña semillado</th>
-                    <th>Campaña de cruzamiento</th>
-                    <th>Fecha de semillado</th>
+                    <th>Orden</th>
+                    <th>Campaña cruzamiento</th>
                     <th>Cruza</th>
+                    <th>Fecha de semillado</th>
                     <th>Gramos</th>
-                    <th>Poder germinativo</th>
+                    <th>PG</th>
                     <th>Plantas</th>
                     <th>Cajones</th>
                     <th></th>
@@ -129,11 +128,11 @@
                     @if (isset($semillados))
                         @foreach ($semillados as $semillado)
                             <tr>
-                                <td>{{$semillado->numero}}</td>
                                 <td>{{$semillado->campania->nombre}}</td>
+                                <td>{{$semillado->numero}}</td>
                                 <td>{{$semillado->cruzamiento->campaniaCruzamiento->nombre}}</td>
+                                <td>{{$semillado->idcruzamiento . " - " . $semillado->cruzamiento->madre->nombre . " - " . $semillado->cruzamiento->padre->nombre}}</td>
                                 <td>{{$semillado->fechasemillado}}</td>
-                                <td>{{$semillado->idcruzamiento}}</td>
                                 <td>{{$semillado->gramos}}</td>
                                 <td>{{$semillado->cruzamiento->semilla->podergerminativo}}</td>
                                 <td>{{$semillado->gramos * $semillado->cruzamiento->semilla->podergerminativo}}</td>
@@ -148,7 +147,7 @@
                 </tbody>
             </table>
             {{$semillados->render()}}
-        </div>
+        </div>    
     </div>
 </div>
 

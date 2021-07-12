@@ -1,11 +1,16 @@
 $(document).ready(function(){
     $('#campSemillado').val(config.data.campActiva);
+    $('#campSemillado').focus();
     
     if(config.session.exito)
         mostrarMensajeExito();
 
     if(config.session.error)
         mostrarMensajeError();
+
+    $('#nroCruza').select2({
+        matcher: matchCustom
+    });
 
     $.ajax({
         url: config.routes.getUltimaOrden,
@@ -78,7 +83,7 @@ $(document).ready(function(){
 
                         $('#nroOrden').text(response.numero + 1); // Nro. de orden es el siguiente al que se guardó
                         $('#stockActual').text(response.cruzamiento.semilla.stockactual);
-                        $('#cantGramos').focus();
+                        $('#campSemillado').focus();
 
                         $('#tablaOrdenes tbody').append(agregarFila(response)); // Agrego fila a la tabla
 
@@ -136,7 +141,7 @@ $(document).ready(function(){
                 $('#nroCruza').empty();
                 
                 $.each(response, function(i, item){
-                    $('#nroCruza').append("<option value='" + item.id + "'>" + item.id + " - Madre: " + item.madre.nombre + ", Padre: " + item.padre.nombre + "</option>");
+                    $('#nroCruza').append("<option value='" + item.id + "'>" + item.id + " - " + item.madre.nombre + " - " + item.padre.nombre + "</option>");
                 });
                 rellenarCamposSemilla();
             }
@@ -186,11 +191,11 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
-    fila += "<td>" + element.numero + "</td>";
     fila += "<td>" + element.campania.nombre + "</td>";
+    fila += "<td>" + element.numero + "</td>";
     fila += "<td>" + element.cruzamiento.campania_cruzamiento.nombre + "</td>";
+    fila += "<td>" + element.idcruzamiento + " - " + element.cruzamiento.madre.nombre + " - " + element.cruzamiento.padre.nombre + "</td>";
     fila += "<td>" + element.fechasemillado + "</td>";
-    fila += "<td>" + element.idcruzamiento + "</td>";
     fila += "<td>" + element.gramos + "</td>"
     fila += "<td>" + element.cruzamiento.semilla.podergerminativo + "</td>";
     fila += "<td>" + element.gramos * element.cruzamiento.semilla.podergerminativo + "</td>";
@@ -237,4 +242,26 @@ function mostrarMensajeExito(){
 function mostrarMensajeError(){
     $('#msgError').fadeIn();
     $('#msgError').delay(2000).fadeOut();
+}
+
+function matchCustom(params, data) {
+    // If there are no search terms, return all of the data
+    if ($.trim(params.term) === '') {
+      return data;
+    }
+
+    // Do not display the item if there is no 'text' property
+    if (typeof data.text === 'undefined') {
+      return null;
+    }
+
+    // `params.term` should be the term that is used for searching
+    // `data.text` is the text that is displayed for the data object
+    var cruza = data.text.substring(0, data.text.indexOf('-') - 1) // Discrimino solo el numero de cruza, no busco por la madre ni el padre
+    if (cruza.indexOf(params.term) > -1) {
+        return data
+    }
+
+    // Return `null` if the term should not be displayed
+    return null;
 }

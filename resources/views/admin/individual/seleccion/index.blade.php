@@ -101,7 +101,7 @@
                         <th>Tabla</th>
                         <th>Tablita</th>
                         <th>Surcos</th>
-                        <th>Plantas/Surco</th>
+                        <th>Plantas / Surco</th>
                         <th></th>
                     </thead>
                     <tbody>
@@ -168,7 +168,7 @@
                         <th>Tabla</th>
                         <th>Tablita</th>
                         <th>Surcos</th>
-                        <th>Plantas/Surco</th>
+                        <th>Plantas / Surco</th>
                         <th></th>
                     </tr> 
                 <tbody>
