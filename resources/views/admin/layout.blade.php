@@ -528,7 +528,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>  
           <li class="nav-item">
-            <a href="{{url('admin/ambientes')}}" class="nav-link">
+            <a href="{{url('admin/individual')}}" class="nav-link">
               <i class="nav-icon fas fa-map-marker"></i>
               <p>
               Etapa Individual
@@ -565,6 +565,56 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
             </ul>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{url('admin/primera')}}" class="nav-link">
+            <i class="nav-icon fas fa-check"></i>
+            <p>
+              Primera Clonal
+              <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/primera/serie')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Series
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/primera/inventario')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Inventario
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/primera/seleccion')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Selección
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/primera/laboratorio')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Laboratorio
+                  </p>
+                </a>
+              </li>
+            </ul>            
           </li>
 
 

@@ -296,7 +296,7 @@ Route::get('ajax/semillados/getSemillado', 'SemilladoController@getSemillado')->
 Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')->name('ajax.semillados.editSemillado');
 
 Route::resource('admin/individual/campaniaseedling','CampaniaSeedlingController');
-Route::get('admin/individual/seleccion/{campania?}', 'EtapaIndividualController@index')->name('individual.index');
+//Route::get('admin/individual/seleccion/{campania?}', 'EtapaIndividualController@index')->name('individual.index');
 Route::delete('admin/individual/{seedling?}', 'EtapaIndividualController@delete')->name('individual.delete');
 
 // Rutas Ajax para seedling
@@ -306,3 +306,7 @@ Route::get('ajax/lotes/getLotesDadoSubambiente', 'LoteController@getLotesDadoSub
 Route::post('ajax/individual/saveSeedling', 'EtapaIndividualController@saveSeedling')->name('ajax.individual.saveSeedling');
 Route::get('ajax/individual/getSeedling', 'EtapaIndividualController@getSeedling')->name('ajax.individual.getSeedling');
 Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedling')->name('ajax.individual.editSeedling');
+
+Route::resource('admin/primera/serie','SerieController');
+Route::get('admin/primera/seleccion/{campania?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
+Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
