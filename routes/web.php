@@ -310,3 +310,6 @@ Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedli
 Route::resource('admin/primera/serie','SerieController');
 Route::get('admin/primera/seleccion/{campania?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
+
+Route::get('/admin/incluirpg','CampaniaSemilladoController@incluirpg');
+Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');

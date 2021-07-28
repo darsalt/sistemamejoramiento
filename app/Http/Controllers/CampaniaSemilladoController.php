@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\CampaniaSemillado;
+use App\Semillado;
+use Carbon\Carbon;
+
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\CampaniaSemilladoFormRequest;
 use DB;
@@ -95,5 +98,63 @@ class CampaniaSemilladoController extends Controller
          return Excel::download(new CampaniasSemilladoExport, 'campaniasemillado.xlsx');
      }
 
+     public function incluirpg()
+     {
+         $campaniasemillado=DB::table('campaniasemillado as c')
+         ->select('c.id as idcampaniasemillado', 'c.nombre as nombrecampaniasemillado')
+         ->orderBy('c.id','desc')
+         ->get();
+ 
+         $campaniacruzamiento=DB::table('campanias as c')
+         ->select('c.id as idcampaniacruzamiento', 'c.nombre as nombrecampaniacruzamiento')
+         ->orderBy('c.id','desc')
+         ->get();
+ 
+         return view("admin.campaniasemillado.pg",compact("campaniasemillado"),["campaniasemillado"=>$campaniasemillado, "campaniacruzamiento"=>$campaniacruzamiento]);
+     }
+
+     private function getUltimaOrden($campaniaSemillado){
+        $ultimoSemillado = Semillado::where('idcampania', $campaniaSemillado)->orderByDesc('numero')->first();
+
+        return $ultimoSemillado ? $ultimoSemillado->numero : 0;
+    }
+
+     public function guardarpg(Request $request)
+     {
+
+        $cruzamientos=DB::table('cruzamientos as c')
+            ->select('c.id')
+    		->where ('c.idcampania','=',$request->get('idcampaniacruzamiento'))
+    		->orderBy('c.id','asc')
+            ->get();
+            $numero = $this->getUltimaOrden($request->idcampaniasemillado);
+            $date = Carbon::now();
+        //   dd($request->get('idcampaniasemillado'));
+           // $date = $date->format('d-m-Y');
+
+            foreach ($cruzamientos as $datas) {
+                $numero++;
+                $semillado = new Semillado();
+    
+                $semillado->numero = $numero;
+
+                $semillado->fechasemillado = $date;
+                $semillado->idcampania = $request->idcampaniasemillado;
+                $semillado->idcruzamiento = $datas->id;
+                $semillado->gramos = 0.5;
+                $semillado->cajones = 0.2;
+    
+                $semillado->save();
+            }
+            $inventario=DB::table('semillados as s') 
+            ->leftjoin('campanias as c','c.id','=','s.idcampania')
+            ->leftjoin('cruzamientos as cru','cru.id','=','s.idcruzamiento')
+            ->select(DB::raw('s.idcampania,c.nombre,COUNT(s.idcampania) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
+            ->groupBy('s.idcampania')
+            ->groupBy('c.nombre')
+                //->orderBy('nombre','asc')
+            ->paginate('10');
+            return view('admin.semillados.index',["inventario"=>$inventario]);
+     }
 
 }
