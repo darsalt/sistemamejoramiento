@@ -9,7 +9,7 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Etapa individual</h3> 
+		<h3>Primera Clonal</h3> 
 	</div>
 </div>
 <div class="row">
@@ -43,26 +43,24 @@
     <div class="col-12">
         <div class="table-responsive">
             <!--Tabla con el formulario para el registro de la etapa individual-->
-            <form action="" class="form" id="formSeedling" operation="insert">
+            <form action="" class="form" id="formPrimeraClonal" operation="insert">
                 <input type="number" hidden value=0 id="idSeedling" name="idSeedling">
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>Campaña seedling</th>
+                            <th>Serie</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
                             <th>Lote</th>
-                            <th>Fecha</th>
-                            <th>Parcela</th>
                         </tr> 
                     </thead>
                     <tbody>
                         <tr>
                             <td>
-                                <select name="campSeedling" id="campSeedling" class="form-control">
+                                <select name="serie" id="serie" class="form-control">
                                     <option value="0" disabled selected>(Ninguna)</option>
-                                    @foreach ($campaniasSeedling as $campania)
-                                        <option value="{{$campania->id}}">{{$campania->nombre}}</option>
+                                    @foreach ($series as $serie)
+                                        <option value="{{$serie->id}}">{{$serie->nombre}}</option>
                                     @endforeach
                                 </select>
                             </td>
@@ -84,65 +82,50 @@
                                     <option value="0" disabled selected>(Ninguno)</option>
                                 </select>
                             </td>
-                            <td>
-                                <input type="date" id="fecha" name="fecha" class="form-control">
-                            </td>
-                            <td>
-                                <p id="parcela"></p>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
-                        <th width="15%">Origen</th>
-                        <th width="15%">Campaña semillado</th>
-                        <th width="15%">Orden</th>
-                        <th>Tabla</th>
-                        <th>Tablita</th>
-                        <th>Surcos</th>
-                        <th>Plantas / Surco</th>
-                        <th></th>
+                        <tr>
+                            <th>Campaña seedling</th>
+                            <th>Parcela</th>
+                            <th>Fecha</th>
+                            <th>Cantidad</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th></th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <select name="origen" id="origen" class="form-control">
-                                    <option value="0" disabled selected>(Ninguno)</option>
-                                    <option value="cruzamiento">Cruzamiento</option>
-                                    <option value="testigo">Testigo</option>
-                                    <option value="n/i">N/I</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select name="campSemillado" id="campSemillado" class="form-control">
-                                    <option value="0" disabled selected>(Ninguna)</option>
-                                    <@foreach ($campaniasSemillado as $campania)
-                                        <option value="{{$campania->id}}">{{$campania->nombre}}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <select name="ordenSemillado" id="ordenSemillado" class="form-control" disabled>
-                                    <option value="0" disabled selected>(Ninguno)</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" id="tabla" name="tabla" class="form-control">
-                            </td>
-                            <td>
-                                <input type="text" id="tablita" name="tablita" class="form-control">
-                            </td>
-                            <td>
-                                <input type="number" id="surcos" name="surcos" class="form-control">
-                            </td>
-                            <td>
-                                <input type="number" id="plantasxsurco" name="plantasxsurco" class="form-control">
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                            </td>
-                        </tr>
+                        <td>
+                            <select name="campSeedling" id="campSeedling" class="form-control">
+                                <option value="0" disabled selected>(Ninguno)</option>
+                                @foreach ($campSeedling as $campania)
+                                    <option value="{{$campania->id}}">{{$campania->nombre}}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td>
+                            <select name="parcela" id="parcela" class="form-control">
+                                <option value="0" disabled selected>(Ninguno)</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="date" id="fecha" name="fecha" class="form-control">
+                        </td>
+                        <td>
+                            <input type="number" id="cantidad" name="cantidad" class="form-control">
+                        </td>
+                        <td>
+                            <p id="parcelaDesde"></p>
+                        </td>
+                        <td>
+                            <p id="parcelaHasta"></p>
+                        </td>
+                        <td class="text-center">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                        </td>
                     </tbody>
                 </table>
             </form>
@@ -156,41 +139,35 @@
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th>Campaña seedling</th>
+                        <th>Serie</th>
                         <th>Ambiente</th>
                         <th>Subambiente</th>
                         <th>Lote</th>
-                        <th>Origen</th>
-                        <th>Campaña semillado</th>
-                        <th>Orden</th>
+                        <th>Campaña seedling</th>
                         <th>Parcela</th>
                         <th>Fecha</th>
-                        <th>Tabla</th>
-                        <th>Tablita</th>
-                        <th>Surcos</th>
-                        <th>Plantas / Surco</th>
+                        <th>Cantidad</th>
+                        <th>Desde</th>
+                        <th>Hasta</th>
                         <th></th>
                     </tr> 
                 <tbody>
                     @if (isset($seedlings))
-                        @foreach ($seedlings as $seedling)
+                        @foreach ($seedlings as $primera)
                             <tr>
-                                <td>{{$seedling->campania->nombre}}</td>
-                                <td>{{$seedling->lote->subambiente->ambiente->nombre}}</td>
-                                <td>{{$seedling->lote->subambiente->nombre}}</td>
-                                <td>{{$seedling->lote->nombrelote}}</td>
-                                <td>{{$seedling->origen}}</td>
-                                <td>{{$seedling->semillado->campania->nombre}}</td>
-                                <td>{{$seedling->semillado->numero}}</td>
-                                <td>{{$seedling->parcela}}</td>
-                                <td>{{$seedling->fecha_plantacion}}</td>
-                                <td>{{$seedling->tabla}}</td>
-                                <td>{{$seedling->tablita}}</td>
-                                <td>{{$seedling->surcos}}</td>
-                                <td>{{$seedling->plantasxsurco}}</td>
+                                <td>{{$primera->serie->nombre}}</td>
+                                <td>{{$primera->lote->subambiente->ambiente->nombre}}</td>
+                                <td>{{$primera->lote->subambiente->nombre}}</td>
+                                <td>{{$primera->lote->nombrelote}}</td>
+                                <td>{{$primera->seedling->campania->nombre}}</td>
+                                <td>{{$primera->seedling->parcela}}</td>
+                                <td>{{$primera->fecha}}</td>
+                                <td>{{$primera->cantidad}}</td>
+                                <td>{{$primera->parceladesde}}</td>
+                                <td>{{$primera->parceladesde + $primera->cantidad - 1}}</td>
                                 <td>
-                                    <button class='btn editBtn' onclick='editarSeedling({{$seedling->id}})'><i class='fa fa-edit fa-lg'></i></button>
-                                    <button class='btn deleteBtn' data-id="{{$seedling->id}}"><i class='fa fa-trash fa-lg'></i></button>
+                                    <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
+                                    <button class='btn deleteBtn' data-id="{{$primera->id}}"><i class='fa fa-trash fa-lg'></i></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -238,18 +215,18 @@ role="dialog" tabindex="-1" id="modal-delete">
     <script>
         var config = {
             routes: {
-                seedlings: "{{route('individual.index')}}",
+                seedlings: "{{route('primeraclonal.index')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getLotes: "{{route('ajax.lotes.getLotesDadoSubambiente')}}",
-                getUltimaParcela: "{{route('ajax.individual.getUltimaParcela')}}",
-                saveSeedling: "{{route('ajax.individual.saveSeedling')}}",
-                getSemillados: "{{route('ajax.semillados.getSemillados')}}",
-                getSeedling: "{{route('ajax.individual.getSeedling')}}",
-                editSeedling: "{{route('ajax.individual.editSeedling')}}",
-                deleteSeedling: "{{route('individual.delete')}}"
+                getUltimaParcela: "{{route('ajax.primeraclonal.getUltimaParcela')}}",
+                savePrimeraClonal: "{{route('ajax.primeraclonal.savePrimeraClonal')}}",
+                getSeedlings: "{{route('ajax.individual.getSeedlings')}}",
+                getPrimeraClonal: "{{route('ajax.primeraclonal.getPrimeraClonal')}}",
+                editPrimeraClonal: "{{route('ajax.primeraclonal.editPrimeraClonal')}}",
+                deletePrimeraClonal: "{{route('primeraclonal.delete')}}"
             },
             data: {
-                campActiva: "{{$idCampania}}"
+                serieActiva: "{{$idSerie}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",
@@ -258,5 +235,5 @@ role="dialog" tabindex="-1" id="modal-delete">
         };
     </script>
 
-    <script src="{{asset('js/seedling/index.js')}}"></script>
+    <script src="{{asset('js/primera/index.js')}}"></script>
 @endsection
