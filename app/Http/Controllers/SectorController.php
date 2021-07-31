@@ -112,5 +112,12 @@ class SectorController extends Controller
          return Excel::download(new SectorExport, 'sector.xlsx');
      }
 
+     public function getSectoresDadoSubambiente(Request $request){
+        $sectores = Sector::where('idsubambiente', $request->subambiente)->get();
+      //  Log::debug($sectores);
+
+        return response()->json($sectores);
+    }
+
 
 }

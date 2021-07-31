@@ -51,7 +51,7 @@
                             <th>Campaña seedling</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
-                            <th>Lote</th>
+                            <th>Sector</th>
                             <th>Fecha</th>
                             <th>Parcela</th>
                         </tr> 
@@ -80,7 +80,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select name="lote" id="lote" class="form-control">
+                                <select name="sector" id="sector" class="form-control">
                                     <option value="0" disabled selected>(Ninguno)</option>
                                 </select>
                             </td>
@@ -159,7 +159,7 @@
                         <th>Campaña seedling</th>
                         <th>Ambiente</th>
                         <th>Subambiente</th>
-                        <th>Lote</th>
+                        <th>Sector</th>
                         <th>Origen</th>
                         <th>Campaña semillado</th>
                         <th>Orden</th>
@@ -176,9 +176,9 @@
                         @foreach ($seedlings as $seedling)
                             <tr>
                                 <td>{{$seedling->campania->nombre}}</td>
-                                <td>{{$seedling->lote->subambiente->ambiente->nombre}}</td>
-                                <td>{{$seedling->lote->subambiente->nombre}}</td>
-                                <td>{{$seedling->lote->nombrelote}}</td>
+                                <td>{{$seedling->sector->subambiente->ambiente->nombre}}</td>
+                                <td>{{$seedling->sector->subambiente->nombre}}</td>
+                                <td>{{$seedling->sector->nombresector}}</td>
                                 <td>{{$seedling->origen}}</td>
                                 <td>{{$seedling->semillado->campania->nombre}}</td>
                                 <td>{{$seedling->semillado->numero}}</td>
@@ -240,7 +240,7 @@ role="dialog" tabindex="-1" id="modal-delete">
             routes: {
                 seedlings: "{{route('individual.index')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
-                getLotes: "{{route('ajax.lotes.getLotesDadoSubambiente')}}",
+                getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
                 getUltimaParcela: "{{route('ajax.individual.getUltimaParcela')}}",
                 saveSeedling: "{{route('ajax.individual.saveSeedling')}}",
                 getSemillados: "{{route('ajax.semillados.getSemillados')}}",

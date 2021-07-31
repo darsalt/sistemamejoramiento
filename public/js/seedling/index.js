@@ -11,7 +11,7 @@ $(document).ready(function(){
     // Aplicar select2 a combos box
     $('#ambiente').select2();
     $('#subambiente').select2();
-    $('#lote').select2();
+    $('#sector').select2();
     $('#ordenSemillado').select2();
 
     $('#campSeedling').focus();
@@ -31,7 +31,7 @@ $(document).ready(function(){
                 required: true,
                 min: 1
             },
-            lote: {
+            sector: {
                 required: true,
                 min: 1
             },
@@ -64,8 +64,8 @@ $(document).ready(function(){
             subambiente:{
                 min: 'Seleccione un subambiente'
             }, 
-            lote:{
-                min: 'Seleccione un lote'
+            sector:{
+                min: 'Seleccione un sector'
             },  
             origen:{
                 max: 'Seleccione un origen'
@@ -173,28 +173,28 @@ $(document).ready(function(){
     $('#subambiente').change(function(){
         var subambiente = $(this).children('option:selected').val();
 
-        // Obtener lotes pertenecientes al subambiente
+        // Obtener sectores pertenecientes al subambiente
         $.ajax({
-            url: config.routes.getLotes,
+            url: config.routes.getSectores,
             type: 'GET',
             data: {
                 'subambiente': subambiente
             },
             success: function(response){
-                $('#lote').empty();
+                $('#sector').empty();
                 
                 $.each(response, function(i, item){
-                    $('#lote').append("<option value='" + item.idlote + "'>" + item.nombrelote + "</option>");
+                    $('#sector').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
-                $('#lote').trigger('change');
+                $('#sector').trigger('change');
             }
         });
         $(this).trigger('blur');
     });
 
-    // Evento cuando se selecciona un lote
-    $('#lote').change(function(){
+    // Evento cuando se selecciona un sector
+    $('#sector').change(function(){
         $(this).trigger('blur');
     });
 
@@ -251,9 +251,9 @@ function agregarFila(element){
 
     fila += "<tr>";
     fila += "<td>" + element.campania.nombre + "</td>";
-    fila += "<td>" + element.lote.subambiente.ambiente.nombre + "</td>";
-    fila += "<td>" + element.lote.subambiente.nombre + "</td>";
-    fila += "<td>" + element.lote.nombrelote + "</td>";
+    fila += "<td>" + element.sector.subambiente.ambiente.nombre + "</td>";
+    fila += "<td>" + element.sector.subambiente.nombre + "</td>";
+    fila += "<td>" + element.sector.nombresector + "</td>";
     fila += "<td>" + element.origen + "</td>";
     fila += "<td>" + element.semillado.campania.nombre + "</td>"
     fila += "<td>" + element.semillado.numero + "</td>";
@@ -281,11 +281,11 @@ function editarSeedling(id){
         success: function(response){
             $('#idSeedling').val(response.id);
             $('#campSeedling').val(response.idcampania);
-            $('#ambiente').val(response.lote.subambiente.ambiente.id);
+            $('#ambiente').val(response.sector.subambiente.ambiente.id);
             $('#ambiente').trigger('change');
-            $('#subambiente').val(response.lote.subambiente.id);
+            $('#subambiente').val(response.sector.subambiente.id);
             $('#subambiente').trigger('change');
-            $('#lote').val(response.idlote);
+            $('#sector').val(response.idsector);
             $('#fecha').val(response.fecha_plantacion);
             $('#parcela').text(response.parcela);
             $('#origen').val(response.origen);
