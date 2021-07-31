@@ -309,11 +309,18 @@ Route::get('ajax/sectores/getSectoresDadoSubambiente', 'SectorController@getSect
 
 Route::post('ajax/individual/saveSeedling', 'EtapaIndividualController@saveSeedling')->name('ajax.individual.saveSeedling');
 Route::get('ajax/individual/getSeedling', 'EtapaIndividualController@getSeedling')->name('ajax.individual.getSeedling');
+Route::get('ajax/individual/getSeedlings', 'EtapaIndividualController@getSeedlings')->name('ajax.individual.getSeedlings');
 Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedling')->name('ajax.individual.editSeedling');
 
 Route::resource('admin/primera/serie','SerieController');
-Route::get('admin/primera/seleccion/{campania?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
+Route::get('admin/primera/seleccion/{serie?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
+
+// Rutas Ajax para primera clonal
+Route::get('ajax/primera/getUltimaParcela', 'PrimeraClonalController@getUltimaParcelaAjax')->name('ajax.primeraclonal.getUltimaParcela');
+Route::post('ajax/primera/savePrimeraClonal', 'PrimeraClonalController@savePrimeraClonal')->name('ajax.primeraclonal.savePrimeraClonal');
+Route::get('ajax/primera/getPrimeraClonal', 'PrimeraClonalController@getPrimeraClonal')->name('ajax.primeraclonal.getPrimeraClonal');
+Route::put('ajax/primera/editPrimeraClonal', 'PrimeraClonalController@editPrimeraClonal')->name('ajax.primeraclonal.editPrimeraClonal');
 
 Route::get('/admin/incluirpg','CampaniaSemilladoController@incluirpg');
 Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');

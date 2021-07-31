@@ -156,4 +156,12 @@ class LoteController extends Controller
 
     }
 
+<<<<<<< HEAD
+=======
+    public function getLotesDadoSubambiente(Request $request){
+        $lotes = Lote::where('idsubambiente', $request->subambiente)->get();
+
+        return response()->json($lotes);
+    }
+>>>>>>> 7c04fb976e2bd7377fe78e38d50e042a45cfb6e3
 }
