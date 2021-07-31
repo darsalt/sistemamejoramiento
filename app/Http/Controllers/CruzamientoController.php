@@ -426,4 +426,6 @@ class CruzamientoController extends Controller
         return response()->json($cruzamientos);
     }
 
+
+
 }

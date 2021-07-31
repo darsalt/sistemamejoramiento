@@ -317,3 +317,6 @@ Route::get('ajax/primera/getUltimaParcela', 'PrimeraClonalController@getUltimaPa
 Route::post('ajax/primera/savePrimeraClonal', 'PrimeraClonalController@savePrimeraClonal')->name('ajax.primeraclonal.savePrimeraClonal');
 Route::get('ajax/primera/getPrimeraClonal', 'PrimeraClonalController@getPrimeraClonal')->name('ajax.primeraclonal.getPrimeraClonal');
 Route::put('ajax/primera/editPrimeraClonal', 'PrimeraClonalController@editPrimeraClonal')->name('ajax.primeraclonal.editPrimeraClonal');
+
+Route::get('/admin/incluirpg','CampaniaSemilladoController@incluirpg');
+Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');
