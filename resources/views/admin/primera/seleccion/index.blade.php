@@ -51,7 +51,7 @@
                             <th>Serie</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
-                            <th>Lote</th>
+                            <th>Sector</th>
                         </tr> 
                     </thead>
                     <tbody>
@@ -142,7 +142,7 @@
                         <th>Serie</th>
                         <th>Ambiente</th>
                         <th>Subambiente</th>
-                        <th>Lote</th>
+                        <th>Sector</th>
                         <th>Campaña seedling</th>
                         <th>Parcela</th>
                         <th>Fecha</th>
@@ -156,9 +156,9 @@
                         @foreach ($seedlings as $primera)
                             <tr>
                                 <td>{{$primera->serie->nombre}}</td>
-                                <td>{{$primera->lote->subambiente->ambiente->nombre}}</td>
-                                <td>{{$primera->lote->subambiente->nombre}}</td>
-                                <td>{{$primera->lote->nombrelote}}</td>
+                                <td>{{$primera->sector->subambiente->ambiente->nombre}}</td>
+                                <td>{{$primera->sector->subambiente->nombre}}</td>
+                                <td>{{$primera->sector->nombre}}</td>
                                 <td>{{$primera->seedling->campania->nombre}}</td>
                                 <td>{{$primera->seedling->parcela}}</td>
                                 <td>{{$primera->fecha}}</td>
@@ -217,7 +217,7 @@ role="dialog" tabindex="-1" id="modal-delete">
             routes: {
                 seedlings: "{{route('primeraclonal.index')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
-                getLotes: "{{route('ajax.lotes.getLotesDadoSubambiente')}}",
+                getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
                 getUltimaParcela: "{{route('ajax.primeraclonal.getUltimaParcela')}}",
                 savePrimeraClonal: "{{route('ajax.primeraclonal.savePrimeraClonal')}}",
                 getSeedlings: "{{route('ajax.individual.getSeedlings')}}",

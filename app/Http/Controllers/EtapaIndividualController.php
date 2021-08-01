@@ -101,12 +101,8 @@ class EtapaIndividualController extends Controller
             return redirect()->back()->with('error', 'error');
         }
     }
-<<<<<<< HEAD
-}
-=======
 
     public function getSeedlings(Request $request){
         return Seedling::where('idcampania', $request->campania)->get();
     }
 }
->>>>>>> 7c04fb976e2bd7377fe78e38d50e042a45cfb6e3

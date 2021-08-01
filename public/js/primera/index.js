@@ -35,7 +35,7 @@ $(document).ready(function(){
                 required: true,
                 min: 1
             },
-            lote: {
+            sector: {
                 required: true,
                 min: 1
             },
@@ -63,8 +63,8 @@ $(document).ready(function(){
             subambiente:{
                 min: 'Seleccione un subambiente'
             }, 
-            lote:{
-                min: 'Seleccione un lote'
+            sector:{
+                min: 'Seleccione un sector'
             }, 
         },
         submitHandler: function(form){
@@ -136,7 +136,7 @@ $(document).ready(function(){
     });
 
     // Evento para cuando se selecciona un ambiente
-    $('#ambiente').change(function(){
+    $('#ambiente').change(function(event, idsubambiente = 0, idsector = 0){
         var ambiente = $(this).children('option:selected').val();
 
         // Obtener subambientes pertenecientes al ambiente
@@ -153,43 +153,49 @@ $(document).ready(function(){
                     $('#subambiente').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
-                $('#subambiente').trigger('change');
+                if(idsubambiente > 0)
+                    $('#subambiente').val(idsubambiente);
+
+                $('#subambiente').trigger('change', [idsector]);
             }
         });
         $(this).trigger('blur');
     });
 
     // Evento para cuando se selecciona un subambiente
-    $('#subambiente').change(function(){
+    $('#subambiente').change(function(event, idsector = 0){
         var subambiente = $(this).children('option:selected').val();
 
         // Obtener lotes pertenecientes al subambiente
         $.ajax({
-            url: config.routes.getLotes,
+            url: config.routes.getSectores,
             type: 'GET',
             data: {
                 'subambiente': subambiente
             },
             success: function(response){
-                $('#lote').empty();
+                $('#sector').empty();
                 
                 $.each(response, function(i, item){
-                    $('#lote').append("<option value='" + item.idlote + "'>" + item.nombrelote + "</option>");
+                    $('#sector').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
-                $('#lote').trigger('change');
+                if(idsector > 0)
+                    $('#sector').val(idsector);
+
+                $('#sector').trigger('change');
             }
         });
         $(this).trigger('blur');
     });
 
-    // Evento cuando se selecciona un lote
-    $('#lote').change(function(){
+    // Evento cuando se selecciona un sector
+    $('#sector').change(function(){
         $(this).trigger('blur');
     });
 
     // Evento para cuando se selecciona la campaña de seedling
-    $('#campSeedling').change(function(){
+    $('#campSeedling').change(function(parcela = 0){
         $.ajax({
             url: config.routes.getSeedlings,
             type: 'GET',
@@ -202,6 +208,9 @@ $(document).ready(function(){
                 $.each(response, function(i, item){
                     $('#parcela').append("<option value='" + item.id + "'>" + item.parcela + "</option>");
                 });
+
+                if(parcela > 0)
+                    $('#parcela').val(parcela);
             }
         });
     });
@@ -236,9 +245,9 @@ function agregarFila(element){
 
     fila += "<tr>";
     fila += "<td>" + element.serie.nombre + "</td>";
-    fila += "<td>" + element.lote.subambiente.ambiente.nombre + "</td>";
-    fila += "<td>" + element.lote.subambiente.nombre + "</td>";
-    fila += "<td>" + element.lote.nombrelote + "</td>";
+    fila += "<td>" + element.sector.subambiente.ambiente.nombre + "</td>";
+    fila += "<td>" + element.sector.subambiente.nombre + "</td>";
+    fila += "<td>" + element.sector.nombre + "</td>";
     fila += "<td>" + element.seedling.campania.nombre + "</td>";
     fila += "<td>" + element.seedling.parcela + "</td>";
     fila += "<td>" + element.fecha + "</td>"
@@ -263,14 +272,10 @@ function editarSeedling(id){
         success: function(response){
             $('#idSeedling').val(response.id);
             $('#serie').val(response.idserie);
-            $('#ambiente').val(response.lote.subambiente.ambiente.id);
-            $('#ambiente').trigger('change');
-            $('#subambiente').val(response.lote.subambiente.id);
-            $('#subambiente').trigger('change');
-            $('#lote').val(response.idlote);
+            $('#ambiente').val(response.sector.subambiente.ambiente.id);
+            $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
             $('#campSeedling').val(response.seedling.idcampania);
-            $('#campSeedling').trigger('change');
-            $('#parcela').val(response.seedling.parcela);
+            $('#campSeedling').trigger('change', [response.seedling.parcela]);
             $('#fecha').val(response.fecha);
             $('#cantidad').val(response.cantidad);
             $('#parcelaDesde').text(response.parceladesde);

@@ -40,7 +40,7 @@ class PrimeraClonalController extends Controller
             $primeraClonal = new PrimeraClonal();
     
             $primeraClonal->idserie = $request->serie;
-            $primeraClonal->idlote = $request->lote;
+            $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);
             $primeraClonal->seedling()->associate($seedling);
             $primeraClonal->fecha = $request->fecha;
@@ -49,7 +49,7 @@ class PrimeraClonalController extends Controller
             
             $primeraClonal->save();
 
-            return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'lote.subambiente.ambiente'])->first();
+            return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'sector.subambiente.ambiente'])->first();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());
@@ -57,7 +57,7 @@ class PrimeraClonalController extends Controller
     }
 
     public function getPrimeraClonal(Request $request){
-        return PrimeraClonal::with(['serie', 'seedling.campania', 'lote.subambiente.ambiente'])->find($request->id);
+        return PrimeraClonal::with(['serie', 'seedling.campania', 'sector.subambiente.ambiente'])->find($request->id);
     }
 
     public function editPrimeraClonal(Request $request){
@@ -65,7 +65,7 @@ class PrimeraClonalController extends Controller
             $primeraClonal = PrimeraClonal::find($request->idSeedling);
     
             $primeraClonal->idserie = $request->serie;
-            $primeraClonal->idlote = $request->lote;
+            $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);
             $primeraClonal->seedling()->associate($seedling);
             $primeraClonal->fecha = $request->fecha;

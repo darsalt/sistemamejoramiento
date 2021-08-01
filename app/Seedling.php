@@ -14,7 +14,7 @@ class Seedling extends Model
         return $this->belongsTo('App\Semillado', 'idsemillado', 'idsemillado');
     }
 
-    public function lote(){
-        return $this->belongsTo('App\Lote', 'idlote', 'idlote');
+    public function sector(){
+        return $this->belongsTo('App\Sector', 'idsector', 'id');
     }
 }

@@ -178,7 +178,7 @@
                                 <td>{{$seedling->campania->nombre}}</td>
                                 <td>{{$seedling->sector->subambiente->ambiente->nombre}}</td>
                                 <td>{{$seedling->sector->subambiente->nombre}}</td>
-                                <td>{{$seedling->sector->nombresector}}</td>
+                                <td>{{$seedling->sector->nombre}}</td>
                                 <td>{{$seedling->origen}}</td>
                                 <td>{{$seedling->semillado->campania->nombre}}</td>
                                 <td>{{$seedling->semillado->numero}}</td>
