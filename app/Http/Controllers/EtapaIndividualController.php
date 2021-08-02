@@ -41,7 +41,7 @@ class EtapaIndividualController extends Controller
             $seedling->idcampania = $request->campSeedling;
             $semillado = Semillado::find($request->ordenSemillado);
             $seedling->semillado()->associate($semillado);
-            $seedling->idlote = $request->lote;
+            $seedling->idsector = $request->sector;
             $seedling->origen = $request->origen;
             $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
             $seedling->fecha_plantacion = $request->fecha;
@@ -52,7 +52,7 @@ class EtapaIndividualController extends Controller
             
             $seedling->save();
 
-            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'lote.subambiente.ambiente'])->first();
+            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->first();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());
@@ -60,7 +60,7 @@ class EtapaIndividualController extends Controller
     }
 
     public function getSeedling(Request $request){
-        return Seedling::where('id', $request->id)->with(['campania', 'semillado.campania', 'lote.subambiente.ambiente'])->first();
+        return Seedling::where('id', $request->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->first();
     }
 
     public function editSeedling(Request $request){
@@ -68,7 +68,7 @@ class EtapaIndividualController extends Controller
             $seedling = Seedling::where('id', $request->idSeedling)->first();
     
             $seedling->idcampania = $request->campSeedling;
-            $seedling->idlote = $request->lote;
+            $seedling->idsector = $request->sector;
             $seedling->fecha_plantacion = $request->fecha;
             $seedling->origen = $request->origen;
             $semillado = Semillado::where('idsemillado', $request->ordenSemillado)->first();
@@ -82,7 +82,7 @@ class EtapaIndividualController extends Controller
 
             session(['exito' => 'exito']);
 
-            return Seedling::with(['campania', 'semillado.campania', 'lote.subambiente.ambiente'])->get();
+            return Seedling::with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->get();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());

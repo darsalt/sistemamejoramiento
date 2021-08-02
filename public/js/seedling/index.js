@@ -9,9 +9,7 @@ $(document).ready(function(){
         mostrarMensajeError();
 
     // Aplicar select2 a combos box
-    $('#ambiente').select2();
-    $('#subambiente').select2();
-    $('#sector').select2();
+    $('#ambiente, #subambiente, #sector').select2();
     $('#ordenSemillado').select2();
 
     $('#campSeedling').focus();
@@ -146,7 +144,7 @@ $(document).ready(function(){
     });
 
     // Evento para cuando se selecciona un ambiente
-    $('#ambiente').change(function(){
+    $('#ambiente').change(function(event, idsubambiente = 0, idsector = 0){
         var ambiente = $(this).children('option:selected').val();
 
         // Obtener subambientes pertenecientes al ambiente
@@ -163,14 +161,17 @@ $(document).ready(function(){
                     $('#subambiente').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
-                $('#subambiente').trigger('change');
+                if(idsubambiente > 0)
+                    $('#subambiente').val(idsubambiente);
+
+                $('#subambiente').trigger('change', [idsector]);
             }
         });
         $(this).trigger('blur');
     });
 
     // Evento para cuando se selecciona un subambiente
-    $('#subambiente').change(function(){
+    $('#subambiente').change(function(event, idsector = 0){
         var subambiente = $(this).children('option:selected').val();
 
         // Obtener sectores pertenecientes al subambiente
@@ -186,6 +187,9 @@ $(document).ready(function(){
                 $.each(response, function(i, item){
                     $('#sector').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
+
+                if(idsector > 0)
+                    $('#sector').val(idsector);
 
                 $('#sector').trigger('change');
             }
@@ -209,7 +213,7 @@ $(document).ready(function(){
     });
 
     // Evento para cuando se selecciona la campaña de semillado
-    $('#campSemillado').change(function(){
+    $('#campSemillado').change(function(event, idsemillado = 0){
         $.ajax({
             url: config.routes.getSemillados,
             type: 'GET',
@@ -222,6 +226,9 @@ $(document).ready(function(){
                 $.each(response, function(i, item){
                     $('#ordenSemillado').append("<option value='" + item.idsemillado + "'>" + item.numero + "</option>");
                 });
+                
+                if(idsemillado > 0)
+                    $('#ordenSemillado').val(idsemillado);
             }
         });
     });
@@ -253,7 +260,7 @@ function agregarFila(element){
     fila += "<td>" + element.campania.nombre + "</td>";
     fila += "<td>" + element.sector.subambiente.ambiente.nombre + "</td>";
     fila += "<td>" + element.sector.subambiente.nombre + "</td>";
-    fila += "<td>" + element.sector.nombresector + "</td>";
+    fila += "<td>" + element.sector.nombre + "</td>";
     fila += "<td>" + element.origen + "</td>";
     fila += "<td>" + element.semillado.campania.nombre + "</td>"
     fila += "<td>" + element.semillado.numero + "</td>";
@@ -282,16 +289,13 @@ function editarSeedling(id){
             $('#idSeedling').val(response.id);
             $('#campSeedling').val(response.idcampania);
             $('#ambiente').val(response.sector.subambiente.ambiente.id);
-            $('#ambiente').trigger('change');
-            $('#subambiente').val(response.sector.subambiente.id);
-            $('#subambiente').trigger('change');
-            $('#sector').val(response.idsector);
+            $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
             $('#fecha').val(response.fecha_plantacion);
             $('#parcela').text(response.parcela);
             $('#origen').val(response.origen);
             $('#origen').trigger('change');
             $('#campSemillado').val(response.semillado.idcampania);
-            $('#campSemillado').trigger('change');
+            $('#campSemillado').trigger('change', [response.idsemillado]);
             $('#tabla').val(response.tabla);
             $('#tablita').val(response.tablita);
             $('#surcos').val(response.surcos);

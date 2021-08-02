@@ -9,10 +9,7 @@ $(document).ready(function(){
         mostrarMensajeError();
 
     // Aplicar select2 a combos box
-    $('#ambiente').select2();
-    $('#subambiente').select2();
-    $('#lote').select2();
-    $('#parcela').select2();
+    $('#ambiente, #subambiente, #sector, #parcela').select2();
 
     $('#serie').focus();
 
