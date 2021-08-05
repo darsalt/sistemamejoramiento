@@ -10,6 +10,7 @@ use App\Seedling;
 use App\Serie;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class PrimeraClonalController extends Controller
@@ -92,6 +93,35 @@ class PrimeraClonalController extends Controller
         }
         catch(Exception $e){
             return redirect()->back()->with('error', 'error');
+        }
+    }
+
+    public function laboratorio($idSerie = 0){
+        $series = Serie::where('estado', 1)->get();
+        $seedlings = PrimeraClonal::where('idserie', $idSerie)->paginate(20);
+
+        return view('admin.primera.laboratorio.index', compact('idSerie', 'series', 'seedlings'));
+    }
+
+    public function saveLaboratorio(Request $request, $idSerie){
+        Log::debug($idSerie);
+        try{
+            DB::transaction(function () use($request, $idSerie){
+                PrimeraClonal::where('idserie', $idSerie)->update(['laboratorio' => 0]);
+
+                if(isset($request->ids)){
+                    foreach($request->ids as $id){
+                        $seedling = PrimeraClonal::find($id);
+                        $seedling->laboratorio = 1;
+                        $seedling->save();
+                    }
+                }
+            });
+
+            return response()->json(true);
+        }
+        catch(Exception $e){
+            return response()->json(false);
         }
     }
 }

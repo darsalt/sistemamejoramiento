@@ -316,6 +316,10 @@ Route::resource('admin/primera/serie','SerieController');
 Route::get('admin/primera/seleccion/{serie?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
 
+// Laboratorio
+Route::get('/admin/primera/laboratorio/{serie?}', 'PrimeraClonalController@laboratorio')->name('primeraclonal.laboratorio.index');
+Route::patch('admin/primera/laboratorio/{serie}', 'PrimeraClonalController@saveLaboratorio')->name('primeraclonal.laboratorio.save');
+
 // Rutas Ajax para primera clonal
 Route::get('ajax/primera/getUltimaParcela', 'PrimeraClonalController@getUltimaParcelaAjax')->name('ajax.primeraclonal.getUltimaParcela');
 Route::post('ajax/primera/savePrimeraClonal', 'PrimeraClonalController@savePrimeraClonal')->name('ajax.primeraclonal.savePrimeraClonal');
