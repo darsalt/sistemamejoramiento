@@ -119,23 +119,37 @@ class PrimeraClonalController extends Controller
         }
     }
 
-    public function laboratorio($idSerie = 0){
+    public function laboratorio($idSerie = 0, $idSector = 0){
         $series = Serie::where('estado', 1)->get();
-        $seedlings = PrimeraClonal::where('idserie', $idSerie)->paginate(20);
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $seedlings = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(20);
+        $sector = Sector::find($idSector);
 
-        return view('admin.primera.laboratorio.index', compact('idSerie', 'series', 'seedlings'));
+        if($sector){
+            $idSubambiente = $sector->subambiente->id;
+            $idAmbiente = $sector->subambiente->ambiente->id;
+        }
+        else{
+            $idSubambiente = $idAmbiente = 0;    
+        }
+
+        return view('admin.primera.laboratorio.index', compact('idSerie', 'series', 'seedlings', 'ambientes', 'idSector', 'idSubambiente', 'idAmbiente'));
     }
 
-    public function saveLaboratorio(Request $request, $idSerie){
+    public function saveLaboratorio(Request $request, $idSerie, $idSector){
         try{
-            DB::transaction(function () use($request, $idSerie){
-                PrimeraClonal::where('idserie', $idSerie)->update(['laboratorio' => 0]);
+            DB::transaction(function () use($request, $idSerie, $idSector){
+                $primera = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)->get();
 
-                if(isset($request->ids)){
-                    foreach($request->ids as $id){
-                        $seedling = PrimeraClonal::find($id);
-                        $seedling->laboratorio = 1;
-                        $seedling->save();
+                foreach($primera as $seedling){
+                    $seedling->parcelas()->update(['laboratorio' => 0]);
+
+                    if(isset($request->ids)){
+                        foreach($request->ids as $id){
+                            $parcela = PrimeraClonalDetalle::find($id);
+                            $parcela->laboratorio = 1;
+                            $parcela->save();
+                        }
                     }
                 }
             });

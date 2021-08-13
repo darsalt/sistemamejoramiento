@@ -19,4 +19,8 @@ class PrimeraClonal extends Model
     public function sector(){
         return $this->belongsTo('App\Sector', 'idsector', 'id');
     }
+
+    public function parcelas(){
+        return $this->hasMany('App\PrimeraClonalDetalle', 'idprimeraclonal', 'id');
+    }
 }

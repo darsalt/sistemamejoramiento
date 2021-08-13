@@ -25,13 +25,37 @@
 <div class="row">
     <div class="col-12">
         <div class="form-group row">
-            <label for="serie" class="col-1 col-form-label">Serie: </label>
-            <div class="col-2">
+            <label for="serie" class="col-2 col-lg-1 col-form-label">Serie: </label>
+            <div class="col-4 col-lg-2">
                 <select name="serie" id="serie" class="form-control">
                     <option value="0" selected disabled>(Ninguna)</option>
                     @foreach ($series as $serie)
                         <option value="{{$serie->id}}">{{$serie->nombre}}</option>
                     @endforeach
+                </select>
+            </div>
+
+            <label for="ambiente" class="col-2 col-lg-1 col-form-label">Ambiente: </label>
+            <div class="col-4 col-lg-2">
+                <select name="ambiente" id="ambiente" class="form-control">
+                    <option value="0" selected disabled>(Ninguno)</option>
+                    @foreach ($ambientes as $ambiente)
+                        <option value="{{$ambiente->id}}">{{$ambiente->nombre}}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <label for="subambiente" class="col-2 col-lg-1 col-form-label">Subambiente: </label>
+            <div class="col-4 col-lg-2">
+                <select name="subambiente" id="subambiente" class="form-control">
+                    <option value="0" selected disabled>(Ninguno)</option>
+                </select>
+            </div>
+
+            <label for="sector" class="col-2 col-lg-1 col-form-label">Sector: </label>
+            <div class="col-4 col-lg-2">
+                <select name="sector" id="sector" class="form-control">
+                    <option value="0" selected disabled>(Ninguno)</option>
                 </select>
             </div>
         </div>   
@@ -44,38 +68,28 @@
         <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings"">
             <thead>
                 <tr>
-                    <th>Serie</th>
-                    <th>Ambiente</th>
-                    <th>Subambiente</th>
-                    <th>Sector</th>
                     <th>Campaña Seedling</th>
                     <th>Parcela</th>
-                    <th>Fecha</th>
-                    <th>Cantidad</th>
-                    <th>Desde</th>
-                    <th>Hasta</th>
+                    <th>Progenitores</th>
+                    <th>Parcela Primera Clonal</th>
                     <th>Seleccionado</th>
                 </tr>
             </thead>
             <tbody>
                 @if (isset($seedlings))
                     @foreach ($seedlings as $primera)
-                        <tr>
-                            <td>{{$primera->serie->nombre}}</td>
-                            <td>{{$primera->sector->subambiente->ambiente->nombre}}</td>
-                            <td>{{$primera->sector->subambiente->nombre}}</td>
-                            <td>{{$primera->sector->nombre}}</td>
-                            <td>{{$primera->seedling->campania->nombre}}</td>
-                            <td>{{$primera->seedling->parcela}}</td>
-                            <td>{{$primera->fecha}}</td>
-                            <td>{{$primera->cantidad}}</td>
-                            <td>{{$primera->parceladesde}}</td>
-                            <td>{{$primera->parceladesde + $primera->cantidad - 1}}</td>
-                            <td class="text-center">
-                                <input type="checkbox" class="form-check-input check-laboratorio" value="{{$primera->id}}" {{$primera->laboratorio ? 'checked' : ''}}
-                                style="width: 15px; height: 15px;">
-                            </td>
-                        </tr>
+                        @foreach ($primera->parcelas as $parcela)
+                            <tr>
+                                <td>{{$primera->seedling->campania->nombre}}</td>
+                                <td>{{$primera->seedling->parcela}}</td>
+                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                                <td>{{$parcela->parcela}}</td>
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" {{$parcela->laboratorio ? 'checked' : ''}}
+                                    style="width: 15px; height: 15px;">
+                                </td>
+                            </tr>
+                        @endforeach
                     @endforeach
                 @endif
             </tbody>
@@ -97,10 +111,15 @@
         var config = {
             routes: {
                 laboratorio: "{{route('primeraclonal.laboratorio.index')}}",
-                saveLaboratorio: "{{url('admin/primera/laboratorio')}}"
+                saveLaboratorio: "{{url('admin/primera/laboratorio')}}",
+                getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
+                getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
             },
             data: {
-                serieActiva: "{{$idSerie}}"
+                serieActiva: "{{$idSerie}}",
+                ambienteActivo: "{{$idAmbiente}}",
+                subambienteActivo: "{{$idSubambiente}}",
+                sectorActivo: "{{$idSector}}",
             },
             session: {
                 exito: "{{session()->pull('exito')}}",
