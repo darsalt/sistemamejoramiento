@@ -6,6 +6,7 @@ use App\Ambiente;
 use App\CampaniaSeedling;
 use App\CampaniaSemillado;
 use App\Http\Controllers\Controller;
+use App\Sector;
 use App\Seedling;
 use App\Semillado;
 use Exception;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Log;
 class EtapaIndividualController extends Controller
 {
     public function index($idCampania = 0){
-        $seedlings = Seedling::where('idcampania', $idCampania)->paginate(10);
+        $seedlings = Seedling::where('idcampania', $idCampania)->where('idsector', $idSector)->paginate(10);
         $campaniasSeedling = CampaniaSeedling::where('estado', 1)->get();
         $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
@@ -104,5 +105,14 @@ class EtapaIndividualController extends Controller
 
     public function getSeedlings(Request $request){
         return Seedling::where('idcampania', $request->campania)->get();
+    }
+
+    public function getProgenitoresSeedling(Request $request){
+        $idSemillado = Seedling::find($request->id)->idsemillado;
+        $semillado = Semillado::find($idSemillado);
+        $cruzamiento = $semillado->cruzamiento;
+        $progenitores = ['madre' => $cruzamiento->madre, 'padre' => $cruzamiento->padre];
+        
+        return $progenitores;
     }
 }

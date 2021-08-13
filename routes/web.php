@@ -311,9 +311,10 @@ Route::post('ajax/individual/saveSeedling', 'EtapaIndividualController@saveSeedl
 Route::get('ajax/individual/getSeedling', 'EtapaIndividualController@getSeedling')->name('ajax.individual.getSeedling');
 Route::get('ajax/individual/getSeedlings', 'EtapaIndividualController@getSeedlings')->name('ajax.individual.getSeedlings');
 Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedling')->name('ajax.individual.editSeedling');
+Route::get('ajax/individual/getProgenitoresSeedling', 'EtapaIndividualController@getProgenitoresSeedling')->name('ajax.individual.getProgenitoresSeedling');
 
 Route::resource('admin/primera/serie','SerieController');
-Route::get('admin/primera/seleccion/{serie?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
+Route::get('admin/primera/seleccion/{serie?}/{sector?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
 
 // Laboratorio

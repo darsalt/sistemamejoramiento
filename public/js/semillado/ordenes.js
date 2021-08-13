@@ -182,6 +182,7 @@ function rellenarCamposSemilla(){
             $('#poderGerminativo').empty();
             $('#stockActual').text(response.stockactual);
             $('#poderGerminativo').text(response.podergerminativo);
+            $('#cantGramos').trigger('change');
         }
     });
 }

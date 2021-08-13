@@ -36,16 +36,18 @@ $(document).ready(function(){
                 required: true,
                 min: 1
             },
-            fecha: {
-                required: true
-            },
             parcela: {
                 required: true,
             },
-            cantidad: {
-                required: true,
+            parcelaDesde: {
                 number: true,
-            }
+            },
+            parcelaHasta: {
+                number: true,
+                min: function(){
+                    return $('#parcelaDesde').val();
+                }
+            },
         },
         messages:{
             serie:{
@@ -62,7 +64,10 @@ $(document).ready(function(){
             }, 
             sector:{
                 min: 'Seleccione un sector'
-            }, 
+            },
+            parcelaHasta: {
+                min: "No puede ser menor que Desde"
+            },
         },
         submitHandler: function(form){
             var operation = $(form).attr('operation');
@@ -77,8 +82,9 @@ $(document).ready(function(){
                         // Resetear algunos campos
                         $('#cantidad').val('');
 
-                        $('#parcelaDesde').text(response.parceladesde + response.cantidad); // Nro. de parcela es el siguiente al que se guardó
-                        $('#parcelaHasta').text('');
+                        $('#parcelaDesde').val(response.parceladesde + response.cantidad); // Nro. de parcela es el siguiente al que se guardó
+                        $('#parcelaHasta').val('');
+                        $('#cantidad').text('');
                         $('#serie').focus();
 
                         $('#tablaSeedlings tbody').append(agregarFila(response)); // Agrego fila a la tabla
@@ -115,7 +121,7 @@ $(document).ready(function(){
             'serie':  $('#serie').val()
         },
         success: function(response){
-            $('#parcelaDesde').text(response + 1);
+            $('#parcelaDesde').val(response + 1);
         }
     });
 
@@ -129,7 +135,14 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
-        window.location.href = config.routes.seedlings + "/" + $('#serie').val();
+        if($('#sector').val() > 0)
+            window.location.href = config.routes.seedlings + "/" + $('#serie').val()  + "/" + $('#sector').val();
+    });
+
+    // Evento cuando se selecciona un sector
+    $('#sector').change(function(){
+        if($('#serie').val() > 0)
+            window.location.href = config.routes.seedlings + "/" + $('#serie').val() + "/" + $('#sector').val();
     });
 
     // Evento para cuando se selecciona un ambiente
@@ -146,6 +159,7 @@ $(document).ready(function(){
             success: function(response){
                 $('#subambiente').empty();
                 
+                $('#subambiente').append("<option value='0' selected disabled>(Ninguno)</option>");
                 $.each(response, function(i, item){
                     $('#subambiente').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
@@ -158,6 +172,9 @@ $(document).ready(function(){
         });
         $(this).trigger('blur');
     });
+
+    $('#ambiente').val(config.data.ambienteActivo);
+    $('#ambiente').trigger('change', [config.data.subambienteActivo, config.data.sectorActivo]);
 
     // Evento para cuando se selecciona un subambiente
     $('#subambiente').change(function(event, idsector = 0){
@@ -173,21 +190,15 @@ $(document).ready(function(){
             success: function(response){
                 $('#sector').empty();
                 
+                $('#sector').append("<option value='0' selected disabled>(Ninguno)</option>");
                 $.each(response, function(i, item){
                     $('#sector').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
                 if(idsector > 0)
                     $('#sector').val(idsector);
-
-                $('#sector').trigger('change');
             }
         });
-        $(this).trigger('blur');
-    });
-
-    // Evento cuando se selecciona un sector
-    $('#sector').change(function(){
         $(this).trigger('blur');
     });
 
@@ -206,15 +217,28 @@ $(document).ready(function(){
                     $('#parcela').append("<option value='" + item.id + "'>" + item.parcela + "</option>");
                 });
 
-                if(parcela > 0)
-                    $('#parcela').val(parcela);
+                $('#parcela').trigger('change');
             }
         });
     });
 
     // Evento al ingresar la cantidad
-    $('#cantidad').keyup(function(){
-        $('#parcelaHasta').text(parseInt($('#parcelaDesde').text()) + parseInt($(this).val()) - 1);
+    $('#parcelaHasta').keyup(function(){
+        $('#cantidad').text(parseInt($(this).val()) - parseInt($('#parcelaDesde').val()) + 1);
+    });
+
+    // Evento al elegir parcela
+    $('#parcela').change(function(){
+        $.ajax({
+            url: config.routes.getProgenitoresSeedling,
+            type: 'GET',
+            data: {
+                'id': $(this).val()
+            },
+            success: function(response){
+                $('#progenitores').text(response.madre.nombre + ' - ' + response.padre.nombre);
+            }
+        });
     });
 
     // Mostrar modal al hacer click en eliminar
@@ -241,16 +265,12 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
-    fila += "<td>" + element.serie.nombre + "</td>";
-    fila += "<td>" + element.sector.subambiente.ambiente.nombre + "</td>";
-    fila += "<td>" + element.sector.subambiente.nombre + "</td>";
-    fila += "<td>" + element.sector.nombre + "</td>";
     fila += "<td>" + element.seedling.campania.nombre + "</td>";
     fila += "<td>" + element.seedling.parcela + "</td>";
-    fila += "<td>" + element.fecha + "</td>"
-    fila += "<td>" + element.cantidad + "</td>";
+    fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
     fila += "<td>" + element.parceladesde + "</td>";
     fila += "<td>" + (element.parceladesde + element.cantidad - 1) + "</td>";
+    fila += "<td>" + element.cantidad + "</td>";
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
     fila += '</tr>'
@@ -273,10 +293,9 @@ function editarSeedling(id){
             $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
             $('#campSeedling').val(response.seedling.idcampania);
             $('#campSeedling').trigger('change', [response.seedling.parcela]);
-            $('#fecha').val(response.fecha);
-            $('#cantidad').val(response.cantidad);
-            $('#parcelaDesde').text(response.parceladesde);
-            $('#cantidad').trigger('keyup');
+            $('#parcelaDesde').val(response.parceladesde);
+            $('#parcelaHasta').val(response.parceladesde + response.cantidad - 1);
+            $('#cantidad').text(response.cantidad);
 
             $('#formPrimeraClonal').attr('operation', 'edit'); // Cambiar el tipo de operacion del form, por defecto es insert
             $('#formPrimeraClonal button[type="submit"] i').removeClass(['fa-check', 'fa-edit']);

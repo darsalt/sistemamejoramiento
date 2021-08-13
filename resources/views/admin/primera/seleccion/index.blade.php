@@ -90,10 +90,10 @@
                         <tr>
                             <th>Campaña seedling</th>
                             <th>Parcela</th>
-                            <th>Fecha</th>
-                            <th>Cantidad</th>
+                            <th>Progenitores</th>
                             <th>Desde</th>
                             <th>Hasta</th>
+                            <th>Cantidad</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -112,16 +112,16 @@
                             </select>
                         </td>
                         <td>
-                            <input type="date" id="fecha" name="fecha" class="form-control">
+                            <p id="progenitores"></p>
                         </td>
                         <td>
-                            <input type="number" id="cantidad" name="cantidad" class="form-control">
+                            <input type="number" id="parcelaDesde" name="parcelaDesde" class="form-control">
                         </td>
                         <td>
-                            <p id="parcelaDesde"></p>
+                            <input type="number" id="parcelaHasta" name="parcelaHasta" class="form-control">
                         </td>
                         <td>
-                            <p id="parcelaHasta"></p>
+                            <p id="cantidad"></p>
                         </td>
                         <td class="text-center">
                             <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
@@ -134,37 +134,38 @@
 </div>
 
 <div class="row">
+    <div class="col-12">
+        @if ($idSerie != 0 && $idSector != 0)
+            <h4><b>Serie: </b>{{App\Serie::find($idSerie)->nombre}} - <b>Ambiente: </b>{{App\Ambiente::find($idAmbiente)->nombre}} - <b>Subambiente: </b>{{App\Subambiente::find($idSubambiente)->nombre}}
+                 - <b>Sector: </b>{{App\Sector::find($idSector)->nombre}}</h4>    
+        @endif
+    </div>
+</div>
+
+<div class="row">
     <div class="col-12 table-responsive">
             <!--Tabla con los datos segun la campaña seleccionada-->
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th>Serie</th>
-                        <th>Ambiente</th>
-                        <th>Subambiente</th>
-                        <th>Sector</th>
                         <th>Campaña seedling</th>
                         <th>Parcela</th>
-                        <th>Fecha</th>
-                        <th>Cantidad</th>
+                        <th>Progenitores</th>
                         <th>Desde</th>
                         <th>Hasta</th>
+                        <th>Cantidad</th>
                         <th></th>
                     </tr> 
                 <tbody>
                     @if (isset($seedlings))
                         @foreach ($seedlings as $primera)
                             <tr>
-                                <td>{{$primera->serie->nombre}}</td>
-                                <td>{{$primera->sector->subambiente->ambiente->nombre}}</td>
-                                <td>{{$primera->sector->subambiente->nombre}}</td>
-                                <td>{{$primera->sector->nombre}}</td>
                                 <td>{{$primera->seedling->campania->nombre}}</td>
                                 <td>{{$primera->seedling->parcela}}</td>
-                                <td>{{$primera->fecha}}</td>
-                                <td>{{$primera->cantidad}}</td>
+                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
                                 <td>{{$primera->parceladesde}}</td>
                                 <td>{{$primera->parceladesde + $primera->cantidad - 1}}</td>
+                                <td>{{$primera->cantidad}}</td>
                                 <td>
                                     <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
                                     <button class='btn deleteBtn' data-id="{{$primera->id}}"><i class='fa fa-trash fa-lg'></i></button>
@@ -223,10 +224,15 @@ role="dialog" tabindex="-1" id="modal-delete">
                 getSeedlings: "{{route('ajax.individual.getSeedlings')}}",
                 getPrimeraClonal: "{{route('ajax.primeraclonal.getPrimeraClonal')}}",
                 editPrimeraClonal: "{{route('ajax.primeraclonal.editPrimeraClonal')}}",
-                deletePrimeraClonal: "{{route('primeraclonal.delete')}}"
+                deletePrimeraClonal: "{{route('primeraclonal.delete')}}",
+                getProgenitoresSeedling: "{{route('ajax.individual.getProgenitoresSeedling')}}"
+
             },
             data: {
-                serieActiva: "{{$idSerie}}"
+                serieActiva: "{{$idSerie}}",
+                ambienteActivo: "{{$idAmbiente}}",
+                subambienteActivo: "{{$idSubambiente}}",
+                sectorActivo: "{{$idSector}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",
