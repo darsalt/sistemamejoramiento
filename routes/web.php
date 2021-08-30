@@ -326,6 +326,21 @@ Route::get('ajax/primera/getUltimaParcela', 'PrimeraClonalController@getUltimaPa
 Route::post('ajax/primera/savePrimeraClonal', 'PrimeraClonalController@savePrimeraClonal')->name('ajax.primeraclonal.savePrimeraClonal');
 Route::get('ajax/primera/getPrimeraClonal', 'PrimeraClonalController@getPrimeraClonal')->name('ajax.primeraclonal.getPrimeraClonal');
 Route::put('ajax/primera/editPrimeraClonal', 'PrimeraClonalController@editPrimeraClonal')->name('ajax.primeraclonal.editPrimeraClonal');
+Route::get('ajax/primera/getSeedlings', 'PrimeraClonalController@getSeedlings')->name('ajax.primeraclonal.getSeedlings');
 
 Route::get('/admin/incluirpg','CampaniaSemilladoController@incluirpg');
 Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');
+
+
+// Segunda Clonal
+Route::group(['prefix' => '/admin/segunda', 'as' => 'segundaclonal.'], function () {
+    Route::get('/seleccion/{serie?}/{sector?}', 'SegundaClonalController@index')->name('index');
+    Route::delete('/{segunda?}', 'SegundaClonalController@delete')->name('delete');
+});
+
+// Rutas Ajax Segunda Clonal
+Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], function () {
+    Route::get('/getSegundaClonal', 'SegundaClonalController@getSegundaClonal')->name('getSegundaClonal');
+    Route::put('/editSegundaClonal', 'SegundaClonalController@editSegundaClonal')->name('editSegundaClonal');
+    Route::post('/saveSegundaClonal', 'SegundaClonalController@saveSegundaClonal')->name('saveSegundaClonal');
+});

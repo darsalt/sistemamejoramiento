@@ -1,15 +1,19 @@
 @extends('admin.layout')
-@section('titulo', 'Primera Clonal')
+@section('titulo', 'Segunda Clonal')
 
 @section('metadatos')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+@endsection
+
+@section('otros-estilos')
+    <link rel="stylesheet" href="{{asset('css/bootstrap-multiselect.min.css')}}">
 @endsection
 
 @section('content')
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Primera Clonal</h3> 
+		<h3>Segunda Clonal</h3> 
 	</div>
 </div>
 <div class="row">
@@ -42,8 +46,7 @@
 <div class="row">
     <div class="col-12">
         <div class="table-responsive">
-            <!--Tabla con el formulario para el registro de la etapa individual-->
-            <form action="" class="form" id="formPrimeraClonal" operation="insert">
+            <form action="" class="form" id="formSegundaClonal" operation="insert">
                 <input type="number" hidden value=0 id="idSeedling" name="idSeedling">
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
@@ -52,6 +55,7 @@
                             <th>Ambiente</th>
                             <th>Subambiente</th>
                             <th>Sector</th>
+                            <th>Procedencia</th>
                         </tr> 
                     </thead>
                     <tbody>
@@ -82,93 +86,75 @@
                                     <option value="0" disabled selected>(Ninguno)</option>
                                 </select>
                             </td>
+                            <td>
+                                <select name="procedencia" id="procedencia" class="form-control">
+                                    <option value="T" selected>Todos</option>
+                                    <option value="L">Laboratorio</option>
+                                </select>
+                            </td>
+                            
                         </tr>
                     </tbody>
                 </table>
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
-                        <tr>
-                            <th>Campaña seedling</th>
-                            <th>Parcela</th>
-                            <th>Progenitores</th>
-                            <th>Desde</th>
-                            <th>Hasta</th>
-                            <th>Cantidad</th>
-                            <th></th>
-                        </tr>
+                        <th>Seedlings Primera Clonal</th>
+                        <th width='10%'></th>
                     </thead>
                     <tbody>
-                        <td>
-                            <select name="campSeedling" id="campSeedling" class="form-control">
-                                <option value="0" disabled selected>(Ninguno)</option>
-                                @foreach ($campSeedling as $campania)
-                                    <option value="{{$campania->id}}">{{$campania->nombre}}</option>
-                                @endforeach
-                            </select>
-                        </td>
-                        <td>
-                            <select name="parcela" id="parcela" class="form-control">
-                                <option value="0" disabled selected>(Ninguno)</option>
-                            </select>
-                        </td>
-                        <td>
-                            <p id="progenitores"></p>
-                        </td>
-                        <td>
-                            <input type="number" id="parcelaDesde" name="parcelaDesde" class="form-control">
-                        </td>
-                        <td>
-                            <input type="number" id="parcelaHasta" name="parcelaHasta" class="form-control">
-                        </td>
-                        <td>
-                            <p id="cantidad"></p>
-                        </td>
-                        <td class="text-center">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                        </td>
+                        <tr>
+                            <td>
+                                <select name="seedlingsPC[]" id="seedlingsPC" multiple>
+                                    @if (isset($parcelasPC))
+                                        @foreach ($parcelasPC as $parcela)
+                                            <option value="{{$parcela->id}}" data-idsc="{{$parcela->idsegundaclonal}}" data-laboratorio="{{$parcela->laboratorio}}">
+                                                {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre . ' - Parcela: ' . $parcela->parcela}}                                        
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </td>
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                            </td>         
+                        </tr>
                     </tbody>
                 </table>
             </form>
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-12">
-        @if ($idSerie != 0 && $idSector != 0)
-            <h4><b>Serie: </b>{{App\Serie::find($idSerie)->nombre}} - <b>Ambiente: </b>{{App\Ambiente::find($idAmbiente)->nombre}} - <b>Subambiente: </b>{{App\Subambiente::find($idSubambiente)->nombre}}
-                 - <b>Sector: </b>{{App\Sector::find($idSector)->nombre}}</h4>    
-        @endif
+        <h4>Seedlings Segunda Clonal:</h4>
     </div>
 </div>
 
 <div class="row">
     <div class="col-12 table-responsive">
-            <!--Tabla con los datos segun la campaña seleccionada-->
+            <!--Tabla con los datos segun la serie seleccionada-->
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th>Campaña seedling</th>
-                        <th>Parcela</th>
-                        <th>Progenitores</th>
-                        <th>Desde</th>
-                        <th>Hasta</th>
-                        <th>Cantidad</th>
+                        <th>Serie</th>
+                        <th>Ambiente</th>
+                        <th>Subambiente</th>
+                        <th>Sector</th>
+                        <th>Cantidad seedlings</th>
                         <th></th>
                     </tr> 
                 <tbody>
                     @if (isset($seedlings))
-                        @foreach ($seedlings as $primera)
+                        @foreach ($seedlings as $segunda)
                             <tr>
-                                <td>{{$primera->seedling->campania->nombre}}</td>
-                                <td>{{$primera->seedling->parcela}}</td>
-                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
-                                <td>{{$primera->parceladesde}}</td>
-                                <td>{{$primera->parceladesde + $primera->cantidad - 1}}</td>
-                                <td>{{$primera->cantidad}}</td>
+                                <td>{{$segunda->serie->nombre}}</td>
+                                <td>{{$segunda->sector->subambiente->ambiente->nombre}}</td>
+                                <td>{{$segunda->sector->subambiente->nombre}}</td>
+                                <td>{{$segunda->sector->nombre}}</td>
+                                <td>{{count($segunda->parcelas)}}</td>
                                 <td>
-                                    <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
-                                    <button class='btn deleteBtn' data-id="{{$primera->id}}"><i class='fa fa-trash fa-lg'></i></button>
+                                    <button class='btn editBtn' onclick='editarSeedling({{$segunda->id}})'><i class='fa fa-edit fa-lg'></i></button>
+                                    <button class='btn deleteBtn' data-id="{{$segunda->id}}"><i class='fa fa-trash fa-lg'></i></button>
                                 </td>
                             </tr>
                         @endforeach
@@ -213,26 +199,24 @@ role="dialog" tabindex="-1" id="modal-delete">
 
 @section('script')
     <script src="{{asset('js/validaciones/initValidation.js')}}"></script>
+    <script src="{{asset('js/bootstrap-multiselect.min.js')}}"></script>
     <script>
         var config = {
             routes: {
-                seedlings: "{{route('primeraclonal.index')}}",
+                segundaclonal: "{{route('segundaclonal.index')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
-                getUltimaParcela: "{{route('ajax.primeraclonal.getUltimaParcela')}}",
-                savePrimeraClonal: "{{route('ajax.primeraclonal.savePrimeraClonal')}}",
-                getSeedlings: "{{route('ajax.individual.getSeedlings')}}",
-                getPrimeraClonal: "{{route('ajax.primeraclonal.getPrimeraClonal')}}",
-                editPrimeraClonal: "{{route('ajax.primeraclonal.editPrimeraClonal')}}",
-                deletePrimeraClonal: "{{route('primeraclonal.delete')}}",
-                getProgenitoresSeedling: "{{route('ajax.individual.getProgenitoresSeedling')}}"
+                saveSegundaClonal: "{{route('ajax.segundaclonal.saveSegundaClonal')}}",
+                getSegundaClonal: "{{route('ajax.segundaclonal.getSegundaClonal')}}",
+                editSegundaClonal: "{{route('ajax.segundaclonal.editSegundaClonal')}}",
+                deleteSegundaClonal: "{{route('segundaclonal.delete')}}",
 
             },
             data: {
                 serieActiva: "{{$idSerie}}",
                 ambienteActivo: "{{$idAmbiente}}",
                 subambienteActivo: "{{$idSubambiente}}",
-                sectorActivo: "{{$idSector}}"
+                sectorActivo: "{{$idSector}}",
             },
             session: {
                 exito: "{{session()->pull('exito')}}",
@@ -241,5 +225,5 @@ role="dialog" tabindex="-1" id="modal-delete">
         };
     </script>
 
-    <script src="{{asset('js/primera/index.js')}}"></script>
+    <script src="{{asset('js/segundaclonal/index.js')}}"></script>
 @endsection

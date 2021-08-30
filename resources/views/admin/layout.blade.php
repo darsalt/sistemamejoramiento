@@ -33,6 +33,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{asset('css/camaras.css')}}">
   <link rel="stylesheet" href="{{asset('css/styles.css')}}">
 
+  @yield('otros-estilos')
+
 <style>
    .wrapper > ul#results li {
      margin-bottom: 2px;
@@ -627,6 +629,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>            
           </li>
 
+          <!--Segunda Clonal-->
+          <li class="nav-item">
+            <a href="{{url('admin/primera')}}" class="nav-link">
+            <i class="nav-icon fas fa-check-double"></i>
+            <p>
+              Segunda Clonal
+              <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{route('segundaclonal.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Selección
+                  </p>
+                </a>
+              </li>
+            </ul>          
+          </li>
+
 
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -776,6 +799,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script src="{{asset('dist/handsontable.full.js')}}"></script>
 
+<!--Scripts propios-->
+<script src="{{asset('js/scripts.js')}}"></script>
 
 <!-- Page script -->
 <script>
@@ -785,10 +810,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     //Bootstrap Duallistbox
     $('.duallistbox').bootstrapDualListbox()
-
   });
-    
 </script>
-    @yield('script')
+
+@yield('script')
 </body>
 </html>

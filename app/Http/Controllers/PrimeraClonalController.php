@@ -160,4 +160,19 @@ class PrimeraClonalController extends Controller
             return response()->json(false);
         }
     }
+
+    public function getSeedlings(Request $request){
+        if($request->procedencia == 'L'){
+            $seedlings = PrimeraClonalDetalle::where('laboratorio', 1)->whereHas('primera', function($query) use($request){
+                $query->where('idserie', $request->idSerie)->where('idSector', $request->idSector);
+            })->get();
+        }
+        else{
+            $seedlings = PrimeraClonalDetalle::whereHas('primera', function($query) use($request){
+                $query->where('idserie', $request->idSerie)->where('idSector', $request->idSector);
+            })->get();
+        }
+
+        return response()->json($seedlings);
+    }
 }
