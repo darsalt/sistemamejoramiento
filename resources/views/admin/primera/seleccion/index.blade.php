@@ -90,7 +90,7 @@
                         <tr>
                             <th>Campaña seedling</th>
                             <th>Parcela</th>
-                            <th>Progenitores</th>
+                            <th>Madre x Padre</th>
                             <th>Desde</th>
                             <th>Hasta</th>
                             <th>Cantidad</th>
@@ -150,7 +150,7 @@
                     <tr>
                         <th>Campaña seedling</th>
                         <th>Parcela</th>
-                        <th>Progenitores</th>
+                        <th>Madre x Padre</th>
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Cantidad</th>

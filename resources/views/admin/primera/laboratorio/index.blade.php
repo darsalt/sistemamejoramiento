@@ -68,11 +68,11 @@
         <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings"">
             <thead>
                 <tr>
+                    <th>Seleccionado</th>
+                    <th>Parcela Primera Clonal</th>
                     <th>Campaña Seedling</th>
                     <th>Parcela</th>
-                    <th>Progenitores</th>
-                    <th>Parcela Primera Clonal</th>
-                    <th>Seleccionado</th>
+                    <th>Madre x Padre</th>   
                 </tr>
             </thead>
             <tbody>
@@ -80,14 +80,14 @@
                     @foreach ($seedlings as $primera)
                         @foreach ($primera->parcelas as $parcela)
                             <tr>
-                                <td>{{$primera->seedling->campania->nombre}}</td>
-                                <td>{{$primera->seedling->parcela}}</td>
-                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
-                                <td>{{$parcela->parcela}}</td>
                                 <td class="text-center">
                                     <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" {{$parcela->laboratorio ? 'checked' : ''}}
                                     style="width: 15px; height: 15px;">
                                 </td>
+                                <td>{{$parcela->parcela}}</td>
+                                <td>{{$primera->seedling->campania->nombre}}</td>
+                                <td>{{$primera->seedling->parcela}}</td>
+                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
                             </tr>
                         @endforeach
                     @endforeach
