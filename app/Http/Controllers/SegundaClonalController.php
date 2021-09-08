@@ -9,6 +9,7 @@ use App\Sector;
 use App\Serie;
 use App\PrimeraClonalDetalle;
 use App\SegundaClonal;
+use App\SegundaClonalDetalle;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,7 @@ class SegundaClonalController extends Controller
     public function index($idSerie = 0, $idSector = 0){
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
-        $seedlings = SegundaClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
+        //$seedlings = SegundaClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
 
         if($idSector > 0){
             $idSubambiente = Sector::find($idSector)->subambiente->id;
@@ -29,28 +30,59 @@ class SegundaClonalController extends Controller
         }
 
         $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie, $idSector){
-            $query->where('idserie', $idSerie)->where('idSector', $idSector);
+            $query->where('idserie', $idSerie);
         });
         
-        $parcelasPC = $parcelasPC->paginate(10);
+        $parcelasPC = $parcelasPC->orderBy('parcela')->get();
 
-        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'seedlings'));
+        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC'));
     }
 
     public function saveSegundaClonal(Request $request){
         try{
             DB::transaction(function () use($request){
-                $segunda = new SegundaClonal();
+                $segunda = SegundaClonal::where('idserie', $request->serie)->first();
 
-                $segunda->idserie = $request->serie;
-                $segunda->idsector = $request->sector;
-                $segunda->fecha = now();
-                $segunda->save();
+                if($segunda){
+                    $parcelasCargadas = $segunda->parcelas()->where('idsector', $request->sector);
 
-                foreach($request->seedlingsPC as $parcela){
-                    $seedling = PrimeraClonalDetalle::find($parcela);
-                    $seedling->idsegundaclonal = $segunda->id;
-                    $seedling->save();
+                    foreach($parcelasCargadas->get() as $parcela){
+                        // Eliminamos del detalle las parcelas que antes fueron seleccionadas y se deseleccionaron
+                        if(!in_array($parcela->parcela, $request->seedlingsPC)){
+                            $parcela->delete();
+                        }
+                    }
+
+                    $i = $this->getUltimaParcela($request->serie) + 1;
+                    foreach($request->seedlingsPC as $nroParcela){
+                        // Eliminamos del detalle las parcelas que antes fueron seleccionadas y se deseleccionaron
+                        if(!in_array($nroParcela, $parcelasCargadas->pluck('idprimeraclonal_detalle')->toArray())){
+                            $seedling = new SegundaClonalDetalle();
+                            $seedling->idsegundaclonal = $segunda->id;
+                            $seedling->idprimeraclonal_detalle = $nroParcela;
+                            $seedling->idsector = $request->sector;
+                            $seedling->parcela = $i;
+                            $seedling->save();
+                            $i += 1;
+                        }
+                    }
+                }
+                else{
+                    $segunda = new SegundaClonal();
+                    $segunda->idserie = $request->serie;
+                    $segunda->fecha = now();
+                    $segunda->save();
+
+                    $i = $this->getUltimaParcela($request->serie) + 1;
+                    foreach($request->seedlingsPC as $parcela){
+                        $seedling = new SegundaClonalDetalle();
+                        $seedling->idsegundaclonal = $segunda->id;
+                        $seedling->idprimeraclonal_detalle = $parcela;
+                        $seedling->idsector = $request->sector;
+                        $seedling->parcela = $i;
+                        $seedling->save();
+                        $i += 1;
+                    }
                 }
             });
             session(['exito' => 'exito']);
@@ -58,6 +90,7 @@ class SegundaClonalController extends Controller
         }
         catch(Exception $e){
             session(['error' => 'error']);
+            Log::debug($e->getMessage());
             return response()->json(false);
         }
     }
@@ -78,14 +111,17 @@ class SegundaClonalController extends Controller
                 $segunda->save();
 
                 foreach($segunda->parcelas as $parcela){
-                    $parcela->idsegundaclonal = null;
-                    $parcela->save();
+                    $parcela->delete();
                 }
 
+                $i = $this->getUltimaParcela($request->serie) + 1;
                 foreach($request->seedlingsPC as $parcela){
-                    $seedling = PrimeraClonalDetalle::find($parcela);
+                    $seedling = new SegundaClonalDetalle();
                     $seedling->idsegundaclonal = $segunda->id;
+                    $seedling->idprimeraclonal_detalle = $parcela;
+                    $seedling->parcela = $i;
                     $seedling->save();
+                    $i += 1;
                 }
             });
             session(['exito' => 'exito']);
@@ -102,8 +138,7 @@ class SegundaClonalController extends Controller
             $seedling = SegundaClonal::find($id);
 
             foreach($seedling->parcelas as $parcela){
-                $parcela->idsegundaclonal = null;
-                $parcela->save();
+                $parcela->delete();
             }
     
             $seedling->delete();
@@ -113,5 +148,13 @@ class SegundaClonalController extends Controller
         catch(Exception $e){
             return redirect()->back()->with('error', 'error');
         }
+    }
+
+    private function getUltimaParcela($idSerie){
+        $ultimoSeedling = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie){
+            $q->where('idserie', $idSerie);
+        })->orderByDesc('parcela')->first();
+
+        return $ultimoSeedling ? $ultimoSeedling->parcela : 0;
     }
 }

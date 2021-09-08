@@ -56,6 +56,7 @@
                             <th>Subambiente</th>
                             <th>Sector</th>
                             <th>Procedencia</th>
+                            <th></th>
                         </tr> 
                     </thead>
                     <tbody>
@@ -92,11 +93,14 @@
                                     <option value="L">Laboratorio</option>
                                 </select>
                             </td>
-                            
+                            <td class="text-center">
+                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                            </td> 
                         </tr>
                     </tbody>
                 </table>
-                <table class="table table-striped table-bordered table-condensed table-hover">
+                <h4>Seedlings primera clonal</h4>
+{{--                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <th>Seedlings Primera Clonal</th>
                         <th width='10%'></th>
@@ -107,24 +111,47 @@
                                 <select name="seedlingsPC[]" id="seedlingsPC" multiple>
                                     @if (isset($parcelasPC))
                                         @foreach ($parcelasPC as $parcela)
-                                            <option value="{{$parcela->id}}" data-idsc="{{$parcela->idsegundaclonal}}" data-laboratorio="{{$parcela->laboratorio}}">
+                                            <option value="{{$parcela->id}}" data-idsc="{{$parcela->segunda ? $parcela->segunda->idsegundaclonal : null}}" data-laboratorio="{{$parcela->laboratorio}}">
                                                 {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre . ' - Parcela: ' . $parcela->parcela}}                                        
                                             </option>
                                         @endforeach
                                     @endif
                                 </select>
                             </td>
-                            <td class="text-center">
-                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
-                            </td>         
+                                    
                         </tr>
+                    </tbody>
+                </table> --}}
+                <table class="table table-striped table-bordered table-condensed table-hover" id="tableSeedlingsPC">
+                    <thead>
+                        <th>Seleccionado</th>
+                        <th>Parcela</th>
+                        <th>Madre x Padre</th>
+                        <th>Ubicación actual</th>
+                    </thead>
+                    <tbody>
+                        @foreach ($parcelasPC as $parcela)
+                        <tr>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" name="seedlingsPC[]" data-idsector="{{$parcela->segunda ? $parcela->segunda->idsector : null}}"
+                                    data-idsc="{{$parcela->segunda ? $parcela->segunda->idsegundaclonal : null}}" data-laboratorio="{{$parcela->laboratorio}}" style="width: 15px; height: 15px;">
+                            </td>
+                            <td>{{$parcela->parcela}}</td>
+                            <td>{{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                            @if ($parcela->segunda)
+                                <td>{{$parcela->segunda->sector->subambiente->ambiente->nombre . ' - ' . $parcela->segunda->sector->subambiente->nombre . ' - ' . $parcela->segunda->sector->nombre}}</td>    
+                            @else
+                                <td></td>
+                            @endif  
+                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </form>
         </div>
     </div>
 </div>
-<div class="row">
+{{-- <div class="row">
     <div class="col-12">
         <h4>Seedlings Segunda Clonal:</h4>
     </div>
@@ -164,7 +191,7 @@
             {{$seedlings->render()}}
         </div>
     </div>
-</div>
+</div> --}}
 
 
 <!--Modal para la eliminacion-->

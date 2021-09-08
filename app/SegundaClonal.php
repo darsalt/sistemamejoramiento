@@ -9,7 +9,7 @@ class SegundaClonal extends Model
     protected $table = 'segundasclonal';
 
     public function parcelas(){
-        return $this->hasMany('App\PrimeraClonalDetalle', 'idsegundaclonal', 'id');
+        return $this->hasMany('App\SegundaClonalDetalle', 'idsegundaclonal', 'id');
     }
 
     public function serie(){

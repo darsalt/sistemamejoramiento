@@ -12,7 +12,7 @@ $(document).ready(function(){
     $('#ambiente, #subambiente, #sector, #parcela').select2();
 
     // Multiselect para elegir los seedlings de primera clonal
-    $('#seedlingsPC').multiselect({
+/*     $('#seedlingsPC').multiselect({
         buttonWidth: '100%',
         nonSelectedText: 'Ninguno seleccionado',
         allSelectedText: 'Todos seleccionados',
@@ -20,9 +20,13 @@ $(document).ready(function(){
         enableCaseInsensitiveFiltering: true,
         filterPlaceholder: 'Buscar',
         nSelectedText: 'seleccionados',
+    }); */
+
+    $('#tableSeedlingsPC').paging({
+        limit: 10,
     });
 
-    habilitarDeshabilitarSeedlings();
+    habilitarDeshabilitarSeedlings(config.data.sectorActivo);
 
     $('#serie').focus();
 
@@ -83,24 +87,23 @@ $(document).ready(function(){
                     }
                 });
             }
-            else{
+/*             else{
                 $.ajax({
                     url: config.routes.editSegundaClonal,
                     method: 'PUT',
                     dataType: 'json',
                     data: $(form).serialize(),
                     success: function(response){
-                        $('#seedlingsPC option').each(function(){
-                            $(this).removeAttr("selected");
-                        });
+                        //$('#seedlingsPC').find('option:selected').removeAttr("selected");
+                        $("input[name='seedlingsPC[]']:checked").removeAttr('checked');
 
-                        location.reload();
+                        location.reload(true);
                     },
                     error: function( jqXHR, textStatus, errorThrown ){
                         mostrarMensajeError();
                     }
                 });
-            }
+            } */
         }
     });
 
@@ -115,7 +118,7 @@ $(document).ready(function(){
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
         if($('#sector').val() > 0)
-            window.location.href = config.routes.segundaclonal + "/" + $('#serie').val()  + "/" + $('#sector').val();
+            window.location.href = config.routes.segundaclonal + "/" + $('#serie').val();
     });
 
     // Evento cuando se selecciona un sector
@@ -185,8 +188,8 @@ $(document).ready(function(){
     $('#procedencia').on('change', function(){
         var procedencia = $(this).val();
 
-        $('#seedlingsPC').multiselect('deselectAll', true);
-        $('#seedlingsPC option').each(function(){
+        //$('#seedlingsPC').multiselect('deselectAll', true);
+        /* $('#seedlingsPC option').each(function(){
             if(procedencia == 'L'){
                 if($(this).data('laboratorio')){
                     $(this).addClass('d-none');
@@ -195,8 +198,18 @@ $(document).ready(function(){
             else{
                 $(this).removeClass('d-none');
             }
+        }); */
+        $("input[name='seedlingsPC[]']").each(function(){
+            if(procedencia == 'L'){
+                if(!$(this).data('laboratorio')){
+                    $(this).closest('tr').addClass('d-none');
+                }
+            }
+            else{
+                $(this).closest('tr').removeClass('d-none');
+            }
         });
-        $('#seedlingsPC').multiselect('rebuild');
+        //$('#seedlingsPC').multiselect('rebuild');
     });
 
     // Mostrar modal al hacer click en eliminar
@@ -234,24 +247,40 @@ function editarSeedling(id){
 
 // Funcion para habilitar/deshabilitar y seleccionar/deseleccionar los seedlings de PC que ya estan asociados a una SC
 // Depende de la operación si es Insert o Edit
-function habilitarDeshabilitarSeedlings(id){
+/* function habilitarDeshabilitarSeedlings(id){
     let operation = $('#formSegundaClonal').attr('operation');
 
-    $('#seedlingsPC').find('option:selected').removeAttr("selected");
+    //$('#seedlingsPC').find('option:selected').removeAttr("selected");
+    $("input[name='seedlingsPC[]']:checked").removeAttr("checked");
     if(operation == 'insert'){
-        $('#seedlingsPC option').each(function(){
+        $("input[name='seedlingsPC[]'").each(function(){
             if($(this).data('idsc')){
                 $(this).attr("disabled", "disabled");
             }
         });
     }
     else{
-        $('#seedlingsPC option').each(function(){
+        $("input[name='seedlingsPC[]']").each(function(){
             $(this).removeAttr("disabled");
             if($(this).data('idsc') == id){
-                $(this).attr("selected", "selected");
+                $(this).attr("checked", "checked");
             }
         });
     }
-    $('#seedlingsPC').multiselect('rebuild');
+    //$('#seedlingsPC').multiselect('rebuild');
+} */
+
+function habilitarDeshabilitarSeedlings(idSector){
+    $("input[name='seedlingsPC[]']:checked").removeAttr("checked");
+    $("input[name='seedlingsPC[]']:disabled").removeAttr("disabled");
+
+    $("input[name='seedlingsPC[]'").each(function(){
+        if($(this).data('idsc') && $(this).data('idsector') == idSector){
+            $(this).attr("checked", "checked");
+        }
+
+        if($(this).data('idsc') && $(this).data('idsector') != idSector){
+            $(this).attr("disabled", "disabled");
+        }
+    });
 }

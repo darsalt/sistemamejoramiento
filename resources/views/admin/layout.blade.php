@@ -799,6 +799,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <script src="{{asset('dist/handsontable.full.js')}}"></script>
 
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="{{asset('js/paging.js')}}"></script>
+
 <!--Scripts propios-->
 <script src="{{asset('js/scripts.js')}}"></script>
 
