@@ -48,14 +48,14 @@ class SegundaClonalController extends Controller
 
                     foreach($parcelasCargadas->get() as $parcela){
                         // Eliminamos del detalle las parcelas que antes fueron seleccionadas y se deseleccionaron
-                        if(!in_array($parcela->parcela, $request->seedlingsPC)){
+                        if(!in_array($parcela->idprimeraclonal_detalle, $request->seedlingsPC ?? [])){
                             $parcela->delete();
                         }
                     }
 
                     $i = $this->getUltimaParcela($request->serie) + 1;
-                    foreach($request->seedlingsPC as $nroParcela){
-                        // Eliminamos del detalle las parcelas que antes fueron seleccionadas y se deseleccionaron
+                    foreach($request->seedlingsPC ?? [] as $nroParcela){
+                        // Cargamos las parcelas nuevas que nunca fueron agregadas
                         if(!in_array($nroParcela, $parcelasCargadas->pluck('idprimeraclonal_detalle')->toArray())){
                             $seedling = new SegundaClonalDetalle();
                             $seedling->idsegundaclonal = $segunda->id;
@@ -68,20 +68,22 @@ class SegundaClonalController extends Controller
                     }
                 }
                 else{
-                    $segunda = new SegundaClonal();
-                    $segunda->idserie = $request->serie;
-                    $segunda->fecha = now();
-                    $segunda->save();
+                    if($request->seedlingsPC){
+                        $segunda = new SegundaClonal();
+                        $segunda->idserie = $request->serie;
+                        $segunda->fecha = now();
+                        $segunda->save();
 
-                    $i = $this->getUltimaParcela($request->serie) + 1;
-                    foreach($request->seedlingsPC as $parcela){
-                        $seedling = new SegundaClonalDetalle();
-                        $seedling->idsegundaclonal = $segunda->id;
-                        $seedling->idprimeraclonal_detalle = $parcela;
-                        $seedling->idsector = $request->sector;
-                        $seedling->parcela = $i;
-                        $seedling->save();
-                        $i += 1;
+                        $i = $this->getUltimaParcela($request->serie) + 1;
+                        foreach($request->seedlingsPC as $parcela){
+                            $seedling = new SegundaClonalDetalle();
+                            $seedling->idsegundaclonal = $segunda->id;
+                            $seedling->idprimeraclonal_detalle = $parcela;
+                            $seedling->idsector = $request->sector;
+                            $seedling->parcela = $i;
+                            $seedling->save();
+                            $i += 1;
+                        }
                     }
                 }
             });

@@ -125,7 +125,7 @@
                 <table class="table table-striped table-bordered table-condensed table-hover" id="tableSeedlingsPC">
                     <thead>
                         <th>Seleccionado</th>
-                        <th>Parcela</th>
+                        <th>Parcela PC</th>
                         <th>Madre x Padre</th>
                         <th>Ubicación actual</th>
                     </thead>
