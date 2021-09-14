@@ -631,7 +631,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
           <!--Segunda Clonal-->
           <li class="nav-item">
-            <a href="{{url('admin/primera')}}" class="nav-link">
+            <a href="{{url('admin/segunda')}}" class="nav-link">
             <i class="nav-icon fas fa-check-double"></i>
             <p>
               Segunda Clonal
@@ -641,6 +641,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
                 <a href="{{route('segundaclonal.index')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Selección
+                  </p>
+                </a>
+              </li>
+            </ul>          
+          </li>
+
+          <!--MET-->
+          <li class="nav-item">
+            <a href="{{url('admin/met')}}" class="nav-link">
+              <i class="nav-icon fas fa-tasks"></i>
+            <p>
+              MET
+              <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{route('met.index')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Selección

@@ -117,8 +117,7 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
-        if($('#sector').val() > 0)
-            window.location.href = config.routes.segundaclonal + "/" + $('#serie').val();
+        window.location.href = config.routes.segundaclonal + "/" + $('#serie').val();
     });
 
     // Evento cuando se selecciona un sector

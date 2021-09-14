@@ -344,3 +344,13 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
     Route::put('/editSegundaClonal', 'SegundaClonalController@editSegundaClonal')->name('editSegundaClonal');
     Route::post('/saveSegundaClonal', 'SegundaClonalController@saveSegundaClonal')->name('saveSegundaClonal');
 });
+
+// MET
+Route::group(['prefix' => '/admin/met', 'as' => 'met.'], function () {
+    Route::get('/seleccion/{serie?}/{sector?}', 'METController@index')->name('index');
+});
+
+// Rutas Ajax MET
+Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
+    Route::post('/saveMET', 'METController@saveMET')->name('saveMET');
+});

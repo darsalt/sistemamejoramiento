@@ -53,6 +53,7 @@ class SegundaClonalController extends Controller
                         }
                     }
 
+                    $this->regenerarNrosParcelas($request->serie);
                     $i = $this->getUltimaParcela($request->serie) + 1;
                     foreach($request->seedlingsPC ?? [] as $nroParcela){
                         // Cargamos las parcelas nuevas que nunca fueron agregadas
@@ -74,6 +75,7 @@ class SegundaClonalController extends Controller
                         $segunda->fecha = now();
                         $segunda->save();
 
+                        $this->regenerarNrosParcelas($request->serie);
                         $i = $this->getUltimaParcela($request->serie) + 1;
                         foreach($request->seedlingsPC as $parcela){
                             $seedling = new SegundaClonalDetalle();
@@ -92,7 +94,6 @@ class SegundaClonalController extends Controller
         }
         catch(Exception $e){
             session(['error' => 'error']);
-            Log::debug($e->getMessage());
             return response()->json(false);
         }
     }
@@ -158,5 +159,18 @@ class SegundaClonalController extends Controller
         })->orderByDesc('parcela')->first();
 
         return $ultimoSeedling ? $ultimoSeedling->parcela : 0;
+    }
+
+    private function regenerarNrosParcelas($idSerie){
+        $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie){
+            $q->where('idserie', $idSerie);
+        })->orderBy('parcela')->get();
+
+        $i = 1;
+        foreach($seedlings as $seedling){
+            $seedling->parcela = $i;
+            $seedling->save();
+            $i++;
+        }
     }
 }

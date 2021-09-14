@@ -20,4 +20,8 @@ class SegundaClonalDetalle extends Model
     public function sector(){
         return $this->belongsTo('App\Sector', 'idsector', 'id');
     }
+
+    public function mets(){
+        return $this->hasMany('App\METDetalle', 'idsegundaclonal_detalle', 'id');
+    }
 }
