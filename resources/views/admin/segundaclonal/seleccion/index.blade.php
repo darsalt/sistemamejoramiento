@@ -51,6 +51,7 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
+                            <th>Año</th>
                             <th>Serie</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
@@ -61,6 +62,13 @@
                     </thead>
                     <tbody>
                         <tr>
+                            <td>
+                                <select name="anio" id="anio" class="form-control">
+                                    @for ($i = (int)date('Y'); $i >= 2010; $i--)
+                                        <option value="{{$i}}" {{old('anio') == $i ? 'selected' : ''}}>{{$i}}</option>
+                                    @endfor
+                                </select>
+                            </td>
                             <td>
                                 <select name="serie" id="serie" class="form-control">
                                     <option value="0" disabled selected>(Ninguna)</option>

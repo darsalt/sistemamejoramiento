@@ -58,7 +58,8 @@ class PrimeraClonalController extends Controller
     public function savePrimeraClonal(Request $request){
         try{
             $primeraClonal = new PrimeraClonal();
-    
+            
+            $primeraClonal->anio = $request->anio;
             $primeraClonal->idserie = $request->serie;
             $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);
@@ -87,6 +88,7 @@ class PrimeraClonalController extends Controller
             $primeraClonal = PrimeraClonal::find($request->idSeedling);
     
             PrimeraClonalDetalle::where('idprimeraclonal', $request->idSeedling)->delete();
+            $primeraClonal->anio = $request->anio;
             $primeraClonal->idserie = $request->serie;
             $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);

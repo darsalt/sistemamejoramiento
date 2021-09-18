@@ -29,7 +29,10 @@ $(document).ready(function(){
     habilitarDeshabilitarSeedlings(config.data.sectorActivo);
 
     $('#serie').focus();
-
+    
+    if(sessionStorage.getItem('anio'))
+        $('#anio').val(sessionStorage.getItem('anio'));
+    
     // Validacion de los campos
     $('#formSegundaClonal').validate({
         rules: {
@@ -113,6 +116,10 @@ $(document).ready(function(){
        form.fadeToggle();
 
        $(this).text() == 'Mostrar formulario' ? $(this).text('Ocultar formulario') : $(this).text('Mostrar formulario');
+    });
+
+    $('#anio').change(function(){
+        sessionStorage.setItem('anio', $('#anio').val())
     });
 
     // Evento cuando se selecciona una serie

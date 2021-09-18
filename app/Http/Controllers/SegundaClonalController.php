@@ -71,6 +71,7 @@ class SegundaClonalController extends Controller
                 else{
                     if($request->seedlingsPC){
                         $segunda = new SegundaClonal();
+                        $segunda->anio = $request->anio;
                         $segunda->idserie = $request->serie;
                         $segunda->fecha = now();
                         $segunda->save();

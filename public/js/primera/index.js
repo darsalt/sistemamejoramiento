@@ -13,6 +13,9 @@ $(document).ready(function(){
 
     $('#serie').focus();
 
+    if(sessionStorage.getItem('anio'))
+        $('#anio').val(sessionStorage.getItem('anio'));
+
     // Validacion de los campos
     $('#formPrimeraClonal').validate({
         rules: {
@@ -131,6 +134,10 @@ $(document).ready(function(){
         form.fadeToggle();
     
         $(this).text() == 'Mostrar formulario' ? $(this).text('Ocultar formulario') : $(this).text('Mostrar formulario');
+    });
+
+    $('#anio').change(function(){
+        sessionStorage.setItem('anio', $('#anio').val())
     });
 
     // Evento cuando se selecciona una serie
@@ -288,6 +295,7 @@ function editarSeedling(id){
         },
         success: function(response){
             $('#idSeedling').val(response.id);
+            $('#anio').val(response.anio);
             $('#serie').val(response.idserie);
             $('#ambiente').val(response.sector.subambiente.ambiente.id);
             $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
