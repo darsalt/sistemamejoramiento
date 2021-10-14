@@ -11,6 +11,7 @@ $(document).ready(function(){
     // Aplicar select2 a combos box
     $('#ambiente, #subambiente, #sector').select2();
     $('#ordenSemillado').select2();
+    $('#variedad').select2();
 
     $('#campSeedling').focus();
 
@@ -40,8 +41,56 @@ $(document).ready(function(){
                 required: true,
             },
             campSemillado: {
-                required: true,
-                min: 1
+                required: function(){
+                    if($('#origen').val() == 'cruzamiento')
+                        return true;
+                    else
+                        return false;
+                },
+                min: function(){
+                    if($('#origen').val() == 'cruzamiento')
+                        return 1;
+                    else
+                        return 0;
+                }
+            },
+            ordenSemillado: {
+                required: function(){
+                    if($('#origen').val() == 'cruzamiento')
+                        return true;
+                    else
+                        return false;
+                },
+                min: function(){
+                    if($('#origen').val() == 'cruzamiento')
+                        return 1;
+                    else
+                        return 0;
+                }
+            },
+            variedad: {
+                required: function(){
+                    if($('#origen').val() == 'testigo')
+                        return true;
+                    else
+                        return false;
+                }
+            },
+            parcelaTestigo: {
+                required: function(){
+                    if($('#origen').val() == 'testigo')
+                        return true;
+                    else
+                        return false;
+                }
+            },
+            observacion: {
+                required: function(){
+                    if($('#origen').val() == 'n/i')
+                        return true;
+                    else
+                        return false;
+                }
             },
             surcos: {
                 required: true,
@@ -70,6 +119,9 @@ $(document).ready(function(){
             },
             campSemillado:{
                 min: 'Seleccione una campaña'
+            }, 
+            campSemillado:{
+                min: 'Seleccione un origen'
             }, 
         },
         submitHandler: function(form){
@@ -204,11 +256,35 @@ $(document).ready(function(){
 
     // Evento para cuando se selecciona el origen
     $('#origen').change(function(){
-        if($(this).val() == 'cruzamiento'){
-            $('#ordenSemillado').prop('disabled', false);
-        }
-        else{
-            $('#ordenSemillado').prop('disabled', true);
+        switch($(this).val()){
+            case 'cruzamiento':
+                $('.col-campania').show();
+                $('.col-orden').show();
+                $('.col-parcela').show();
+                $('.col-progenitores').show();
+                $('.col-variedad').hide();
+                $('.col-parcelaTestigo').hide();
+                $('.col-observacion').hide();
+                break;
+            case 'testigo':
+                $('.col-campania').hide();
+                $('.col-orden').hide();
+                $('.col-parcela').hide();
+                $('.col-progenitores').hide();
+                $('.col-observacion').hide();
+                $('.col-variedad').show();
+                $('.col-parcelaTestigo').show();
+                $('#parcelaTestigo').val(parseInt($('#parcela').text())-1);
+                break;
+            case 'n/i':
+                $('.col-campania').hide();
+                $('.col-orden').hide();
+                $('.col-progenitores').hide();
+                $('.col-variedad').hide();
+                $('.col-parcelaTestigo').hide();
+                $('.col-parcela').show();
+                $('.col-observacion').show();
+                break;
         }
     });
 
@@ -229,6 +305,22 @@ $(document).ready(function(){
                 
                 if(idsemillado > 0)
                     $('#ordenSemillado').val(idsemillado);
+
+                $('#ordenSemillado').trigger('change');
+            }
+        });
+    });
+
+    // Evento al elegir orden
+    $('#ordenSemillado').change(function(){
+        $.ajax({
+            url: config.routes.getProgenitoresSemillado,
+            type: 'GET',
+            data: {
+                'id': $(this).val()
+            },
+            success: function(response){
+                $('#progenitores').text(response.madre.nombre + ' - ' + response.padre.nombre);
             }
         });
     });
@@ -258,18 +350,30 @@ function agregarFila(element){
 
     fila += "<tr>";
     fila += "<td>" + element.campania.nombre + "</td>";
-    fila += "<td>" + element.sector.subambiente.ambiente.nombre + "</td>";
-    fila += "<td>" + element.sector.subambiente.nombre + "</td>";
-    fila += "<td>" + element.sector.nombre + "</td>";
+    fila += "<td>" + element.sector.subambiente.ambiente.nombre + " - " + element.sector.subambiente.nombre + " - " + element.sector.nombre + "</td>";
     fila += "<td>" + element.origen + "</td>";
-    fila += "<td>" + element.semillado.campania.nombre + "</td>"
-    fila += "<td>" + element.semillado.numero + "</td>";
+    if(element.semillado){
+        fila += "<td>" + element.semillado.campania.nombre + "</td>"
+        fila += "<td>" + element.semillado.numero + "</td>";
+    }
+    else{
+        fila += "<td>-</td>"
+        fila += "<td>-</td>";
+    }
     fila += "<td>" + element.parcela + "</td>";
     fila += "<td>" + element.fecha_plantacion + "</td>";
     fila += "<td>" + element.tabla + "</td>";
     fila += "<td>" + element.tablita + "</td>";
     fila += "<td>" + element.surcos + "</td>";
     fila += "<td>" + element.plantasxsurco + "</td>";
+    if(element.origen == 'testigo')
+        fila += "<td>" + element.variedad.nombre + "</td>";
+    else{
+        if(element.origen == 'n/i')
+            fila += "<td>" + element.observaciones + "</td>";
+        else
+        fila += "<td>-</td>";
+    }
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
     fila += '</tr>'

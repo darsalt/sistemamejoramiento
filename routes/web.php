@@ -296,6 +296,7 @@ Route::post('ajax/semillados/saveSemillado', 'SemilladoController@saveSemillado'
 Route::get('ajax/semillados/getSemillados', 'SemilladoController@getSemillados')->name('ajax.semillados.getSemillados');
 Route::get('ajax/semillados/getSemillado', 'SemilladoController@getSemillado')->name('ajax.semillados.getSemillado');
 Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')->name('ajax.semillados.editSemillado');
+Route::get('ajax/semillados/getProgenitores', 'SemilladoController@getProgenitores')->name('ajax.semillados.getProgenitores');
 
 Route::resource('admin/individual/campaniaseedling','CampaniaSeedlingController');
 Route::get('admin/individual/seleccion/{campania?}', 'EtapaIndividualController@index')->name('individual.index');

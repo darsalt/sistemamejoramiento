@@ -98,7 +98,8 @@
                 <h4>Seedlings segunda clonal</h4>
                 <table class="table table-striped table-bordered table-condensed table-hover" id="tableSeedlingsPC">
                     <thead>
-                        <th>Seleccionado</th>
+                        <th width="5%">Seleccionado</th>
+                        <th width="5%">Parcela</th>
                         <th>Parcela PC</th>
                         <th>Madre x Padre</th>
                     </thead>
@@ -109,6 +110,7 @@
                                 <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" name="seedlingsSC[]"
                                 data-mets="{{$parcela->mets()->with('met')->get()}}" style="width: 15px; height: 15px;">
                             </td>
+                            <td><input type="number" class="form-control"></td>
                             <td>{{$parcela->parcelaPC->parcela}}</td>
                             <td>{{$parcela->parcelaPC->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->parcelaPC->primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
                         </tr>

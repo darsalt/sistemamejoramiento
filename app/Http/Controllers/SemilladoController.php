@@ -236,4 +236,12 @@ public function repicadas(Request $request,$id)
             return redirect()->back()->with('error', 'error');
         }
     }
+
+    public function getProgenitores(Request $request){
+        $semillado = Semillado::find($request->id);
+        $cruzamiento = $semillado->cruzamiento;
+        $progenitores = ['madre' => $cruzamiento->madre, 'padre' => $cruzamiento->padre];
+        
+        return $progenitores;
+    }
 }

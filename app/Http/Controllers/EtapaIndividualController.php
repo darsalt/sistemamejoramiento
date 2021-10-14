@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Sector;
 use App\Seedling;
 use App\Semillado;
+use App\Variedad;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -20,8 +21,9 @@ class EtapaIndividualController extends Controller
         $campaniasSeedling = CampaniaSeedling::where('estado', 1)->get();
         $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
+        $variedades = Variedad::all();
 
-        return view('admin.individual.seleccion.index', compact('seedlings', 'campaniasSeedling', 'campaniasSemillado', 'ambientes', 'idCampania'));
+        return view('admin.individual.seleccion.index', compact('seedlings', 'campaniasSeedling', 'campaniasSemillado', 'ambientes', 'idCampania', 'variedades'));
     }
 
     public function getUltimaParcela($campaniaSeedling){
@@ -40,11 +42,26 @@ class EtapaIndividualController extends Controller
             $seedling = new Seedling();
     
             $seedling->idcampania = $request->campSeedling;
-            $semillado = Semillado::find($request->ordenSemillado);
-            $seedling->semillado()->associate($semillado);
             $seedling->idsector = $request->sector;
             $seedling->origen = $request->origen;
-            $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
+            
+            // Asignar numero de parcela dependiendo del origen del seedling
+            if($request->origen == 'cruzamiento'){
+                $semillado = Semillado::find($request->ordenSemillado);
+                $seedling->semillado()->associate($semillado);
+                $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
+            }
+            else{ 
+                if($request->origen == 'n/i'){
+                    $seedling->observaciones = $request->observacion;
+                    $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
+                }
+                else{
+                    $seedling->idvariedad = $request->variedad;
+                    $seedling->parcela = $request->parcelaTestigo;
+                }
+            }  
+
             $seedling->fecha_plantacion = $request->fecha;
             $seedling->tabla = $request->tabla;
             $seedling->tablita = $request->tablita;
@@ -53,9 +70,10 @@ class EtapaIndividualController extends Controller
             
             $seedling->save();
 
-            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->first();
+            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente', 'variedad'])->first();
         }
         catch(Exception $e){
+            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }

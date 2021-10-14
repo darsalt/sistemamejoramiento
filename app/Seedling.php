@@ -17,4 +17,8 @@ class Seedling extends Model
     public function sector(){
         return $this->belongsTo('App\Sector', 'idsector', 'id');
     }
+
+    public function variedad(){
+        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
+    }
 }
