@@ -23,4 +23,8 @@ class PrimeraClonal extends Model
     public function parcelas(){
         return $this->hasMany('App\PrimeraClonalDetalle', 'idprimeraclonal', 'id');
     }
+
+    public function variedad(){
+        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
+    }
 }

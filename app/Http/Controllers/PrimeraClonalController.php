@@ -10,6 +10,7 @@ use App\PrimeraClonalDetalle;
 use App\Sector;
 use App\Seedling;
 use App\Serie;
+use App\Variedad;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +23,7 @@ class PrimeraClonalController extends Controller
         $ambientes = Ambiente::where('estado', 1)->get();
         $seedlings = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
         $campSeedling = CampaniaSeedling::where('estado', 1)->get();
+        $variedades = Variedad::where('estado', 1)->get();
 
         if($idSector > 0){
             $idSubambiente = Sector::find($idSector)->subambiente->id;
@@ -31,18 +33,18 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        return view('admin.primera.seleccion.index')->with(compact('series', 'seedlings', 'ambientes', 'campSeedling', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente'));
+        return view('admin.primera.seleccion.index')->with(compact('series', 'seedlings', 'ambientes', 'campSeedling', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'variedades'));
     }
 
-    public function getUltimaParcela($serie){
-        $ultimoSeedling = PrimeraClonal::where('idserie', $serie)->orderByDesc('parceladesde')->first();
+    public function getUltimaParcela($serie, $sector){
+        $ultimoSeedling = PrimeraClonal::where('idserie', $serie)->where('idsector', $sector)->orderByDesc('parceladesde')->first();
 
         return $ultimoSeedling ? $ultimoSeedling->parceladesde + $ultimoSeedling->cantidad - 1 : 0;
     }
 
     // Obtener el numero de la ultima parcela cargada
     public function getUltimaParcelaAjax(Request $request){
-        return response()->json($this->getUltimaParcela($request->serie));
+        return response()->json($this->getUltimaParcela($request->serie, $request->sector));
     }
 
     private static function insertarDetalle($primeraClonal){
@@ -176,5 +178,52 @@ class PrimeraClonalController extends Controller
         }
 
         return response()->json($seedlings);
+    }
+
+    public function saveTestigos(Request $request){
+        try{
+            DB::transaction(function() use ($request){
+                if(count($request->testigoVariedad) == count($request->testigoParcela)){
+                    // Borrar todos los testigos previos
+                    PrimeraClonal::where('testigo', 1)->where('idserie', $request->serie)->where('idsector', $request->sector)->delete();
+
+                    for($i = 0; $i < count($request->testigoVariedad); $i++){
+                        $variedad = $request->testigoVariedad[$i];
+                        $parcela = $request->testigoParcela[$i];
+
+                        $detalle = PrimeraClonalDetalle::where('parcela', $parcela)->whereHas('primera', function($q) use($request){
+                            $q->where('idserie', $request->serie)->where('idsector', $request->sector);
+                        })->first();
+                        while($detalle){
+                            $primeraRelacionado = $detalle->primera;
+                            $primeraClonal = new PrimeraClonal();
+
+                            $primeraClonal->anio = $primeraRelacionado->anio;
+                            $primeraClonal->idserie = $primeraRelacionado->serie->id;
+                            $primeraClonal->idsector = $primeraRelacionado->sector->id;
+                            $primeraClonal->fecha = now();
+                            $primeraClonal->parceladesde = $parcela + 0.5;
+                            $primeraClonal->cantidad = 1;
+                            $primeraClonal->idvariedad = $variedad;
+                            $primeraClonal->testigo = 1;
+
+                            $primeraClonal->save();
+
+                            $parcela += 100;
+                            $detalle = PrimeraClonalDetalle::where('parcela', $parcela)->first();
+                        }
+                    }
+                }
+                else
+                    throw new Exception("Los campos de parcela son requeridos.");
+            });
+
+            session(['exito' => 'exito']);
+            return response()->json(true);
+        }
+        catch(Exception $e){
+            session(['error' => 'error']);
+            return response()->json(false);
+        }
     }
 }

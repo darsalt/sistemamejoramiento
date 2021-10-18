@@ -13,8 +13,9 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<div class="col-6">
 		<button id="btnToggleForm" class="btn btn-primary mb-2">Ocultar formulario</button>
+        <button id="btnAddTestigos" class="btn btn-info mb-2" style="display: none;" data-toggle="modal" data-target="#modal-testigos">Incorporar testigos</button>
 	</div>
 </div>
 
@@ -162,21 +163,25 @@
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Cantidad</th>
+                        <th>Variedad</th>
                         <th></th>
                     </tr> 
                 <tbody>
                     @if (isset($seedlings))
                         @foreach ($seedlings as $primera)
                             <tr>
-                                <td>{{$primera->seedling->campania->nombre}}</td>
-                                <td>{{$primera->seedling->parcela}}</td>
-                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
-                                <td>{{$primera->parceladesde}}</td>
-                                <td>{{$primera->parceladesde + $primera->cantidad - 1}}</td>
+                                <td>{{$primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td>
+                                <td>{{$primera->testigo ? '-' : $primera->seedling->parcela}}</td>
+                                <td>{{$primera->testigo ? 'Testigo' : $primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                                <td>{{$primera->testigo ? $primera->parceladesde : (int)$primera->parceladesde}}</td>
+                                <td>{{$primera->testig ? '-' : $primera->parceladesde + $primera->cantidad - 1}}</td>
                                 <td>{{$primera->cantidad}}</td>
+                                <td>{{$primera->testigo ? $primera->variedad->nombre : '-'}}</td>
                                 <td>
-                                    <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
-                                    <button class='btn deleteBtn' data-id="{{$primera->id}}"><i class='fa fa-trash fa-lg'></i></button>
+                                    @if (!$primera->testigo)
+                                        <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
+                                        <button class='btn deleteBtn' data-id="{{$primera->id}}"><i class='fa fa-trash fa-lg'></i></button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -187,7 +192,6 @@
         </div>
     </div>
 </div>
-
 
 <!--Modal para la eliminacion-->
 <div class="modal fade modal-slide-in-right" aria-hidden="true"
@@ -217,6 +221,57 @@ role="dialog" tabindex="-1" id="modal-delete">
     </form>
 </div>
 
+<!--Modal para la incorporacion de testigos-->
+<div class="modal fade modal-slide-in-right" aria-hidden="true" role="dialog" tabindex="-1" id="modal-testigos">
+	<form action="" method="POST" id="formTestigos">
+        @csrf
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Incorporacion de testigos</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                         <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 text-right">
+                            <button type="button" class="btn btn-sm btn-primary mb-3" id="btnAddRowTestigo"><i class="fas fa-plus"></i> Nueva fila</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table col-12" id="tablaTestigos">
+                            <thead>
+                                <th width="50%">Variedad</th>
+                                <th>Parcela</th>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select name="testigoVariedad[]" class="form-control testigoVariedades">
+                                            @foreach ($variedades as $variedad)
+                                                <option value="{{$variedad->idvariedad}}">{{$variedad->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" name="testigoParcela[]" required>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-success" id="btnGuardarTestigos">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 @endsection 
 
 @section('script')
@@ -233,7 +288,8 @@ role="dialog" tabindex="-1" id="modal-delete">
                 getPrimeraClonal: "{{route('ajax.primeraclonal.getPrimeraClonal')}}",
                 editPrimeraClonal: "{{route('ajax.primeraclonal.editPrimeraClonal')}}",
                 deletePrimeraClonal: "{{route('primeraclonal.delete')}}",
-                getProgenitoresSeedling: "{{route('ajax.individual.getProgenitoresSeedling')}}"
+                getProgenitoresSeedling: "{{route('ajax.individual.getProgenitoresSeedling')}}",
+                saveTestigos: "{{route('ajax.primeraclonal.saveTestigos')}}"
 
             },
             data: {

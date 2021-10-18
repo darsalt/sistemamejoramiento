@@ -9,12 +9,15 @@ $(document).ready(function(){
         mostrarMensajeError();
 
     // Aplicar select2 a combos box
-    $('#ambiente, #subambiente, #sector, #parcela').select2();
+    $('#ambiente, #subambiente, #sector, #parcela, .testigoVariedades').select2();
 
     $('#serie').focus();
 
     if(sessionStorage.getItem('anio'))
         $('#anio').val(sessionStorage.getItem('anio'));
+
+    if(config.data.serieActiva > 0 && config.data.sectorActivo > 0)
+        $('#btnAddTestigos').show();
 
     // Validacion de los campos
     $('#formPrimeraClonal').validate({
@@ -121,7 +124,8 @@ $(document).ready(function(){
         url: config.routes.getUltimaParcela,
         type: 'GET',
         data: {
-            'serie':  $('#serie').val()
+            'serie': config.data.serieActiva,
+            'sector': config.data.sectorActivo,
         },
         success: function(response){
             $('#parcelaDesde').val(response + 1);
@@ -254,6 +258,34 @@ $(document).ready(function(){
 
         $('#formDelete').attr('action', config.routes.deletePrimeraClonal + "/" + id);
         $('#modal-delete').modal('show');
+    });
+
+    // Evento cuando se agrega una nueva fila para los testigos
+    $('#btnAddRowTestigo').click(function(){
+        let tableBody =  $('#tablaTestigos').find('tbody');
+        let trLast = tableBody.find("tr:last");
+
+        $('.testigoVariedades').select2('destroy'); // Eliminar el select2 para no tener conflictos en el clone
+        trLast.after(trLast.clone())
+        $('.testigoVariedades').select2(); // Volver a aplicar select2 a todos
+    });
+
+    // Evento cuando se apreta en el boton de guardar testigos
+    $('#btnGuardarTestigos').click(function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: config.routes.saveTestigos,
+            method: 'POST',
+            dataType: 'json',
+            data: $('#formTestigos').serialize() + "&serie=" + config.data.serieActiva  + "&sector=" + config.data.sectorActivo,
+            success: function(response){
+                window.location.href = config.routes.seedlings + "/" + config.data.serieActiva  + "/" + config.data.sectorActivo;
+            },
+            error: function( jqXHR, textStatus, errorThrown ){
+                window.location.href = config.routes.seedlings + "/" + config.data.serieActiva  + "/" + config.data.sectorActivo;
+            }
+        });
     });
 });
 
