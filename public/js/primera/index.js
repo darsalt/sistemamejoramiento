@@ -88,7 +88,8 @@ $(document).ready(function(){
                         // Resetear algunos campos
                         $('#cantidad').val('');
 
-                        $('#parcelaDesde').val(response.parceladesde + response.cantidad); // Nro. de parcela es el siguiente al que se guardó
+                        //$('#parcelaDesde').val(parseInt(response.parceladesde) + response.cantidad); // Nro. de parcela es el siguiente al que se guardó
+                        obtenerUltimaParcelaCargada();
                         $('#parcelaHasta').val('');
                         $('#cantidad').text('');
                         $('#serie').focus();
@@ -119,18 +120,7 @@ $(document).ready(function(){
         }
     });
 
-    // Obtener la ultima parcela cargada
-    $.ajax({
-        url: config.routes.getUltimaParcela,
-        type: 'GET',
-        data: {
-            'serie': config.data.serieActiva,
-            'sector': config.data.sectorActivo,
-        },
-        success: function(response){
-            $('#parcelaDesde').val(response + 1);
-        }
-    });
+    obtenerUltimaParcelaCargada();
 
     // Evento del boton para mostrar u ocultar formulario
     $('#btnToggleForm').click(function(){
@@ -299,6 +289,21 @@ function mostrarMensajeError(){
     $('#msgError').delay(2000).fadeOut();
 }
 
+// Obtener la ultima parcela cargada
+function obtenerUltimaParcelaCargada(){
+    $.ajax({
+        url: config.routes.getUltimaParcela,
+        type: 'GET',
+        data: {
+            'serie': config.data.serieActiva,
+            'sector': config.data.sectorActivo,
+        },
+        success: function(response){
+            $('#parcelaDesde').val(response + 1);
+        }
+    });
+}
+
 // Agregar una fila a la tabla de seedlings
 function agregarFila(element){
     let fila = '';
@@ -307,9 +312,10 @@ function agregarFila(element){
     fila += "<td>" + element.seedling.campania.nombre + "</td>";
     fila += "<td>" + element.seedling.parcela + "</td>";
     fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
-    fila += "<td>" + element.parceladesde + "</td>";
-    fila += "<td>" + (element.parceladesde + element.cantidad - 1) + "</td>";
+    fila += "<td>" + parseInt(element.parceladesde) + "</td>";
+    fila += "<td>" + (parseInt(element.parceladesde) + element.cantidad - 1) + "</td>";
     fila += "<td>" + element.cantidad + "</td>";
+    fila += "<td>-</td>"
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
     fila += '</tr>'

@@ -67,7 +67,7 @@ class PrimeraClonalController extends Controller
             $seedling = Seedling::find($request->parcela);
             $primeraClonal->seedling()->associate($seedling);
             $primeraClonal->fecha = now();
-            $primeraClonal->parceladesde = $this->getUltimaParcela($request->serie) + 1;
+            $primeraClonal->parceladesde = $request->parcelaDesde;
             $primeraClonal->cantidad = $request->parcelaHasta - $primeraClonal->parceladesde + 1;
             
             $primeraClonal->save();
@@ -77,6 +77,7 @@ class PrimeraClonalController extends Controller
             return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'seedling.semillado.cruzamiento.madre', 'seedling.semillado.cruzamiento.padre'])->first();
         }
         catch(Exception $e){
+            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }
@@ -112,6 +113,8 @@ class PrimeraClonalController extends Controller
 
     public function delete(Request $request, $id = 0){
         try{
+            PrimeraClonalDetalle::where('idprimeraclonal', $id)->delete();
+
             $seedling = PrimeraClonal::find($id);
     
             $seedling->delete();
@@ -190,11 +193,30 @@ class PrimeraClonalController extends Controller
                     for($i = 0; $i < count($request->testigoVariedad); $i++){
                         $variedad = $request->testigoVariedad[$i];
                         $parcela = $request->testigoParcela[$i];
+                        $digits = strlen((string)$parcela);
 
-                        $detalle = PrimeraClonalDetalle::where('parcela', $parcela)->whereHas('primera', function($q) use($request){
+                        $detalles = PrimeraClonalDetalle::whereHas('primera', function($q) use($request){
                             $q->where('idserie', $request->serie)->where('idsector', $request->sector);
-                        })->first();
-                        while($detalle){
+                        })->get();
+
+                        foreach($detalles as $detalle){
+                            if(str_ends_with((string)$detalle->parcela, (string)$parcela)){
+                                $primeraRelacionado = $detalle->primera;
+                                $primeraClonal = new PrimeraClonal();
+    
+                                $primeraClonal->anio = $primeraRelacionado->anio;
+                                $primeraClonal->idserie = $primeraRelacionado->serie->id;
+                                $primeraClonal->idsector = $primeraRelacionado->sector->id;
+                                $primeraClonal->fecha = now();
+                                $primeraClonal->parceladesde = $detalle->parcela + 0.5;
+                                $primeraClonal->cantidad = 1;
+                                $primeraClonal->idvariedad = $variedad;
+                                $primeraClonal->testigo = 1;
+    
+                                $primeraClonal->save();
+                            }
+                        }
+                        /*while($detalle){
                             $primeraRelacionado = $detalle->primera;
                             $primeraClonal = new PrimeraClonal();
 
@@ -208,10 +230,12 @@ class PrimeraClonalController extends Controller
                             $primeraClonal->testigo = 1;
 
                             $primeraClonal->save();
-
-                            $parcela += 100;
-                            $detalle = PrimeraClonalDetalle::where('parcela', $parcela)->first();
-                        }
+                            
+                            $parcela += pow(10, $digits);
+                            $detalle = PrimeraClonalDetalle::where('parcela', $parcela)->whereHas('primera', function($q) use($request){
+                                $q->where('idserie', $request->serie)->where('idsector', $request->sector);
+                            })->first();
+                        }*/
                     }
                 }
                 else
