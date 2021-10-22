@@ -24,4 +24,8 @@ class SegundaClonalDetalle extends Model
     public function mets(){
         return $this->hasMany('App\METDetalle', 'idsegundaclonal_detalle', 'id');
     }
+
+    public function variedad(){
+        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
+    }
 }

@@ -73,7 +73,6 @@ class EtapaIndividualController extends Controller
             return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente', 'variedad'])->first();
         }
         catch(Exception $e){
-            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }

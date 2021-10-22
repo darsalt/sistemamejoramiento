@@ -77,7 +77,6 @@ class PrimeraClonalController extends Controller
             return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'seedling.semillado.cruzamiento.madre', 'seedling.semillado.cruzamiento.padre'])->first();
         }
         catch(Exception $e){
-            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }

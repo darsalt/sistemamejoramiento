@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function(){    
     // Seleccionar en el combo box la campaña activa
     $('#serie').val(config.data.serieActiva);
 
@@ -9,18 +9,7 @@ $(document).ready(function(){
         mostrarMensajeError();
 
     // Aplicar select2 a combos box
-    $('#ambiente, #subambiente, #sector, #parcela').select2();
-
-    // Multiselect para elegir los seedlings de primera clonal
-/*     $('#seedlingsPC').multiselect({
-        buttonWidth: '100%',
-        nonSelectedText: 'Ninguno seleccionado',
-        allSelectedText: 'Todos seleccionados',
-        enableFiltering: true,
-        enableCaseInsensitiveFiltering: true,
-        filterPlaceholder: 'Buscar',
-        nSelectedText: 'seleccionados',
-    }); */
+    $('#ambiente, #subambiente, #sector, #parcela, #variedad').select2();
 
     $('#tableSeedlingsPC').paging({
         limit: 10,
@@ -28,10 +17,23 @@ $(document).ready(function(){
 
     habilitarDeshabilitarSeedlings(config.data.sectorActivo);
 
+    // De los campos parcela habilitados (es decir que son del sector activo) obtener el maximo
+    if(config.data.sectorActivo){
+        maximaParcela = Math.max(...$("input[name='parcelas[]']:enabled").map(function(){return parseInt($(this).val());}).get());
+        if(maximaParcela)
+            var contParcelas = maximaParcela;
+        else
+            var contParcelas = 0;
+    }
+
     $('#serie').focus();
     
     if(sessionStorage.getItem('anio'))
         $('#anio').val(sessionStorage.getItem('anio'));
+
+    // Habilitar el bloque para ingresar testigos cuando ya se eligio una serie
+    if(config.data.serieActiva > 0 && config.data.sectorActivo > 0)
+        $('#div-testigos').show();
     
     // Validacion de los campos
     $('#formSegundaClonal').validate({
@@ -90,23 +92,29 @@ $(document).ready(function(){
                     }
                 });
             }
-/*             else{
-                $.ajax({
-                    url: config.routes.editSegundaClonal,
-                    method: 'PUT',
-                    dataType: 'json',
-                    data: $(form).serialize(),
-                    success: function(response){
-                        //$('#seedlingsPC').find('option:selected').removeAttr("selected");
-                        $("input[name='seedlingsPC[]']:checked").removeAttr('checked');
+        }
+    });
 
-                        location.reload(true);
-                    },
-                    error: function( jqXHR, textStatus, errorThrown ){
-                        mostrarMensajeError();
-                    }
-                });
-            } */
+    // Validacion de los campos para cargar testigos
+    $('#formTestigos').validate({
+        rules: {
+            parcelaTestigo: {
+                required: true,
+                number: true
+            }
+        },
+        submitHandler: function(form){
+            $.ajax({
+                url: config.routes.saveTestigo,
+                method: 'POST',
+                dataType: 'json',
+                data: $(form).serialize() + "&serie=" + config.data.serieActiva  + "&sector=" + config.data.sectorActivo,
+                success: function(response){
+                    mostrarMensajeExito();
+                    $('#tablaTestigos tbody').append(agregarFilaTestigo(response)); // Agrego fila a la tabla
+                    $('#parcelaTestigo').val('');
+                }
+            });
         }
     });
 
@@ -222,8 +230,26 @@ $(document).ready(function(){
     $('.deleteBtn').on('click', function(){
         var id = $(this).data('id');
 
-        $('#formDelete').attr('action', config.routes.deleteSegundaClonal + "/" + id);
+        $('#formDelete').attr('action', config.routes.deleteTestigo + "/" + id);
         $('#modal-delete').modal('show');
+    });
+
+    $('.check-seleccionado').click(function(){
+        let row = $(this).closest("tr");
+        let inputParcela = row.find("input[name='parcelas[]']")
+
+        if($(this).prop('checked')){
+            contParcelas += 1;
+            inputParcela.val(contParcelas);
+            inputParcela.removeAttr('disabled');
+        }
+        else{
+            inputParcela.attr('disabled', 'disabled');
+            if(inputParcela.val() == contParcelas)
+                contParcelas--;
+
+            inputParcela.val('');
+        }
     });
 });
 
@@ -286,7 +312,23 @@ function habilitarDeshabilitarSeedlings(idSector){
         }
 
         if($(this).data('idsc') && $(this).data('idsector') != idSector){
+            let row = $(this).closest("tr");
+            let inputParcela = row.find("input[name='parcelas[]']")
+
             $(this).attr("disabled", "disabled");
+            inputParcela.attr("disabled", "disabled");
         }
     });
+}
+
+function agregarFilaTestigo(element){
+    let fila = '';
+
+    fila += "<tr>";
+    fila += "<td>" + element.variedad.nombre + "</td>";
+    fila += "<td>" + element.parcela + "</td>";
+    fila += "<td><button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>";
+    fila += '</tr>'
+
+    return fila;
 }

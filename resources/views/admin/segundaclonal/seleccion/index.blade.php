@@ -108,31 +108,10 @@
                     </tbody>
                 </table>
                 <h4>Seedlings primera clonal</h4>
-{{--                 <table class="table table-striped table-bordered table-condensed table-hover">
-                    <thead>
-                        <th>Seedlings Primera Clonal</th>
-                        <th width='10%'></th>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <select name="seedlingsPC[]" id="seedlingsPC" multiple>
-                                    @if (isset($parcelasPC))
-                                        @foreach ($parcelasPC as $parcela)
-                                            <option value="{{$parcela->id}}" data-idsc="{{$parcela->segunda ? $parcela->segunda->idsegundaclonal : null}}" data-laboratorio="{{$parcela->laboratorio}}">
-                                                {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre . ' - Parcela: ' . $parcela->parcela}}                                        
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </td>
-                                    
-                        </tr>
-                    </tbody>
-                </table> --}}
                 <table class="table table-striped table-bordered table-condensed table-hover" id="tableSeedlingsPC">
                     <thead>
                         <th>Seleccionado</th>
+                        <th width="5%">Parcela</th>
                         <th>Parcela PC</th>
                         <th>Madre x Padre</th>
                         <th>Ubicación actual</th>
@@ -141,8 +120,11 @@
                         @foreach ($parcelasPC as $parcela)
                         <tr>
                             <td class="text-center">
-                                <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" name="seedlingsPC[]" data-idsector="{{$parcela->segunda ? $parcela->segunda->idsector : null}}"
+                                <input type="checkbox" class="form-check-input check-seleccionado" value="{{$parcela->id}}" name="seedlingsPC[]" data-idsector="{{$parcela->segunda ? $parcela->segunda->idsector : null}}"
                                     data-idsc="{{$parcela->segunda ? $parcela->segunda->idsegundaclonal : null}}" data-laboratorio="{{$parcela->laboratorio}}" style="width: 15px; height: 15px;">
+                            </td>
+                            <td class="text-center">
+                                <input type="number" class="form-control input-parcela" name="parcelas[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->parcela : 'disabled'}}>
                             </td>
                             <td>{{$parcela->parcela}}</td>
                             <td>{{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
@@ -159,50 +141,65 @@
         </div>
     </div>
 </div>
-{{-- <div class="row">
+
+<!--Formulario para cargar testigos-->
+<div class="row" id="div-testigos" style="display: none;">
     <div class="col-12">
-        <h4>Seedlings Segunda Clonal:</h4>
+        <h4>Testigos</h4>
+        <div class="table-responsive">
+            <form action="" class="form" id="formTestigos" operation="insert">
+                <table class="table table-striped table-bordered table-condensed table-hover">
+                    <thead>
+                        <th>Variedad</th>
+                        <th width="10%">Parcela</th>
+                        <th width="10%"></th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <select name="variedad" id="variedad" class="form-control">
+                                    @foreach ($variedades as $variedad)
+                                        <option value="{{$variedad->idvariedad}}">{{$variedad->nombre}}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="parcelaTestigo" id="parcelaTestigo">
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+    <!--Tabla para visualizar los testigos cargados-->
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-condensed table-hover" id="tablaTestigos">
+                <thead>
+                    <th>Variedad</th>
+                    <th width="10%">Parcela</th>
+                    <th width="10%"></th>
+                </thead>
+                <tbody>
+                    @foreach ($testigos as $testigo)
+                        <tr>
+                            <td>{{$testigo->variedad->nombre}}</td>
+                            <td>{{$testigo->parcela}}</td>
+                            <td><button class='btn deleteBtn' data-id="{{$testigo->id}}"><i class='fa fa-trash fa-lg'></i></button></td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12 table-responsive">
-            <!--Tabla con los datos segun la serie seleccionada-->
-            <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
-                <thead>
-                    <tr>
-                        <th>Serie</th>
-                        <th>Ambiente</th>
-                        <th>Subambiente</th>
-                        <th>Sector</th>
-                        <th>Cantidad seedlings</th>
-                        <th></th>
-                    </tr> 
-                <tbody>
-                    @if (isset($seedlings))
-                        @foreach ($seedlings as $segunda)
-                            <tr>
-                                <td>{{$segunda->serie->nombre}}</td>
-                                <td>{{$segunda->sector->subambiente->ambiente->nombre}}</td>
-                                <td>{{$segunda->sector->subambiente->nombre}}</td>
-                                <td>{{$segunda->sector->nombre}}</td>
-                                <td>{{count($segunda->parcelas)}}</td>
-                                <td>
-                                    <button class='btn editBtn' onclick='editarSeedling({{$segunda->id}})'><i class='fa fa-edit fa-lg'></i></button>
-                                    <button class='btn deleteBtn' data-id="{{$segunda->id}}"><i class='fa fa-trash fa-lg'></i></button>
-                                </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-            {{$seedlings->render()}}
-        </div>
-    </div>
-</div> --}}
-
-
-<!--Modal para la eliminacion-->
+<!--Modal para la eliminacion de testigo-->
 <div class="modal fade modal-slide-in-right" aria-hidden="true"
 role="dialog" tabindex="-1" id="modal-delete">
 	<form action="" method="POST" id="formDelete">
@@ -212,14 +209,14 @@ role="dialog" tabindex="-1" id="modal-delete">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Baja de Seedling</h4>
+                    <h4 class="modal-title">Eliminacion de testigo</h4>
                     <button type="button" class="close" data-dismiss="modal" 
                     aria-label="Close">
                          <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Confirme que desea dar de baja el seedling</p>
+                    <p>Confirme que desea eliminar el testigo</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -245,7 +242,8 @@ role="dialog" tabindex="-1" id="modal-delete">
                 getSegundaClonal: "{{route('ajax.segundaclonal.getSegundaClonal')}}",
                 editSegundaClonal: "{{route('ajax.segundaclonal.editSegundaClonal')}}",
                 deleteSegundaClonal: "{{route('segundaclonal.delete')}}",
-
+                saveTestigo: "{{route('ajax.segundaclonal.saveTestigo')}}",
+                deleteTestigo: "{{route('segundaclonal.deleteTestigo')}}"
             },
             data: {
                 serieActiva: "{{$idSerie}}",

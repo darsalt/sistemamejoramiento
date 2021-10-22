@@ -10,6 +10,7 @@ use App\Serie;
 use App\PrimeraClonalDetalle;
 use App\SegundaClonal;
 use App\SegundaClonalDetalle;
+use App\Variedad;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,8 +35,12 @@ class SegundaClonalController extends Controller
         });
         
         $parcelasPC = $parcelasPC->orderBy('parcela')->get();
+        $variedades = Variedad::where('estado', 1)->get();
+        $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie){
+            $q->where('idserie', $idSerie);
+        })->where('idsector', $idSector)->where('testigo', 1)->get();
 
-        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC'));
+        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'variedades', 'testigos'));
     }
 
     public function saveSegundaClonal(Request $request){
@@ -53,9 +58,26 @@ class SegundaClonalController extends Controller
                         }
                     }
 
-                    $this->regenerarNrosParcelas($request->serie);
-                    $i = $this->getUltimaParcela($request->serie) + 1;
-                    foreach($request->seedlingsPC ?? [] as $nroParcela){
+                    //$this->regenerarNrosParcelas($request->serie);
+                    //$i = $this->getUltimaParcela($request->serie) + 1;
+                    for($i = 0; $i < count($request->seedlingsPC); $i++){
+                        // Cargamos las parcelas nuevas que nunca fueron agregadas
+                        if(!in_array($request->seedlingsPC[$i], $parcelasCargadas->pluck('idprimeraclonal_detalle')->toArray())){
+                            $seedling = new SegundaClonalDetalle();
+                            $seedling->idsegundaclonal = $segunda->id;
+                            $seedling->idprimeraclonal_detalle = $request->seedlingsPC[$i];
+                            $seedling->idsector = $request->sector;
+                            $seedling->parcela = $request->parcelas[$i];
+                            $seedling->save();
+                        }
+                        else{
+                            //Se actualiza el numero de parcela en el caso que se haya cambiado
+                            $seedling = SegundaClonalDetalle::where('idprimeraclonal_detalle', $request->seedlingsPC[$i])->first();
+                            $seedling->parcela = $request->parcelas[$i];
+                            $seedling->save();
+                        }
+                    }
+/*                     foreach($request->seedlingsPC ?? [] as $nroParcela){
                         // Cargamos las parcelas nuevas que nunca fueron agregadas
                         if(!in_array($nroParcela, $parcelasCargadas->pluck('idprimeraclonal_detalle')->toArray())){
                             $seedling = new SegundaClonalDetalle();
@@ -66,7 +88,7 @@ class SegundaClonalController extends Controller
                             $seedling->save();
                             $i += 1;
                         }
-                    }
+                    } */
                 }
                 else{
                     if($request->seedlingsPC){
@@ -76,16 +98,15 @@ class SegundaClonalController extends Controller
                         $segunda->fecha = now();
                         $segunda->save();
 
-                        $this->regenerarNrosParcelas($request->serie);
-                        $i = $this->getUltimaParcela($request->serie) + 1;
-                        foreach($request->seedlingsPC as $parcela){
+                        //$this->regenerarNrosParcelas($request->serie);
+                        //$i = $this->getUltimaParcela($request->serie) + 1;
+                        for($i = 0; $i < count($request->seedlingsPC); $i++){
                             $seedling = new SegundaClonalDetalle();
                             $seedling->idsegundaclonal = $segunda->id;
-                            $seedling->idprimeraclonal_detalle = $parcela;
+                            $seedling->idprimeraclonal_detalle = $request->seedlingsPC[$i];
                             $seedling->idsector = $request->sector;
-                            $seedling->parcela = $i;
-                            $seedling->save();
-                            $i += 1;
+                            $seedling->parcela = $request->parcelas[$i];
+                            $seedling->save();  
                         }
                     }
                 }
@@ -173,5 +194,35 @@ class SegundaClonalController extends Controller
             $seedling->save();
             $i++;
         }
+    }
+
+    public function saveTestigo(Request $request){
+        try{
+            $segunda_detalle = DB::transaction(function () use($request){
+                $segunda = SegundaClonal::where('idserie', $request->serie)->first();
+
+                $segunda_detalle = new SegundaClonalDetalle();
+                $segunda_detalle->segunda()->associate($segunda);
+                $segunda_detalle->idsector = $request->sector;
+                $segunda_detalle->parcela = $request->parcelaTestigo + 0.5;
+                $segunda_detalle->testigo = 1;
+                $segunda_detalle->idvariedad = $request->variedad;
+                $segunda_detalle->save();
+
+                return $segunda_detalle;
+            });
+
+            return SegundaClonalDetalle::with('variedad')->find($segunda_detalle->id);
+        }
+        catch(Exception $e){
+            session(['error' => 'error']);
+            return response()->json(false);
+        }
+    }
+
+    public function deleteTestigo($idTestigo = 0){
+        SegundaClonalDetalle::find($idTestigo)->delete();
+
+        return redirect()->back()->with('exito', 'exito');
     }
 }
