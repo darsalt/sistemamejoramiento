@@ -163,7 +163,7 @@
                         <th>Desde</th>
                         <th>Hasta</th>
                         <th>Cantidad</th>
-                        <th>Variedad</th>
+                        {{-- <th>Variedad</th> --}}
                         <th></th>
                     </tr> 
                 <tbody>
@@ -172,11 +172,26 @@
                             <tr>
                                 <td>{{$primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td>
                                 <td>{{$primera->testigo ? '-' : $primera->seedling->parcela}}</td>
-                                <td>{{$primera->testigo ? 'Testigo' : $primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                                <td>
+                                    @if (!$primera->testigo)
+                                        @if ($primera->seedling->origen == 'cruzamiento')
+                                            {{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}
+                                        @else
+                                            @if ($primera->seedling->origen == 'testigo')
+                                                {{$primera->seedling->variedad->nombre}}
+                                            @else
+                                                {{$primera->seedling->observaciones}}
+                                            @endif
+                                        @endif
+                                    @else
+                                        Testigo
+                                    @endif
+
+                                </td>
                                 <td>{{$primera->testigo ? $primera->parceladesde : (int)$primera->parceladesde}}</td>
-                                <td>{{$primera->testig ? '-' : $primera->parceladesde + $primera->cantidad - 1}}</td>
+                                <td>{{$primera->testigo ? '-' : $primera->parceladesde + $primera->cantidad - 1}}</td>
                                 <td>{{$primera->cantidad}}</td>
-                                <td>{{$primera->testigo ? $primera->variedad->nombre : '-'}}</td>
+                                {{-- <td>{{$primera->testigo ? $primera->variedad->nombre : '-'}}</td> --}}
                                 <td>
                                     @if (!$primera->testigo)
                                         <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>

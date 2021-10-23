@@ -48,12 +48,12 @@ $(document).ready(function(){
             parcelaDesde: {
                 number: true,
             },
-            parcelaHasta: {
+            /*parcelaHasta: {
                 number: true,
                 min: function(){
                     return $('#parcelaDesde').val();
                 }
-            },
+            },*/
         },
         messages:{
             serie:{
@@ -315,7 +315,6 @@ function agregarFila(element){
     fila += "<td>" + parseInt(element.parceladesde) + "</td>";
     fila += "<td>" + (parseInt(element.parceladesde) + element.cantidad - 1) + "</td>";
     fila += "<td>" + element.cantidad + "</td>";
-    fila += "<td>-</td>"
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
     fila += '</tr>'

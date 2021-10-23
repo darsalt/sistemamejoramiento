@@ -127,7 +127,17 @@
                                 <input type="number" class="form-control input-parcela" name="parcelas[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->parcela : 'disabled'}}>
                             </td>
                             <td>{{$parcela->parcela}}</td>
-                            <td>{{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                            <td>
+                                @if ($parcela->primera->seedling->origen == 'cruzamiento')
+                                    {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}    
+                                @else
+                                    @if ($parcela->primera->seedling->origen == 'testigo')
+                                        {{$parcela->primera->seedling->variedad->nombre}}  
+                                    @else
+                                        {{$parcela->primera->seedling->observaciones}}  
+                                    @endif 
+                                @endif
+                            </td>
                             @if ($parcela->segunda)
                                 <td>{{$parcela->segunda->sector->subambiente->ambiente->nombre . ' - ' . $parcela->segunda->sector->subambiente->nombre . ' - ' . $parcela->segunda->sector->nombre}}</td>    
                             @else
