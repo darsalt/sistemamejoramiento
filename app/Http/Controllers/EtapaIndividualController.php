@@ -45,21 +45,16 @@ class EtapaIndividualController extends Controller
             $seedling->idsector = $request->sector;
             $seedling->origen = $request->origen;
             
-            // Asignar numero de parcela dependiendo del origen del seedling
+            $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
             if($request->origen == 'cruzamiento'){
                 $semillado = Semillado::find($request->ordenSemillado);
-                $seedling->semillado()->associate($semillado);
-                $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
+                $seedling->semillado()->associate($semillado); 
             }
             else{ 
-                if($request->origen == 'n/i'){
+                if($request->origen == 'n/i')
                     $seedling->observaciones = $request->observacion;
-                    $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
-                }
-                else{
+                else
                     $seedling->idvariedad = $request->variedad;
-                    $seedling->parcela = $request->parcelaTestigo;
-                }
             }  
 
             $seedling->fecha_plantacion = $request->fecha;
@@ -70,7 +65,8 @@ class EtapaIndividualController extends Controller
             
             $seedling->save();
 
-            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente', 'variedad'])->first();
+            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente', 'variedad', 'semillado.cruzamiento.madre',
+            'semillado.cruzamiento.padre'])->first();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());
@@ -116,6 +112,7 @@ class EtapaIndividualController extends Controller
             return redirect()->back()->with('exito', 'exito');
         }
         catch(Exception $e){
+            Log::debug($e->getMessage());
             return redirect()->back()->with('error', 'error');
         }
     }

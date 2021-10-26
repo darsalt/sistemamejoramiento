@@ -91,13 +91,12 @@
                 </table>
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
-                        <th class="col-parcela">Parcela</th>
+                        <th width="10%" class="col-parcela">Parcela</th>
                         <th >Origen</th>
                         <th class="col-campania">Campaña semillado</th>
                         <th class="col-orden">Orden</th>
                         <th class="col-progenitores">Madre x Padre</th>
                         <th class="col-variedad" style="display: none;">Variedad</th>
-                        <th width="15%" class="col-parcelaTestigo" style="display: none;">Parcela testigo</th>
                         <th class="col-observacion" style="display: none;">Observación</th>
                     </thead>
                     <tbody>
@@ -134,9 +133,6 @@
                                         <option value="{{$variedad->idvariedad}}">{{$variedad->nombre}}</option>
                                     @endforeach
                                 </select>
-                            </td>
-                            <td class="col-parcelaTestigo" style="display: none;">
-                                <input type="number" name="parcelaTestigo" id="parcelaTestigo" class="form-control">
                             </td>
                             <td class="col-observacion" style="display: none;">
                                 <input type="text" name="observacion" id="observacion" class="form-control">
@@ -181,46 +177,38 @@
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th>Campaña seedling</th>
-                        <th>Ubicación</th>
-                        <th>Origen</th>
+                        <th>Parcela</th>
                         <th>Campaña semillado</th>
                         <th>Orden</th>
-                        <th>Parcela</th>
-                        <th>Fecha</th>
+                        <th>Madre x Padre</th>
                         <th>Tabla</th>
                         <th>Tablita</th>
                         <th>Surcos</th>
                         <th>Plantas / Surco</th>
-                        <th>Variedad</th>
                         <th></th>
                     </tr> 
                 <tbody>
                     @if (isset($seedlings))
                         @foreach ($seedlings as $seedling)
                             <tr>
-                                <td>{{$seedling->campania->nombre}}</td>
-                                <td>{{$seedling->sector->subambiente->ambiente->nombre}} - {{$seedling->sector->subambiente->nombre}} - {{$seedling->sector->nombre}}</td>
-                                <td>{{$seedling->origen}}</td>
+                                <td>{{$seedling->parcela}}</td>
                                 <td>{{$seedling->semillado ? $seedling->semillado->campania->nombre : '-'}}</td>
                                 <td>{{$seedling->semillado ? $seedling->semillado->numero : '-'}}</td>
-                                <td>{{$seedling->parcela}}</td>
-                                <td>{{$seedling->fecha_plantacion}}</td>
-                                <td>{{$seedling->tabla}}</td>
-                                <td>{{$seedling->tablita}}</td>
-                                <td>{{$seedling->surcos}}</td>
-                                <td>{{$seedling->plantasxsurco}}</td>
                                 <td>
                                     @if ($seedling->origen == 'testigo')
                                         {{$seedling->variedad->nombre}}
                                     @else
                                         @if ($seedling->origen == 'n/i')
-                                        {{$seedling->observaciones}}
+                                            {{$seedling->observaciones}}
                                         @else
-                                            -
+                                            {{$seedling->semillado->cruzamiento->madre->nombre . ' - ' . $seedling->semillado->cruzamiento->padre->nombre}}
                                         @endif
                                     @endif
                                 </td>
+                                <td>{{$seedling->tabla}}</td>
+                                <td>{{$seedling->tablita}}</td>
+                                <td>{{$seedling->surcos}}</td>
+                                <td>{{$seedling->plantasxsurco}}</td>
                                 <td>
                                     <button class='btn editBtn' onclick='editarSeedling({{$seedling->id}})'><i class='fa fa-edit fa-lg'></i></button>
                                     <button class='btn deleteBtn' data-id="{{$seedling->id}}"><i class='fa fa-trash fa-lg'></i></button>

@@ -76,14 +76,6 @@ $(document).ready(function(){
                         return false;
                 }
             },
-            parcelaTestigo: {
-                required: function(){
-                    if($('#origen').val() == 'testigo')
-                        return true;
-                    else
-                        return false;
-                }
-            },
             observacion: {
                 required: function(){
                     if($('#origen').val() == 'n/i')
@@ -136,10 +128,12 @@ $(document).ready(function(){
                     success: function(response){
                         // Resetear algunos campos
                         $('#orden').val(0);
-                        $('#tabla').val('');
+                        /* $('#tabla').val('');
                         $('#tablita').val('');
+                        $('#plantasxsurco').val(''); */
                         $('#surcos').val('');
-                        $('#plantasxsurco').val('');
+                        $('#origen').val('cruzamiento');
+                        $('#origen').trigger('change');
 
                         $('#parcela').text(response.parcela + 1); // Nro. de parcela es el siguiente al que se guardó
                         $('#campSeedling').focus();
@@ -260,29 +254,22 @@ $(document).ready(function(){
             case 'cruzamiento':
                 $('.col-campania').show();
                 $('.col-orden').show();
-                $('.col-parcela').show();
                 $('.col-progenitores').show();
                 $('.col-variedad').hide();
-                $('.col-parcelaTestigo').hide();
                 $('.col-observacion').hide();
                 break;
             case 'testigo':
                 $('.col-campania').hide();
                 $('.col-orden').hide();
-                $('.col-parcela').hide();
                 $('.col-progenitores').hide();
                 $('.col-observacion').hide();
                 $('.col-variedad').show();
-                $('.col-parcelaTestigo').show();
-                $('#parcelaTestigo').val(parseInt($('#parcela').text())-1);
                 break;
             case 'n/i':
                 $('.col-campania').hide();
                 $('.col-orden').hide();
                 $('.col-progenitores').hide();
                 $('.col-variedad').hide();
-                $('.col-parcelaTestigo').hide();
-                $('.col-parcela').show();
                 $('.col-observacion').show();
                 break;
         }
@@ -349,9 +336,7 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
-    fila += "<td>" + element.campania.nombre + "</td>";
-    fila += "<td>" + element.sector.subambiente.ambiente.nombre + " - " + element.sector.subambiente.nombre + " - " + element.sector.nombre + "</td>";
-    fila += "<td>" + element.origen + "</td>";
+    fila += "<td>" + element.parcela + "</td>";
     if(element.semillado){
         fila += "<td>" + element.semillado.campania.nombre + "</td>"
         fila += "<td>" + element.semillado.numero + "</td>";
@@ -360,20 +345,18 @@ function agregarFila(element){
         fila += "<td>-</td>"
         fila += "<td>-</td>";
     }
-    fila += "<td>" + element.parcela + "</td>";
-    fila += "<td>" + element.fecha_plantacion + "</td>";
-    fila += "<td>" + element.tabla + "</td>";
-    fila += "<td>" + element.tablita + "</td>";
-    fila += "<td>" + element.surcos + "</td>";
-    fila += "<td>" + element.plantasxsurco + "</td>";
     if(element.origen == 'testigo')
         fila += "<td>" + element.variedad.nombre + "</td>";
     else{
         if(element.origen == 'n/i')
             fila += "<td>" + element.observaciones + "</td>";
         else
-        fila += "<td>-</td>";
+            fila += "<td>" + element.semillado.cruzamiento.madre.nombre + " - " + element.semillado.cruzamiento.padre.nombre +"</td>";
     }
+    fila += "<td>" + element.tabla + "</td>";
+    fila += "<td>" + element.tablita + "</td>";
+    fila += "<td>" + element.surcos + "</td>";
+    fila += "<td>" + element.plantasxsurco + "</td>";
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
     fila += '</tr>'
@@ -397,13 +380,17 @@ function editarSeedling(id){
             $('#fecha').val(response.fecha_plantacion);
             $('#parcela').text(response.parcela);
             $('#origen').val(response.origen);
+            $('#variedad').val(response.idvariedad);
+            $('#variedad').select2();
             $('#origen').trigger('change');
-            $('#campSemillado').val(response.semillado.idcampania);
-            $('#campSemillado').trigger('change', [response.idsemillado]);
+            if(response.semillado){
+                $('#campSemillado').val(response.semillado.idcampania);
+                $('#campSemillado').trigger('change', [response.idsemillado]);
+            }
             $('#tabla').val(response.tabla);
             $('#tablita').val(response.tablita);
             $('#surcos').val(response.surcos);
-            $('#plantasxsurco').val(response.plantasxsurco)
+            $('#plantasxsurco').val(response.plantasxsurco);
 
             $('#formSeedling').attr('operation', 'edit'); // Cambiar el tipo de operacion del form, por defecto es insert
             $('#formSeedling button[type="submit"] i').removeClass(['fa-check', 'fa-edit']);
