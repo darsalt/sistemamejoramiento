@@ -10,13 +10,17 @@ use App\MET;
 use App\METDetalle;
 use App\Sector;
 use App\SegundaClonalDetalle;
+use App\Variedad;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class METController extends Controller
 {
-    public function index($idSerie = 0, $idSector = 0){
+    public function index($anio = 0, $idSector = 0){
+        if($anio == 0)
+            $anio = (int)date('Y');
+        
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
 
@@ -28,17 +32,22 @@ class METController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        $parcelasSC = SegundaClonalDetalle::whereHas('segunda', function($query) use($idSerie){
+        /*$parcelasSC = SegundaClonalDetalle::whereHas('segunda', function($query) use($idSerie){
             $query->where('idserie', $idSerie);
-        })->orderBy('idprimeraclonal_detalle')->get();
+        })->orderBy('parcela')->get();*/
+        $variedades = Variedad::where('estado', 1)->get();
 
-        return view('admin.met.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasSC'));
+        $parcelasCargadas = METDetalle::whereHas('met', function($query) use($anio, $idSector){
+            $query->where('anio', $anio)->where('idsector', $idSector);
+        })->orderBy('parcela')->get();
+
+        return view('admin.met.seleccion.index2')->with(compact('series', 'ambientes', 'anio', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasCargadas', 'variedades'));
     }
 
     public function saveMET(Request $request){
         try{
             DB::transaction(function () use($request){
-                $met = MET::where('anio', $request->anio)->first();
+                /*$met = MET::where('anio', $request->anio)->first();
 
                 if($met){
                     $parcelasCargadas = $met->parcelas()->where('idsector', $request->sector);
@@ -83,10 +92,18 @@ class METController extends Controller
                             $i += 1;
                         }
                     }
-                }
+                }*/
+                $met = new MET();
+                $met->anio = $request->anio;
+                $met->idsector = $request->sector;
+                $met->cant_variedades = $request->cantVariedades;
+                $met->repeticiones = $request->repeticiones;
+                $met->bloques = $request->cantBloques;
+                $met->save();
             });
+            
             session(['exito' => 'exito']);
-            return response()->json(true);
+            return response()->json(true);  
         }
         catch(Exception $e){
             session(['error' => 'error']);
@@ -94,13 +111,13 @@ class METController extends Controller
         }
     }
 
-    private function getUltimaParcela($anio){
+    /*private function getUltimaParcela($anio){
         $ultimoSeedling = METDetalle::whereHas('met', function($q) use($anio){
             $q->where('anio', $anio);
         })->orderByDesc('parcela')->first();
 
         return $ultimoSeedling ? $ultimoSeedling->parcela : 0;
-    }
+    }*/
 
     private function regenerarNrosParcelas($anio){
         $seedlings = METDetalle::whereHas('met', function($q) use($anio){
@@ -114,4 +131,56 @@ class METController extends Controller
             $i++;
         }
     }
+
+    public function getMETAsociado(Request $request){
+        $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first() ?? null;
+
+        return response()->json($met);
+    }
+
+    public function getUltimaParcela(Request $request){
+        $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+        
+        if(count($met->parcelas) > 0){
+            $ultimo_met_detalle = $met->parcelas()->orderByDesc('parcela')->first();
+            return $ultimo_met_detalle->parcela;
+        }
+        else
+            return 0;
+    }
+
+    public function saveDetalleMET(Request $request){
+        try{
+            return DB::transaction(function () use($request){
+                Log::debug($request);
+                $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+
+                if($met){
+                    $met_detalle = new METDetalle();
+
+                    $met_detalle->idmet = $met->id;
+                    if($request->origenSeedling == 'sc')
+                        $met_detalle->idsegundaclonal_detalle = $request->seedlingsSC;
+                    else{
+                        if($request->origenSeedling == 'testigo')
+                            $met_detalle->idvariedad = $request->variedad;
+                        else
+                            $met_detalle->observaciones = $request->observaciones;
+                    }
+                    $met_detalle->parcela = $request->nroParcela;
+                    $met_detalle->bloque = $request->nroBloque;
+                    $met_detalle->save();
+
+                    return METDetalle::with(['parcelaSC.parcelaPC', 'variedad', 'parcelaSC.variedad'])->find($met_detalle->id);
+                }
+                else
+                    throw new Exception("No se encontro el MET correspondiente");
+                    return null;
+            });
+        }
+        catch(Exception $e){
+            Log::debug($e->getMessage());
+            return response()->json(false);
+        }
+    } 
 }

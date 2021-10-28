@@ -12,4 +12,12 @@ class METDetalle extends Model
     public function met(){
         return $this->belongsTo('App\MET', 'idmet', 'id');
     }
+
+    public function parcelaSC(){
+        return $this->belongsTo('App\SegundaClonalDetalle', 'idsegundaclonal_detalle', 'id');
+    }
+
+    public function variedad(){
+        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
+    }
 }

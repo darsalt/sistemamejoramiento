@@ -347,6 +347,7 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
     Route::put('/editSegundaClonal', 'SegundaClonalController@editSegundaClonal')->name('editSegundaClonal');
     Route::post('/saveSegundaClonal', 'SegundaClonalController@saveSegundaClonal')->name('saveSegundaClonal');
     Route::post('/saveTestigo', 'SegundaClonalController@saveTestigo')->name('saveTestigo');
+    Route::get('/getSegundaClonales', 'SegundaClonalController@getSegundaClonales')->name('getSegundaClonales');
 });
 
 // MET
@@ -357,4 +358,8 @@ Route::group(['prefix' => '/admin/met', 'as' => 'met.'], function () {
 // Rutas Ajax MET
 Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
     Route::post('/saveMET', 'METController@saveMET')->name('saveMET');
+    Route::get('/METAsociado', 'METController@getMETAsociado')->name('METAsociado');
+    Route::get('/getUltimaParcela', 'METController@getUltimaParcela')->name('getUltimaParcela');
+    Route::post('/saveDetalleMET', 'METController@saveDetalleMET')->name('saveDetalleMET');
 });
+

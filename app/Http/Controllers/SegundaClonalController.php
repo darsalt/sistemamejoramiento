@@ -126,6 +126,14 @@ class SegundaClonalController extends Controller
         return $seedling;
     }
 
+    public function getSegundaClonales(Request $request){
+        $seedlings = SegundaClonalDetalle::whereHas('segunda', function($query) use($request){
+            $query->where('idserie', $request->serie);
+        })->with(['parcelaPC'])->get();
+
+        return $seedlings;
+    }
+
     public function editSegundaClonal(Request $request){
         try{
             DB::transaction(function () use($request){
