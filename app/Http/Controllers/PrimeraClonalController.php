@@ -39,7 +39,7 @@ class PrimeraClonalController extends Controller
     public function getUltimaParcela($serie, $sector){
         $ultimoSeedling = PrimeraClonal::where('idserie', $serie)->where('idsector', $sector)->orderByDesc('parceladesde')->first();
 
-        return $ultimoSeedling ? $ultimoSeedling->parceladesde + $ultimoSeedling->cantidad - 1 : 0;
+        return $ultimoSeedling ? (int)$ultimoSeedling->parceladesde + $ultimoSeedling->cantidad - 1 : 0;
     }
 
     // Obtener el numero de la ultima parcela cargada
@@ -52,6 +52,7 @@ class PrimeraClonalController extends Controller
             $planta = new PrimeraClonalDetalle();
             $planta->primera()->associate($primeraClonal);
             $planta->parcela = $i;
+            $planta->nombre_clon = 'NA ' . substr($primeraClonal->serie->nombre, 2, 2) . ' ' . strval($i);
             $planta->laboratorio = 0;
             $planta->save();
         }
@@ -74,9 +75,10 @@ class PrimeraClonalController extends Controller
 
             $this::insertarDetalle($primeraClonal);
 
-            return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'seedling.semillado.cruzamiento.madre', 'seedling.semillado.cruzamiento.padre'])->first();
+            return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'seedling.semillado.cruzamiento.madre', 'seedling.semillado.cruzamiento.padre', 'seedling.variedad', 'parcelas'])->first();
         }
         catch(Exception $e){
+            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }

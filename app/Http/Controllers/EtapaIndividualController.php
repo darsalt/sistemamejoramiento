@@ -122,10 +122,16 @@ class EtapaIndividualController extends Controller
     }
 
     public function getProgenitoresSeedling(Request $request){
-        $idSemillado = Seedling::find($request->id)->idsemillado;
-        $semillado = Semillado::find($idSemillado);
-        $cruzamiento = $semillado->cruzamiento;
-        $progenitores = ['madre' => $cruzamiento->madre, 'padre' => $cruzamiento->padre];
+        $seedling = Seedling::find($request->id);
+        $idSemillado = $seedling->idsemillado;
+        if($idSemillado){
+            $semillado = Semillado::find($idSemillado);
+            $cruzamiento = $semillado->cruzamiento;
+            $progenitores = ['madre' => $cruzamiento->madre, 'padre' => $cruzamiento->padre, 'origen' => $seedling->origen];
+        }
+        else{
+            $progenitores = ['variedad' => $seedling->variedad->nombre, 'observaciones' => $seedling->observaciones, 'origen' => $seedling->origen];
+        }
         
         return $progenitores;
     }

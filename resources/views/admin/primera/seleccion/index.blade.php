@@ -157,20 +157,20 @@
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th>Campaña seedling</th>
+                        {{-- <th>Campaña seedling</th> --}}
                         <th>Parcela</th>
                         <th>Madre x Padre</th>
-                        <th>Desde</th>
+                        {{-- <th>Desde</th>
                         <th>Hasta</th>
-                        <th>Cantidad</th>
+                        <th>Cantidad</th> --}}
                         {{-- <th>Variedad</th> --}}
-                        <th></th>
+                        <th width="10%"></th>
                     </tr> 
-                <tbody>
+                <tbody id="bodyTablaSeedlings">
                     @if (isset($seedlings))
                         @foreach ($seedlings as $primera)
                             <tr>
-                                <td>{{$primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td>
+                                {{-- <td>{{$primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td> --}}
                                 <td>{{$primera->testigo ? '-' : $primera->seedling->parcela}}</td>
                                 <td>
                                     @if (!$primera->testigo)
@@ -188,9 +188,9 @@
                                     @endif
 
                                 </td>
-                                <td>{{$primera->testigo ? $primera->parceladesde : (int)$primera->parceladesde}}</td>
+                                {{-- <td>{{$primera->testigo ? $primera->parceladesde : (int)$primera->parceladesde}}</td>
                                 <td>{{$primera->testigo ? '-' : $primera->parceladesde + $primera->cantidad - 1}}</td>
-                                <td>{{$primera->cantidad}}</td>
+                                <td>{{$primera->cantidad}}</td> --}}
                                 {{-- <td>{{$primera->testigo ? $primera->variedad->nombre : '-'}}</td> --}}
                                 <td>
                                     @if (!$primera->testigo)
@@ -199,6 +199,26 @@
                                     @endif
                                 </td>
                             </tr>
+                            @if (count($primera->parcelas) > 0)
+                                <tr>
+                                    <td colspan="3">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <th>Parcela</th>
+                                                <th>Nombre clon</th>
+                                            </thead>
+                                            <tbody>
+                                                @foreach ($primera->parcelas as $parcela)
+                                                    <tr>
+                                                        <td>{{$parcela->parcela}}</td>
+                                                        <td>{{$parcela->nombre_clon}}</td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
                     @endif
                 </tbody>

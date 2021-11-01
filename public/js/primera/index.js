@@ -94,7 +94,7 @@ $(document).ready(function(){
                         $('#cantidad').text('');
                         $('#serie').focus();
 
-                        $('#tablaSeedlings tbody').append(agregarFila(response)); // Agrego fila a la tabla
+                        $('#bodyTablaSeedlings').append(agregarFila(response)); // Agrego fila a la tabla
 
                         mostrarMensajeExito();
                     },
@@ -204,7 +204,7 @@ $(document).ready(function(){
     });
 
     // Evento para cuando se selecciona la campaña de seedling
-    $('#campSeedling').change(function(parcela = 0){
+    $('#campSeedling').change(function(event, parcela = 0){
         $.ajax({
             url: config.routes.getSeedlings,
             type: 'GET',
@@ -214,9 +214,12 @@ $(document).ready(function(){
             success: function(response){
                 $('#parcela').empty();
                 
-                $.each(response, function(i, item){
+                $.each(response, function(i, item){  
                     $('#parcela').append("<option value='" + item.id + "'>" + item.parcela + "</option>");
                 });
+
+                if(parcela > 0)
+                    $('#parcela').val(parcela);
 
                 $('#parcela').trigger('change');
             }
@@ -237,7 +240,14 @@ $(document).ready(function(){
                 'id': $(this).val()
             },
             success: function(response){
-                $('#progenitores').text(response.madre.nombre + ' - ' + response.padre.nombre);
+                if(response.origen == 'cruzamiento')
+                    $('#progenitores').text(response.madre.nombre + ' - ' + response.padre.nombre);
+                else{
+                    if(response.origen == 'testigo')
+                        $('#progenitores').text(response.variedad);
+                    else
+                        $('#progenitores').text(response.observaciones);
+                }
             }
         });
     });
@@ -309,15 +319,34 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
-    fila += "<td>" + element.seedling.campania.nombre + "</td>";
+    //fila += "<td>" + element.seedling.campania.nombre + "</td>";
     fila += "<td>" + element.seedling.parcela + "</td>";
-    fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
-    fila += "<td>" + parseInt(element.parceladesde) + "</td>";
-    fila += "<td>" + (parseInt(element.parceladesde) + element.cantidad - 1) + "</td>";
-    fila += "<td>" + element.cantidad + "</td>";
+    if(element.seedling.origen == 'cruzamiento')
+        fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
+    else{
+        if(element.seedling.origen == 'testigo')
+            fila += "<td>" + element.seedling.variedad.nombre + "</td>";
+        else
+            fila += "<td>" + element.seedling.observaciones + "</td>";
+    }
+    //fila += "<td>" + parseInt(element.parceladesde) + "</td>";
+    //fila += "<td>" + (parseInt(element.parceladesde) + element.cantidad - 1) + "</td>";
+    //fila += "<td>" + element.cantidad + "</td>";
     fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
     fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
-    fila += '</tr>'
+    fila += "</tr>";
+
+    // Subtabla con las parcelas
+    fila += "<tr>";
+    fila += '<td colspan="3"><table class="table table-sm"><thead><th>Parcela</th><th>Nombre clon</th></thead><tbody>';
+    $.each(element.parcelas, function(i, item){
+        fila += "<tr>";
+        fila += "<td>" + item.parcela + "</td>";
+        fila += "<td>" + item.nombre_clon + "</td>";
+        fila += "</tr>";
+    });
+    fila += "</tbody></table></td>";
+    fila += "</tr>";
 
     return fila;
 }
@@ -337,9 +366,9 @@ function editarSeedling(id){
             $('#ambiente').val(response.sector.subambiente.ambiente.id);
             $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
             $('#campSeedling').val(response.seedling.idcampania);
-            $('#campSeedling').trigger('change', [response.seedling.parcela]);
-            $('#parcelaDesde').val(response.parceladesde);
-            $('#parcelaHasta').val(response.parceladesde + response.cantidad - 1);
+            $('#campSeedling').trigger('change', [response.seedling.id]);
+            $('#parcelaDesde').val(parseInt(response.parceladesde));
+            $('#parcelaHasta').val(parseInt(response.parceladesde) + response.cantidad - 1);
             $('#cantidad').text(response.cantidad);
 
             $('#formPrimeraClonal').attr('operation', 'edit'); // Cambiar el tipo de operacion del form, por defecto es insert
