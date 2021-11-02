@@ -336,7 +336,7 @@ Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');
 
 // Segunda Clonal
 Route::group(['prefix' => '/admin/segunda', 'as' => 'segundaclonal.'], function () {
-    Route::get('/seleccion/{serie?}/{sector?}', 'SegundaClonalController@index')->name('index');
+    Route::get('/seleccion/{anio?}/{serie?}/{sector?}', 'SegundaClonalController@index')->name('index');
     Route::delete('/{segunda?}', 'SegundaClonalController@delete')->name('delete');
     Route::delete('/testigo/{testigo?}', 'SegundaClonalController@deleteTestigo')->name('deleteTestigo');
 });
@@ -348,6 +348,7 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
     Route::post('/saveSegundaClonal', 'SegundaClonalController@saveSegundaClonal')->name('saveSegundaClonal');
     Route::post('/saveTestigo', 'SegundaClonalController@saveTestigo')->name('saveTestigo');
     Route::get('/getSegundaClonales', 'SegundaClonalController@getSegundaClonales')->name('getSegundaClonales');
+    Route::get('/getUltimaParcela', 'SegundaClonalController@getUltimaParcelaAjax')->name('getUltimaParcela');
 });
 
 // MET

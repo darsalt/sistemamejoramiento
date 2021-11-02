@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Log;
 
 class SegundaClonalController extends Controller
 {
-    public function index($idSerie = 0, $idSector = 0){
+    public function index($anio = 0, $idSerie = 0, $idSector = 0){
+        if($anio == 0)
+            $anio = date('Y');
+        
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
         //$seedlings = SegundaClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
@@ -30,25 +33,25 @@ class SegundaClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie, $idSector){
+        $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie){
             $query->where('idserie', $idSerie);
         });
         
         $parcelasPC = $parcelasPC->orderBy('parcela')->get();
         $variedades = Variedad::where('estado', 1)->get();
-        $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie){
-            $q->where('idserie', $idSerie);
-        })->where('idsector', $idSector)->where('testigo', 1)->get();
+        $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSector){
+            $q->where('anio', $anio)->where('idsector', $idSector);
+        })->where('testigo', 1)->get();
 
-        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'variedades', 'testigos'));
+        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'variedades', 'testigos', 'anio'));
     }
 
     public function saveSegundaClonal(Request $request){
         try{
             DB::transaction(function () use($request){
-                $segunda = SegundaClonal::where('idserie', $request->serie)->first();
+                $segunda = SegundaClonal::where('anio', $request->anio)->where('idsector', $request->sector)->first();
 
-                if($segunda){
+                /*if($segunda){
                     $parcelasCargadas = $segunda->parcelas()->where('idsector', $request->sector);
 
                     foreach($parcelasCargadas->get() as $parcela){
@@ -77,18 +80,6 @@ class SegundaClonalController extends Controller
                             $seedling->save();
                         }
                     }
-/*                     foreach($request->seedlingsPC ?? [] as $nroParcela){
-                        // Cargamos las parcelas nuevas que nunca fueron agregadas
-                        if(!in_array($nroParcela, $parcelasCargadas->pluck('idprimeraclonal_detalle')->toArray())){
-                            $seedling = new SegundaClonalDetalle();
-                            $seedling->idsegundaclonal = $segunda->id;
-                            $seedling->idprimeraclonal_detalle = $nroParcela;
-                            $seedling->idsector = $request->sector;
-                            $seedling->parcela = $i;
-                            $seedling->save();
-                            $i += 1;
-                        }
-                    } */
                 }
                 else{
                     if($request->seedlingsPC){
@@ -109,6 +100,27 @@ class SegundaClonalController extends Controller
                             $seedling->save();  
                         }
                     }
+                }*/
+                if(!$segunda){
+                    $segunda = new SegundaClonal();
+                    $segunda->anio = $request->anio;
+                    $segunda->idsector = $request->sector;
+                    $segunda->fecha = now();
+                    $segunda->save();
+                }
+
+                $parcelasCargadas = $segunda->parcelas()->where('idserie', $request->serie)->get();
+                foreach($parcelasCargadas as $parcela){
+                    $parcela->delete();
+                }
+
+                for($i = 0; $i < count($request->seedlingsPC); $i++){
+                    $parcela = new SegundaClonalDetalle();
+                    $parcela->idsegundaclonal = $segunda->id;
+                    $parcela->idprimeraclonal_detalle = $request->seedlingsPC[$i];
+                    $parcela->idserie = $request->serie;
+                    $parcela->parcela = $request->parcelas[$i];
+                    $parcela->save();  
                 }
             });
             session(['exito' => 'exito']);
@@ -183,12 +195,16 @@ class SegundaClonalController extends Controller
         }
     }
 
-    private function getUltimaParcela($idSerie){
-        $ultimoSeedling = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie){
-            $q->where('idserie', $idSerie);
+    private function getUltimaParcela($anio, $idSector){
+        $ultimoSeedling = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSector){
+            $q->where('anio', $anio)->where('idsector', $idSector);
         })->orderByDesc('parcela')->first();
 
         return $ultimoSeedling ? $ultimoSeedling->parcela : 0;
+    }
+
+    public function getUltimaParcelaAjax(Request $request){
+        return $this->getUltimaParcela($request->anio, $request->sector);
     }
 
     private function regenerarNrosParcelas($idSerie){
@@ -207,12 +223,12 @@ class SegundaClonalController extends Controller
     public function saveTestigo(Request $request){
         try{
             $segunda_detalle = DB::transaction(function () use($request){
-                $segunda = SegundaClonal::where('idserie', $request->serie)->first();
+                $segunda = SegundaClonal::where('anio', $request->anio)->where('idsector', $request->sector)->first();
 
                 $segunda_detalle = new SegundaClonalDetalle();
                 $segunda_detalle->segunda()->associate($segunda);
-                $segunda_detalle->idsector = $request->sector;
-                $segunda_detalle->parcela = $request->parcelaTestigo + 0.5;
+                //$segunda_detalle->idserie = $request->serie;
+                $segunda_detalle->parcela = $request->parcelaTestigo;
                 $segunda_detalle->testigo = 1;
                 $segunda_detalle->idvariedad = $request->variedad;
                 $segunda_detalle->save();

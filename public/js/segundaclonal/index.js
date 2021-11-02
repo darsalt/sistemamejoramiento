@@ -1,3 +1,6 @@
+var ultimaParcela = 0;
+var yaSeleccionados = 0;
+
 $(document).ready(function(){    
     // Seleccionar en el combo box la campaña activa
     $('#serie').val(config.data.serieActiva);
@@ -14,22 +17,36 @@ $(document).ready(function(){
     $('#tableSeedlingsPC').paging({
         limit: 10,
     });
+        
+    $('#anio').val(config.data.anioActivo);
 
-    habilitarDeshabilitarSeedlings(config.data.sectorActivo);
+    $.ajax({
+        url: config.routes.getUltimaParcela,
+        method: 'GET',
+        ajaxType: 'json',
+        data: {
+            'anio': $('#anio').val(),
+            'sector': config.data.sectorActivo
+        },
+        success: function(response){
+            ultimaParcela = response;
+        }
+    });
+
+    habilitarDeshabilitarSeedlings($('#anio').val(), config.data.sectorActivo);
 
     // De los campos parcela habilitados (es decir que son del sector activo) obtener el maximo
-    if(config.data.sectorActivo){
+    /*if(config.data.anioActivo && config.data.sectorActivo){
+        var contParcelas;
+
         maximaParcela = Math.max(...$("input[name='parcelas[]']:enabled").map(function(){return parseInt($(this).val());}).get());
-        if(maximaParcela)
-            var contParcelas = maximaParcela;
+        if(maximaParcela > 0)
+            contParcelas = maximaParcela;
         else
-            var contParcelas = 0;
-    }
+            contParcelas = 0;
+    }*/
 
     $('#serie').focus();
-    
-    if(sessionStorage.getItem('anio'))
-        $('#anio').val(sessionStorage.getItem('anio'));
 
     // Habilitar el bloque para ingresar testigos cuando ya se eligio una serie
     if(config.data.serieActiva > 0 && config.data.sectorActivo > 0)
@@ -85,7 +102,7 @@ $(document).ready(function(){
                     dataType: 'json',
                     data: $(form).serialize(),
                     success: function(response){
-                        window.location.href = config.routes.segundaclonal + "/" + $('#serie').val()  + "/" + $('#sector').val();
+                        window.location.href = config.routes.segundaclonal + "/" + $('#anio').val() + "/" + $('#serie').val()  + "/" + $('#sector').val();
                     },
                     error: function( jqXHR, textStatus, errorThrown ){
                         mostrarMensajeError();
@@ -108,7 +125,7 @@ $(document).ready(function(){
                 url: config.routes.saveTestigo,
                 method: 'POST',
                 dataType: 'json',
-                data: $(form).serialize() + "&serie=" + config.data.serieActiva  + "&sector=" + config.data.sectorActivo,
+                data: $(form).serialize() + "&anio=" + config.data.anioActivo  + "&sector=" + config.data.sectorActivo,
                 success: function(response){
                     mostrarMensajeExito();
                     $('#tablaTestigos tbody').append(agregarFilaTestigo(response)); // Agrego fila a la tabla
@@ -127,18 +144,20 @@ $(document).ready(function(){
     });
 
     $('#anio').change(function(){
-        sessionStorage.setItem('anio', $('#anio').val())
+        if($('#sector').val() > 0)
+            window.location.href = config.routes.segundaclonal +  "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val();
     });
 
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
-        window.location.href = config.routes.segundaclonal + "/" + $('#serie').val();
+        if($('#anio').val() > 0 && $('#sector').val() > 0)
+            window.location.href = config.routes.segundaclonal + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val();;
     });
 
     // Evento cuando se selecciona un sector
     $('#sector').change(function(){
-        if($('#serie').val() > 0)
-            window.location.href = config.routes.segundaclonal + "/" + $('#serie').val() + "/" + $('#sector').val();
+        if($('#anio').val() > 0)
+            window.location.href = config.routes.segundaclonal + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val();
     });
 
     // Evento para cuando se selecciona un ambiente
@@ -237,17 +256,15 @@ $(document).ready(function(){
     $('.check-seleccionado').click(function(){
         let row = $(this).closest("tr");
         let inputParcela = row.find("input[name='parcelas[]']")
+        let cont = $('.check-seleccionado:checked').length;
 
         if($(this).prop('checked')){
-            contParcelas += 1;
-            inputParcela.val(contParcelas);
+
+            inputParcela.val(parseInt(ultimaParcela) + cont - yaSeleccionados);
             inputParcela.removeAttr('disabled');
         }
         else{
             inputParcela.attr('disabled', 'disabled');
-            if(inputParcela.val() == contParcelas)
-                contParcelas--;
-
             inputParcela.val('');
         }
     });
@@ -302,21 +319,24 @@ function editarSeedling(id){
     //$('#seedlingsPC').multiselect('rebuild');
 } */
 
-function habilitarDeshabilitarSeedlings(idSector){
+function habilitarDeshabilitarSeedlings(anio, idSector){
     $("input[name='seedlingsPC[]']:checked").removeAttr("checked");
-    $("input[name='seedlingsPC[]']:disabled").removeAttr("disabled");
 
     $("input[name='seedlingsPC[]'").each(function(){
-        if($(this).data('idsc') && $(this).data('idsector') == idSector){
-            $(this).attr("checked", "checked");
-        }
-
-        if($(this).data('idsc') && $(this).data('idsector') != idSector){
-            let row = $(this).closest("tr");
-            let inputParcela = row.find("input[name='parcelas[]']")
-
-            $(this).attr("disabled", "disabled");
-            inputParcela.attr("disabled", "disabled");
+        var segundas = $(this).data('segundas');
+        var option = $(this);
+        var row = $(this).closest("tr");
+        var inputParcela = row.find("input[name='parcelas[]']")
+        
+        if(segundas){
+            segundas.forEach(function(valor, i){
+                if(valor.segunda.anio == anio && valor.segunda.idsector == idSector){
+                    option.attr("checked", "checked");
+                    inputParcela.removeAttr('disabled');
+                    inputParcela.val(parseInt(valor.parcela));
+                    yaSeleccionados++;
+                }
+            });
         }
     });
 }
@@ -326,7 +346,7 @@ function agregarFilaTestigo(element){
 
     fila += "<tr>";
     fila += "<td>" + element.variedad.nombre + "</td>";
-    fila += "<td>" + element.parcela + "</td>";
+    fila += "<td>" + parseInt(element.parcela) + "</td>";
     fila += "<td><button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>";
     fila += '</tr>'
 

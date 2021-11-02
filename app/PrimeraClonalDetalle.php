@@ -13,7 +13,7 @@ class PrimeraClonalDetalle extends Model
         return $this->belongsTo('App\PrimeraClonal', 'idprimeraclonal', 'id');
     }
 
-    public function segunda(){
-        return $this->hasOne('App\SegundaClonalDetalle', 'idprimeraclonal_detalle', 'id');
+    public function segundas(){
+        return $this->hasMany('App\SegundaClonalDetalle', 'idprimeraclonal_detalle', 'id');
     }
 }

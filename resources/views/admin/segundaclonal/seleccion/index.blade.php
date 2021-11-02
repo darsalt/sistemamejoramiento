@@ -16,11 +16,6 @@
 		<h3>Segunda Clonal</h3> 
 	</div>
 </div>
-<div class="row">
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<button id="btnToggleForm" class="btn btn-primary mb-2">Ocultar formulario</button>
-	</div>
-</div>
 
 <div class="row">
     <div class="col-12">
@@ -113,20 +108,21 @@
                         <th>Seleccionado</th>
                         <th width="5%">Parcela</th>
                         <th>Parcela PC</th>
+                        <th>Nombre clon</th>
                         <th>Madre x Padre</th>
-                        <th>Ubicación actual</th>
                     </thead>
                     <tbody>
                         @foreach ($parcelasPC as $parcela)
                         <tr>
                             <td class="text-center">
-                                <input type="checkbox" class="form-check-input check-seleccionado" value="{{$parcela->id}}" name="seedlingsPC[]" data-idsector="{{$parcela->segunda ? $parcela->segunda->idsector : null}}"
-                                    data-idsc="{{$parcela->segunda ? $parcela->segunda->idsegundaclonal : null}}" data-laboratorio="{{$parcela->laboratorio}}" style="width: 15px; height: 15px;">
+                                <input type="checkbox" class="form-check-input check-seleccionado" value="{{$parcela->id}}" name="seedlingsPC[]"
+                                    data-segundas="{{$parcela->segundas()->with('segunda')->get()}}" data-laboratorio="{{$parcela->laboratorio}}" style="width: 15px; height: 15px;">
                             </td>
                             <td class="text-center">
                                 <input type="number" class="form-control input-parcela" name="parcelas[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->parcela : 'disabled'}}>
                             </td>
                             <td>{{$parcela->parcela}}</td>
+                            <td>{{$parcela->nombre_clon}}</td>
                             <td>
                                 @if ($parcela->primera->seedling->origen == 'cruzamiento')
                                     {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}    
@@ -138,11 +134,6 @@
                                     @endif 
                                 @endif
                             </td>
-                            @if ($parcela->segunda)
-                                <td>{{$parcela->segunda->sector->subambiente->ambiente->nombre . ' - ' . $parcela->segunda->sector->subambiente->nombre . ' - ' . $parcela->segunda->sector->nombre}}</td>    
-                            @else
-                                <td></td>
-                            @endif  
                         </tr>
                         @endforeach
                     </tbody>
@@ -199,7 +190,7 @@
                     @foreach ($testigos as $testigo)
                         <tr>
                             <td>{{$testigo->variedad->nombre}}</td>
-                            <td>{{$testigo->parcela}}</td>
+                            <td>{{(int)$testigo->parcela}}</td>
                             <td><button class='btn deleteBtn' data-id="{{$testigo->id}}"><i class='fa fa-trash fa-lg'></i></button></td>
                         </tr>
                     @endforeach
@@ -253,13 +244,15 @@ role="dialog" tabindex="-1" id="modal-delete">
                 editSegundaClonal: "{{route('ajax.segundaclonal.editSegundaClonal')}}",
                 deleteSegundaClonal: "{{route('segundaclonal.delete')}}",
                 saveTestigo: "{{route('ajax.segundaclonal.saveTestigo')}}",
-                deleteTestigo: "{{route('segundaclonal.deleteTestigo')}}"
+                deleteTestigo: "{{route('segundaclonal.deleteTestigo')}}",
+                getUltimaParcela: "{{route('ajax.segundaclonal.getUltimaParcela')}}"
             },
             data: {
                 serieActiva: "{{$idSerie}}",
                 ambienteActivo: "{{$idAmbiente}}",
                 subambienteActivo: "{{$idSubambiente}}",
                 sectorActivo: "{{$idSector}}",
+                anioActivo: "{{$anio}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",
