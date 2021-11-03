@@ -271,7 +271,10 @@ role="dialog" tabindex="-1" id="modal-delete">
                 getProgenitoresSemillado: "{{route('ajax.semillados.getProgenitores')}}"
             },
             data: {
-                campActiva: "{{$idCampania}}"
+                campActiva: "{{$idCampania}}",
+                sectorActivo: "{{$idSector}}",
+                ambienteActivo: "{{$idAmbiente}}",
+                subambienteActivo: "{{$idSubambiente}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",

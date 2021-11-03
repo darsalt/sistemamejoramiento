@@ -264,7 +264,7 @@ Route::resource('admin/campaniasemillado','CampaniaSemilladoController');
 Route::get('admin/camaras/{id}/{idCa}', 'CamaraController@CambiarCamara');
 
 Route::resource('admin/inventario', 'InventarioController');
-Route::get('admin/individual/inventario', 'EtapaIndividualController@inventario');
+Route::get('admin/individual/inventario', 'EtapaIndividualController@inventario')->name('individual.inventario.index');
 
 
 //Route::get('/admin/podergerminativo/edit/{campania}','CruzamientoController@ubicacionesasociadas');
@@ -299,7 +299,7 @@ Route::put('ajax/semillados/editSemillado', 'SemilladoController@editSemillado')
 Route::get('ajax/semillados/getProgenitores', 'SemilladoController@getProgenitores')->name('ajax.semillados.getProgenitores');
 
 Route::resource('admin/individual/campaniaseedling','CampaniaSeedlingController');
-Route::get('admin/individual/seleccion/{campania?}', 'EtapaIndividualController@index')->name('individual.index');
+Route::get('admin/individual/seleccion/{campania?}/{sector?}', 'EtapaIndividualController@index')->name('individual.index');
 Route::delete('admin/individual/{seedling?}', 'EtapaIndividualController@delete')->name('individual.delete');
 
 // Rutas Ajax para seedling

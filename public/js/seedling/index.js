@@ -169,7 +169,8 @@ $(document).ready(function(){
         url: config.routes.getUltimaParcela,
         type: 'GET',
         data: {
-            'campania':  $('#campSeedling').val()
+            'campania':  $('#campSeedling').val(),
+            'sector': config.data.sectorActivo
         },
         success: function(response){
             $('#parcela').text(response + 1);
@@ -186,7 +187,8 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona una campaña de seedling
     $('#campSeedling').change(function(){
-        window.location.href = config.routes.seedlings + "/" + $('#campSeedling').val();
+        if($('#sector').val() > 0)
+            window.location.href = config.routes.seedlings + "/" + $('#campSeedling').val()  + "/" + $('#sector').val();
     });
 
     // Evento para cuando se selecciona un ambiente
@@ -203,6 +205,7 @@ $(document).ready(function(){
             success: function(response){
                 $('#subambiente').empty();
                 
+                $('#subambiente').append("<option value='0' disabled selected>(Ninguno)</option>");
                 $.each(response, function(i, item){
                     $('#subambiente').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
@@ -215,6 +218,9 @@ $(document).ready(function(){
         });
         $(this).trigger('blur');
     });
+
+    $('#ambiente').val(config.data.ambienteActivo);
+    $('#ambiente').trigger('change', [config.data.subambienteActivo, config.data.sectorActivo]);
 
     // Evento para cuando se selecciona un subambiente
     $('#subambiente').change(function(event, idsector = 0){
@@ -230,14 +236,13 @@ $(document).ready(function(){
             success: function(response){
                 $('#sector').empty();
                 
+                $('#sector').append("<option value='0' disabled selected>(Ninguno)</option>");
                 $.each(response, function(i, item){
                     $('#sector').append("<option value='" + item.id + "'>" + item.nombre + "</option>");
                 });
 
                 if(idsector > 0)
                     $('#sector').val(idsector);
-
-                $('#sector').trigger('change');
             }
         });
         $(this).trigger('blur');
@@ -245,7 +250,8 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona un sector
     $('#sector').change(function(){
-        $(this).trigger('blur');
+        if($('#campSeedling').val() > 0)
+            window.location.href = config.routes.seedlings + "/" + $('#campSeedling').val()  + "/" + $('#sector').val();
     });
 
     // Evento para cuando se selecciona el origen
