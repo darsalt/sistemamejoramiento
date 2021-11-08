@@ -73,6 +73,7 @@
                     <th>Campaña Seedling</th>
                     <th>Parcela</th>
                     <th>Madre x Padre</th>   
+                    <th>Nombre clon</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,10 +85,25 @@
                                     <input type="checkbox" class="form-check-input check-laboratorio" value="{{$parcela->id}}" {{$parcela->laboratorio ? 'checked' : ''}}
                                     style="width: 15px; height: 15px;">
                                 </td>
-                                <td>{{$parcela->parcela}}</td>
-                                <td>{{$primera->seedling->campania->nombre}}</td>
-                                <td>{{$primera->seedling->parcela}}</td>
-                                <td>{{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}</td>
+                                <td>{{$parcela->primera->testigo ? $parcela->parcela : (int)$parcela->parcela}}</td>
+                                <td>{{$parcela->primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td>
+                                <td>{{$parcela->primera->testigo ? '-' : $primera->seedling->parcela}}</td>
+                                <td>
+                                    @if ($parcela->primera->testigo)
+                                        {{$parcela->primera->variedad->nombre}}
+                                    @else
+                                        @if ($primera->seedling->origen == 'cruzamiento')
+                                            {{$primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $primera->seedling->semillado->cruzamiento->padre->nombre}}   
+                                        @else
+                                            @if ($primera->seedling->origen == 'testigo')
+                                                {{$primera->seedling->variedad->nombre}}
+                                            @else
+                                                {{$primera->seedling->observaciones}}
+                                            @endif
+                                        @endif 
+                                    @endif
+                                </td>
+                                <td>{{$parcela->nombre_clon}}</td>
                             </tr>
                         @endforeach
                     @endforeach
