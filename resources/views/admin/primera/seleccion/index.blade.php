@@ -210,8 +210,8 @@
                                             <tbody>
                                                 @foreach ($primera->parcelas as $parcela)
                                                     <tr>
-                                                        <td>{{$parcela->parcela}}</td>
-                                                        <td>{{$parcela->nombre_clon}}</td>
+                                                        <td>{{$parcela->primera->testigo ? $parcela->parcela : (int)$parcela->parcela}}</td>
+                                                        <td>{{$parcela->primera->testigo ? $parcela->primera->variedad->nombre : $parcela->nombre_clon}}</td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>

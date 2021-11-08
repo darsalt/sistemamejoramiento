@@ -141,7 +141,7 @@ class SegundaClonalController extends Controller
     public function getSegundaClonales(Request $request){
         $seedlings = SegundaClonalDetalle::whereHas('segunda', function($query) use($request){
             $query->where('idserie', $request->serie);
-        })->with(['parcelaPC'])->get();
+        })->with(['parcelaPC.primera.variedad', 'variedad'])->get();
 
         return $seedlings;
     }

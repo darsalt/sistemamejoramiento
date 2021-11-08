@@ -21,7 +21,8 @@ class PrimeraClonalController extends Controller
     public function index($idSerie = 0, $idSector = 0){
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
-        $seedlings = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
+        $seedlings = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)
+        ->orderBy('parcelaDesde')->paginate(10);
         $campSeedling = CampaniaSeedling::where('estado', 1)->get();
         $variedades = Variedad::where('estado', 1)->get();
 
@@ -78,7 +79,6 @@ class PrimeraClonalController extends Controller
             return PrimeraClonal::where('id', $primeraClonal->id)->with(['serie', 'seedling.campania', 'seedling.semillado.cruzamiento.madre', 'seedling.semillado.cruzamiento.padre', 'seedling.variedad', 'parcelas'])->first();
         }
         catch(Exception $e){
-            Log::debug($e->getMessage());
             return response()->json($e->getMessage());
         }
     }
@@ -189,6 +189,9 @@ class PrimeraClonalController extends Controller
             DB::transaction(function() use ($request){
                 if(count($request->testigoVariedad) == count($request->testigoParcela)){
                     // Borrar todos los testigos previos
+                    PrimeraClonalDetalle::whereHas('primera', function($q) use($request){
+                        $q->where('testigo', 1)->where('idserie', $request->serie)->where('idsector', $request->sector);
+                    })->delete();
                     PrimeraClonal::where('testigo', 1)->where('idserie', $request->serie)->where('idsector', $request->sector)->delete();
 
                     for($i = 0; $i < count($request->testigoVariedad); $i++){
@@ -201,7 +204,7 @@ class PrimeraClonalController extends Controller
                         })->get();
 
                         foreach($detalles as $detalle){
-                            if(str_ends_with((string)$detalle->parcela, (string)$parcela)){
+                            if(str_ends_with((string)((int)$detalle->parcela), (string)$parcela)){
                                 $primeraRelacionado = $detalle->primera;
                                 $primeraClonal = new PrimeraClonal();
     
@@ -213,8 +216,12 @@ class PrimeraClonalController extends Controller
                                 $primeraClonal->cantidad = 1;
                                 $primeraClonal->idvariedad = $variedad;
                                 $primeraClonal->testigo = 1;
-    
                                 $primeraClonal->save();
+
+                                $primeraClonalDetalle = new PrimeraClonalDetalle();
+                                $primeraClonalDetalle->idprimeraclonal = $primeraClonal->id;
+                                $primeraClonalDetalle->parcela = $detalle->parcela + 0.5;
+                                $primeraClonalDetalle->save();
                             }
                         }
                         /*while($detalle){

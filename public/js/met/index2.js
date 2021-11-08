@@ -134,10 +134,13 @@ $(document).ready(function(){
                 $('#seedlingsSC').append("<option value='0' selected disabled>(Ninguna)</option>");
                 $.each(response, function(i, item){
                     if(item.parcela_p_c != null){
-                        $('#seedlingsSC').append("<option value='" + item.id + "'>" + parseInt(item.parcela_p_c.parcela) + ' - Clon: ' + item.parcela_p_c.nombre_clon + "</option>");
+                        if(item.parcela_p_c.nombre_clon != null)
+                            $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela PC: ' + parseInt(item.parcela_p_c.parcela) + ' - Clon: ' + item.parcela_p_c.nombre_clon + "</option>");
+                        else
+                            $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela PC: ' + parseInt(item.parcela_p_c.parcela) + ' - Variedad: ' + item.parcela_p_c.primera.variedad.nombre + "</option>");
                     }
                     else{
-                        $('#seedlingsSC').append("<option value='" + item.id + "'>" + item.parcela + "</option>");
+                        $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela SC: ' + item.parcela + ' - Variedad: ' + item.variedad.nombre + "</option>");
                     }
                 });
             }

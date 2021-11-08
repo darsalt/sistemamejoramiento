@@ -14,9 +14,9 @@ $(document).ready(function(){
     // Aplicar select2 a combos box
     $('#ambiente, #subambiente, #sector, #parcela, #variedad').select2();
 
-    $('#tableSeedlingsPC').paging({
+    /*$('#tableSeedlingsPC').paging({
         limit: 10,
-    });
+    });*/
         
     $('#anio').val(config.data.anioActivo);
 
