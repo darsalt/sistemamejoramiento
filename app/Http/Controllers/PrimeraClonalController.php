@@ -281,7 +281,7 @@ class PrimeraClonalController extends Controller
 
         $seedlingsPC = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
-        })->get();
+        })->where('laboratorio', 0)->get();
 
         $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
         ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'C')->first();
