@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Ambiente;
 use App\CampaniaSeedling;
+use App\Edad;
+use App\EvaluacionDetalleCampoSanidadPC;
+use App\EvaluacionPrimeraClonal;
 use App\Http\Controllers\Controller;
 use App\PrimeraClonal;
 use App\PrimeraClonalDetalle;
@@ -254,6 +257,92 @@ class PrimeraClonalController extends Controller
             return response()->json(true);
         }
         catch(Exception $e){
+            session(['error' => 'error']);
+            return response()->json(false);
+        }
+    }
+
+    function evCampoSanidad($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
+        if($anio == 0)
+            $anio = date('Y');
+        
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $edades = Edad::all();
+        $series = Serie::where('estado', 1)->get();
+        $sector = Sector::find($idSector);
+
+        if($sector){
+            $idSubambiente = $sector->subambiente->id;
+            $idAmbiente = $sector->subambiente->ambiente->id;
+        }
+        else{
+            $idSubambiente = $idAmbiente = 0;    
+        }
+
+        $seedlingsPC = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
+        })->get();
+
+        $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
+        ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'C')->first();
+        if($evaluacion){
+            $fecha_calendario = $evaluacion->fecha;
+            $idEvaluacion = $evaluacion->id;
+        }
+        else{
+            $fecha_calendario = now();
+            $idEvaluacion = 0;
+        }
+
+        return view('admin.primera.evaluaciones.campo_sanidad', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlingsPC', 'fecha_calendario', 'idEvaluacion'));
+    }
+
+    function saveEvCampoSanidad(Request $request){
+        try{
+            DB::transaction(function () use($request){
+                $evaluacion = EvaluacionPrimeraClonal::where('anio', $request->anio)->where('idserie', $request->serie)->where('idsector', $request->sector)
+                ->where('mes', $request->mes)->where('idedad', $request->edad)->where('tipo', 'C')->first();
+
+                if(!$evaluacion){
+                    $evaluacion = new EvaluacionPrimeraClonal();
+                    $evaluacion->idserie = $request->serie;
+                    $evaluacion->idsector = $request->sector;
+                    $evaluacion->anio = $request->anio;
+                    $evaluacion->mes = $request->mes;
+                    $evaluacion->idedad = $request->edad;
+                    $evaluacion->tipo = 'C';
+                    $evaluacion->fecha = $request->fecha;
+                    $evaluacion->save();
+                }
+
+                $evaluacionDetalle = EvaluacionDetalleCampoSanidadPC::where('idevaluacion', $evaluacion->id)->where('idseedling', $request->idSeedling)->first();
+                if(!$evaluacionDetalle){
+                    $evaluacionDetalle = new EvaluacionDetalleCampoSanidadPC();
+                    $evaluacionDetalle->idevaluacion = $evaluacion->id;
+                    $evaluacionDetalle->idseedling = $request->idSeedling;
+                }
+                $evaluacionDetalle->tipo = $request->tipo;
+                $evaluacionDetalle->tallos = $request->tallos;
+                $evaluacionDetalle->altura = $request->altura;
+                $evaluacionDetalle->grosor = $request->grosor;
+                $evaluacionDetalle->vuelco = $request->vuelco;
+                $evaluacionDetalle->flor = $request->flor;
+                $evaluacionDetalle->brix = $request->brix;
+                $evaluacionDetalle->escaldad = $request->escaldad;
+                $evaluacionDetalle->carbon = $request->carbon;
+                $evaluacionDetalle->roya = $request->roya;
+                $evaluacionDetalle->mosaico = $request->mosaico;
+                $evaluacionDetalle->estaria = $request->estaria;
+                $evaluacionDetalle->amarilla = $request->amarilla;
+                $evaluacionDetalle->save();
+            });
+
+            session(['exito' => 'exito']);
+            return response()->json(true);
+        }
+        catch(Exception $e){
+            Log::debug($e->getMessage());
             session(['error' => 'error']);
             return response()->json(false);
         }

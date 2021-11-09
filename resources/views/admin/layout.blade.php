@@ -626,7 +626,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-            </ul>            
+            </ul>    
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{route('primeraclonal.evaluaciones.camposanidad')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Campo-Sanidad
+                  </p>
+                </a>
+              </li>
+            </ul> 
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Laboratorio
+                  </p>
+                </a>
+              </li>
+            </ul>         
           </li>
 
           <!--Segunda Clonal-->
@@ -647,7 +667,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-            </ul>          
+            </ul>   
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Campo-Sanidad
+                  </p>
+                </a>
+              </li>
+            </ul> 
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Laboratorio
+                  </p>
+                </a>
+              </li>
+            </ul>         
           </li>
 
           <!--MET-->
@@ -668,7 +708,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-            </ul>          
+            </ul>    
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Campo-Sanidad
+                  </p>
+                </a>
+              </li>
+            </ul> 
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Ev. Laboratorio
+                  </p>
+                </a>
+              </li>
+            </ul>        
           </li>
 
 

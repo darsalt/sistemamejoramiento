@@ -16,4 +16,8 @@ class PrimeraClonalDetalle extends Model
     public function segundas(){
         return $this->hasMany('App\SegundaClonalDetalle', 'idprimeraclonal_detalle', 'id');
     }
+
+    public function evaluacionesCampoSanidad(){
+        return $this->hasMany('App\EvaluacionDetalleCampoSanidadPC', 'idseedling', 'id');
+    }
 }
