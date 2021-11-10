@@ -140,13 +140,27 @@
                         <th width="7%">Pol en caña</th>
                     </tr> 
                 <tbody>
-                    @foreach ($seedlingsPC as $seedling)
+                    @foreach ($seedlings as $seedling)
                         <tr>
                             <td>
                                 <input type="number" disabled hidden value="{{$seedling->id}}" class="idSeedling">
-                                {{$seedling->primera->testigo ? $seedling->parcela : (int)$seedling->parcela}}
+                                @if ($origen == 'pc')
+                                    {{$seedling->primera->testigo ? $seedling->parcela : (int)$seedling->parcela}}    
+                                @else
+                                    {{(int)$seedling->parcela}}
+                                @endif     
                             </td>
-                            <td>{{$seedling->nombre_clon}}</td>
+                            <td>
+                                @if ($origen == 'pc')
+                                    {{$seedling->nombre_clon}}
+                                @else
+                                    @if ($origen == 'sc')
+                                        {{$seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon}}
+                                    @else
+                                        {{$seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre}}
+                                    @endif
+                                @endif  
+                            </td>
                             <td><input type="number" class="form-control" id="{{'pesomuestra-' . $seedling->id}}" 
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : ''}}"></td>
                             <td><input type="number" class="form-control" id="{{'pesojugo-' . $seedling->id}}"
@@ -179,10 +193,14 @@
     <script>
         var config = {
             routes: {
-                evaluaciones: "{{route('primeraclonal.evaluaciones.laboratorio')}}",
+                evaluacionesPC: "{{route('primeraclonal.evaluaciones.laboratorio')}}",
+                evaluacionesSC: "{{route('segundaclonal.evaluaciones.laboratorio')}}",
+                evaluacionesMET: "{{route('met.evaluaciones.laboratorio')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
-                saveEvaluacion: "{{route('ajax.primeraclonal.evaluaciones.saveEvLaboratorio')}}"
+                saveEvaluacionPC: "{{route('ajax.primeraclonal.evaluaciones.saveEvLaboratorio')}}",
+                saveEvaluacionSC: "{{route('ajax.segundaclonal.evaluaciones.saveEvLaboratorio')}}",
+                saveEvaluacionMET: "{{route('ajax.met.evaluaciones.saveEvLaboratorio')}}",
             },
             data: {
                 anioActivo: "{{$anio}}",
@@ -191,7 +209,8 @@
                 sectorActivo: "{{$idSector}}",
                 serieActiva: "{{$idSerie}}",
                 mesActivo: "{{$mes}}",
-                edadActiva: "{{$edad2}}"
+                edadActiva: "{{$edad2}}",
+                origen: "{{$origen}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",

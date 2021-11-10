@@ -142,13 +142,27 @@
                         <th width="7%">Amarilla</th>
                     </tr> 
                 <tbody>
-                    @foreach ($seedlingsPC as $seedling)
+                    @foreach ($seedlings as $seedling)
                         <tr>
                             <td>
                                 <input type="number" disabled hidden value="{{$seedling->id}}" class="idSeedling">
-                                {{$seedling->primera->testigo ? $seedling->parcela : (int)$seedling->parcela}}
+                                @if ($origen == 'pc')
+                                    {{$seedling->primera->testigo ? $seedling->parcela : (int)$seedling->parcela}}    
+                                @else
+                                    {{(int)$seedling->parcela}}
+                                @endif     
                             </td>
-                            <td>{{$seedling->nombre_clon}}</td>
+                            <td>
+                                @if ($origen == 'pc')
+                                    {{$seedling->nombre_clon}}
+                                @else
+                                    @if ($origen == 'sc')
+                                        {{$seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon}}
+                                    @else
+                                        {{$seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre}}
+                                    @endif
+                                @endif  
+                            </td>
                             <td><input type="number" class="form-control" id="{{'tipo-' . $seedling->id}}" 
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tipo : ''}}"></td>
                             <td><input type="number" class="form-control" id="{{'tallos-' . $seedling->id}}"
@@ -190,10 +204,14 @@
     <script>
         var config = {
             routes: {
-                evaluaciones: "{{route('primeraclonal.evaluaciones.camposanidad')}}",
+                evaluacionesPC: "{{route('primeraclonal.evaluaciones.camposanidad')}}",
+                evaluacionesSC: "{{route('segundaclonal.evaluaciones.camposanidad')}}",
+                evaluacionesMET: "{{route('met.evaluaciones.camposanidad')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
-                saveEvaluacion: "{{route('ajax.primeraclonal.evaluaciones.saveEvCampoSanidad')}}"
+                saveEvaluacionPC: "{{route('ajax.primeraclonal.evaluaciones.saveEvCampoSanidad')}}",
+                saveEvaluacionSC: "{{route('ajax.segundaclonal.evaluaciones.saveEvCampoSanidad')}}",
+                saveEvaluacionMET: "{{route('ajax.met.evaluaciones.saveEvCampoSanidad')}}",
             },
             data: {
                 anioActivo: "{{$anio}}",
@@ -202,7 +220,8 @@
                 sectorActivo: "{{$idSector}}",
                 serieActiva: "{{$idSerie}}",
                 mesActivo: "{{$mes}}",
-                edadActiva: "{{$edad2}}"
+                edadActiva: "{{$edad2}}",
+                origen: "{{$origen}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",

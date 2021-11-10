@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Ambiente;
+use App\Edad;
+use App\EvaluacionDetalleCampoSanidadSC;
+use App\EvaluacionDetalleLaboratorioSC;
+use App\EvaluacionSegundaClonal;
 use App\Sector;
 use App\Serie;
 use App\PrimeraClonalDetalle;
@@ -248,5 +252,185 @@ class SegundaClonalController extends Controller
         SegundaClonalDetalle::find($idTestigo)->delete();
 
         return redirect()->back()->with('exito', 'exito');
+    }
+
+    function evCampoSanidad($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
+        if($anio == 0)
+            $anio = date('Y');
+        
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $edades = Edad::all();
+        $series = Serie::where('estado', 1)->get();
+        $sector = Sector::find($idSector);
+        $origen = 'sc';
+
+        if($sector){
+            $idSubambiente = $sector->subambiente->id;
+            $idAmbiente = $sector->subambiente->ambiente->id;
+        }
+        else{
+            $idSubambiente = $idAmbiente = 0;    
+        }
+
+        $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
+            $q->where('idsector', $idSector)->where('anio', $anio);
+        })->whereHas('parcelaPC', function($q){
+            $q->where('laboratorio', 0);
+        })->where('idserie', $idSerie)->get();
+
+        $evaluacion = EvaluacionSegundaClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
+        ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'C')->first();
+        if($evaluacion){
+            $fecha_calendario = $evaluacion->fecha;
+            $idEvaluacion = $evaluacion->id;
+        }
+        else{
+            $fecha_calendario = now();
+            $idEvaluacion = 0;
+        }
+
+        return view('admin.primera.evaluaciones.campo_sanidad', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
+    }
+
+    function saveEvCampoSanidad(Request $request){
+        try{
+            DB::transaction(function () use($request){
+                $evaluacion = EvaluacionSegundaClonal::where('anio', $request->anio)->where('idserie', $request->serie)->where('idsector', $request->sector)
+                ->where('mes', $request->mes)->where('idedad', $request->edad)->where('tipo', 'C')->first();
+
+                if(!$evaluacion){
+                    $evaluacion = new EvaluacionSegundaClonal();
+                    $evaluacion->idserie = $request->serie;
+                    $evaluacion->idsector = $request->sector;
+                    $evaluacion->anio = $request->anio;
+                    $evaluacion->mes = $request->mes;
+                    $evaluacion->idedad = $request->edad;
+                    $evaluacion->tipo = 'C';
+                    $evaluacion->fecha = $request->fecha;
+                    $evaluacion->save();
+                }
+
+                $evaluacionDetalle = EvaluacionDetalleCampoSanidadSC::where('idevaluacion', $evaluacion->id)->where('idseedling', $request->idSeedling)->first();
+                if(!$evaluacionDetalle){
+                    $evaluacionDetalle = new EvaluacionDetalleCampoSanidadSC();
+                    $evaluacionDetalle->idevaluacion = $evaluacion->id;
+                    $evaluacionDetalle->idseedling = $request->idSeedling;
+                }
+                $evaluacionDetalle->tipo = $request->tipo;
+                $evaluacionDetalle->tallos = $request->tallos;
+                $evaluacionDetalle->altura = $request->altura;
+                $evaluacionDetalle->grosor = $request->grosor;
+                $evaluacionDetalle->vuelco = $request->vuelco;
+                $evaluacionDetalle->flor = $request->flor;
+                $evaluacionDetalle->brix = $request->brix;
+                $evaluacionDetalle->escaldad = $request->escaldad;
+                $evaluacionDetalle->carbon = $request->carbon;
+                $evaluacionDetalle->roya = $request->roya;
+                $evaluacionDetalle->mosaico = $request->mosaico;
+                $evaluacionDetalle->estaria = $request->estaria;
+                $evaluacionDetalle->amarilla = $request->amarilla;
+                $evaluacionDetalle->save();
+            });
+
+            session(['exito' => 'exito']);
+            return response()->json(true);
+        }
+        catch(Exception $e){
+            session(['error' => 'error']);
+            return response()->json(false);
+        }
+    }
+
+    function evLaboratorio($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
+        if($anio == 0)
+            $anio = date('Y');
+        
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $edades = Edad::all();
+        $series = Serie::where('estado', 1)->get();
+        $sector = Sector::find($idSector);
+        $origen = 'sc';
+
+        if($sector){
+            $idSubambiente = $sector->subambiente->id;
+            $idAmbiente = $sector->subambiente->ambiente->id;
+        }
+        else{
+            $idSubambiente = $idAmbiente = 0;    
+        }
+
+        $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
+            $q->where('idsector', $idSector)->where('anio', $anio);
+        })->whereHas('parcelaPC', function($q){
+            $q->where('laboratorio', 1);
+        })->where('idserie', $idSerie)->get();
+
+        $evaluacion = EvaluacionSegundaClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
+        ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'L')->first();
+        if($evaluacion){
+            $fecha_calendario = $evaluacion->fecha;
+            $idEvaluacion = $evaluacion->id;
+        }
+        else{
+            $fecha_calendario = now();
+            $idEvaluacion = 0;
+        }
+
+        return view('admin.primera.evaluaciones.laboratorio', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
+    }
+
+    function saveEvLaboratorio(Request $request){
+        try{
+            return DB::transaction(function () use($request){
+                $evaluacion = EvaluacionSegundaClonal::where('anio', $request->anio)->where('idserie', $request->serie)->where('idsector', $request->sector)
+                ->where('mes', $request->mes)->where('idedad', $request->edad)->where('tipo', 'L')->first();
+
+                if(!$evaluacion){
+                    $evaluacion = new EvaluacionSegundaClonal();
+                    $evaluacion->idserie = $request->serie;
+                    $evaluacion->idsector = $request->sector;
+                    $evaluacion->anio = $request->anio;
+                    $evaluacion->mes = $request->mes;
+                    $evaluacion->idedad = $request->edad;
+                    $evaluacion->tipo = 'L';
+                    $evaluacion->fecha = $request->fecha;
+                    $evaluacion->save();
+                }
+
+                $evaluacionDetalle = EvaluacionDetalleLaboratorioSC::where('idevaluacion', $evaluacion->id)->where('idseedling', $request->idSeedling)->first();
+                if(!$evaluacionDetalle){
+                    $evaluacionDetalle = new EvaluacionDetalleLaboratorioSC();
+                    $evaluacionDetalle->idevaluacion = $evaluacion->id;
+                    $evaluacionDetalle->idseedling = $request->idSeedling;
+                }
+                $evaluacionDetalle->peso_muestra = $request->pesomuestra;
+                $evaluacionDetalle->peso_jugo = $request->pesojugo;
+                $evaluacionDetalle->brix = $request->brix;
+                $evaluacionDetalle->polarizacion = $request->polarizacion;
+                $evaluacionDetalle->temperatura = $request->temperatura;
+                $evaluacionDetalle->conductividad = $request->conductividad;
+                
+                if($request->temperatura < 20)
+                    $brix_corregido = +$request->brix-(((20-$request->polarizacion)*((0.00082*$request->temperatura)+0.042))-(((20-$request->temperatura)/50)*(20-$request->temperatura)/50));
+                else
+                    $brix_corregido = ((($request->temperatura-20)*0.06))+((($request->temperatura-20)*($request->temperatura-20)*($request->brix/15)*0.000615)+$request->brix);
+                
+                $evaluacionDetalle->brix_corregido = $brix_corregido;
+                $pol_jugo = ($request->polarizacion*0.26)/((((1.00037)+(0.0038*$request->brix))+(((0.00001625*($request->brix*$request->brix)))))*0.99823);
+                $evaluacionDetalle->pol_jugo = $pol_jugo;
+                $evaluacionDetalle->pureza = $pol_jugo/$brix_corregido*100;
+                $evaluacionDetalle->rend_prob = +$pol_jugo*((1.4-(40/($pol_jugo/$brix_corregido*100)))*0.65);
+                $evaluacionDetalle->pol_cania = $pol_jugo*0.82;
+                $evaluacionDetalle->save();
+
+                return $evaluacionDetalle;
+            });
+        }
+        catch(Exception $e){
+            session(['error' => 'error']);
+            return response()->json(false);
+        }
     }
 }

@@ -28,4 +28,12 @@ class SegundaClonalDetalle extends Model
     public function variedad(){
         return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
     }
+
+    public function evaluacionesCampoSanidad(){
+        return $this->hasMany('App\EvaluacionDetalleCampoSanidadSC', 'idseedling', 'id');
+    }
+
+    public function evaluacionesLaboratorio(){
+        return $this->hasMany('App\EvaluacionDetalleLaboratorioSC', 'idseedling', 'id');
+    }
 }

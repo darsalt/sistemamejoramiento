@@ -20,4 +20,12 @@ class METDetalle extends Model
     public function variedad(){
         return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
     }
+
+    public function evaluacionesCampoSanidad(){
+        return $this->hasMany('App\EvaluacionDetalleCampoSanidadMET', 'idseedling', 'id');
+    }
+
+    public function evaluacionesLaboratorio(){
+        return $this->hasMany('App\EvaluacionDetalleLaboratorioMET', 'idseedling', 'id');
+    }
 }

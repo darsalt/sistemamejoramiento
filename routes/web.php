@@ -344,6 +344,8 @@ Route::group(['prefix' => '/admin/segunda', 'as' => 'segundaclonal.'], function 
     Route::get('/seleccion/{anio?}/{serie?}/{sector?}', 'SegundaClonalController@index')->name('index');
     Route::delete('/{segunda?}', 'SegundaClonalController@delete')->name('delete');
     Route::delete('/testigo/{testigo?}', 'SegundaClonalController@deleteTestigo')->name('deleteTestigo');
+    Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evCampoSanidad')->name('evaluaciones.camposanidad');
+    Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evLaboratorio')->name('evaluaciones.laboratorio');
 });
 
 // Rutas Ajax Segunda Clonal
@@ -354,11 +356,15 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
     Route::post('/saveTestigo', 'SegundaClonalController@saveTestigo')->name('saveTestigo');
     Route::get('/getSegundaClonales', 'SegundaClonalController@getSegundaClonales')->name('getSegundaClonales');
     Route::get('/getUltimaParcela', 'SegundaClonalController@getUltimaParcelaAjax')->name('getUltimaParcela');
+    Route::post('/evaluaciones/saveEvCampoSanidad', 'SegundaClonalController@saveEvCampoSanidad')->name('evaluaciones.saveEvCampoSanidad');
+    Route::post('/evaluaciones/saveEvLaboratorio', 'SegundaClonalController@saveEvLaboratorio')->name('evaluaciones.saveEvLaboratorio');
 });
 
 // MET
 Route::group(['prefix' => '/admin/met', 'as' => 'met.'], function () {
     Route::get('/seleccion/{serie?}/{sector?}', 'METController@index')->name('index');
+    Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evCampoSanidad')->name('evaluaciones.camposanidad');
+    Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evLaboratorio')->name('evaluaciones.laboratorio');
 });
 
 // Rutas Ajax MET
@@ -367,5 +373,7 @@ Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
     Route::get('/METAsociado', 'METController@getMETAsociado')->name('METAsociado');
     Route::get('/getUltimaParcela', 'METController@getUltimaParcela')->name('getUltimaParcela');
     Route::post('/saveDetalleMET', 'METController@saveDetalleMET')->name('saveDetalleMET');
+    Route::post('/evaluaciones/saveEvCampoSanidad', 'METController@saveEvCampoSanidad')->name('evaluaciones.saveEvCampoSanidad');
+    Route::post('/evaluaciones/saveEvLaboratorio', 'METController@saveEvLaboratorio')->name('evaluaciones.saveEvLaboratorio');
 });
 

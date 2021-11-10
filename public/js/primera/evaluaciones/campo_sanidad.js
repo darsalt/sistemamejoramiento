@@ -79,16 +79,37 @@ $(document).ready(function(){
     });
 
     $('#anio, #serie, #sector, #mes, #edad').change(function(){
-        if($('#anio').val() > 0 && $('#serie').val() > 0 && $('#sector').val() > 0 && $('#mes').val() > 0 && $('#edad').val() > 0)
-            window.location.href = config.routes.evaluaciones + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val() + "/" + $('#mes').val() + "/" + $('#edad').val();
+        var ruta = '';
+        if($('#anio').val() > 0 && $('#serie').val() > 0 && $('#sector').val() > 0 && $('#mes').val() > 0 && $('#edad').val() > 0){
+            if(config.data.origen == 'pc')
+                ruta = config.routes.evaluacionesPC;
+            else{
+                if(config.data.origen == 'sc')
+                    ruta = config.routes.evaluacionesSC;
+                else
+                    ruta = config.routes.evaluacionesMET;
+            }
+
+            window.location.href = ruta + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val() + "/" + $('#mes').val() + "/" + $('#edad').val();
+        }
     });
 
     $('.ultimoCampo').focusout(function(){
         var fila = $(this).closest('tr');
         var idSeedling = fila.find('.idSeedling').val();
+        var ruta = '';
+
+        if(config.data.origen == 'pc')
+            ruta = config.routes.saveEvaluacionPC;
+        else{
+            if(config.data.origen == 'sc')
+                ruta = config.routes.saveEvaluacionSC;
+            else
+                ruta = config.routes.saveEvaluacionMET;
+        }
 
         $.ajax({
-            url: config.routes.saveEvaluacion,
+            url: ruta,
             method: 'POST',
             data: {
                 anio: config.data.anioActivo,

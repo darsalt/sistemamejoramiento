@@ -271,6 +271,7 @@ class PrimeraClonalController extends Controller
         $edades = Edad::all();
         $series = Serie::where('estado', 1)->get();
         $sector = Sector::find($idSector);
+        $origen = 'pc';
 
         if($sector){
             $idSubambiente = $sector->subambiente->id;
@@ -280,7 +281,7 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlingsPC = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
         })->where('laboratorio', 0)->get();
 
@@ -296,7 +297,7 @@ class PrimeraClonalController extends Controller
         }
 
         return view('admin.primera.evaluaciones.campo_sanidad', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlingsPC', 'fecha_calendario', 'idEvaluacion'));
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
     }
 
     function saveEvCampoSanidad(Request $request){
@@ -356,6 +357,7 @@ class PrimeraClonalController extends Controller
         $edades = Edad::all();
         $series = Serie::where('estado', 1)->get();
         $sector = Sector::find($idSector);
+        $origen = 'pc';
 
         if($sector){
             $idSubambiente = $sector->subambiente->id;
@@ -365,7 +367,7 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlingsPC = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
         })->where('laboratorio', 1)->get();
 
@@ -381,7 +383,7 @@ class PrimeraClonalController extends Controller
         }
 
         return view('admin.primera.evaluaciones.laboratorio', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlingsPC', 'fecha_calendario', 'idEvaluacion'));
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
     }
 
     function saveEvLaboratorio(Request $request){
