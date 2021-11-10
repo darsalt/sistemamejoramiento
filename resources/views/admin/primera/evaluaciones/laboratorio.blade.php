@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('titulo', 'Evaluaciones Campo-Sanidad PC')
+@section('titulo', 'Evaluaciones Laboratorio PC')
 
 @section('metadatos')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -12,7 +12,7 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Evaluaciones Campo-Sanidad</h3> 
+		<h3>Evaluaciones Laboratorio</h3> 
 	</div>
 </div>
 
@@ -125,21 +125,19 @@
             <table class="table table-striped table-bordered table-condensed table-hover" id="tablaSeedlings">
                 <thead>
                     <tr>
-                        <th width="3%">Par- cela</th>
-                        <th width="6%">Clon</th>
-                        <th width="7%">Tipo</th>
-                        <th width="7%">Tallos</th>
-                        <th width="7%">Altura</th>
-                        <th width="7%">Grosor</th>
-                        <th width="7%">Vuelco</th>
-                        <th width="7%">Flor</th>
-                        <th width="7%">Brix en campo</th>
-                        <th width="7%">Escaldad</th>
-                        <th width="7%">Carbón</th>
-                        <th width="7%">Roya</th>
-                        <th width="7%">Mosaico</th>
-                        <th width="7%">Estaria</th>
-                        <th width="7%">Amarilla</th>
+                        <th width="3%">Parcela</th>
+                        <th width="8%">Clon</th>
+                        <th width="7%">Peso muestra</th>
+                        <th width="7%">Peso jugo</th>
+                        <th width="7%">Brix</th>
+                        <th width="7%">Polarización</th>
+                        <th width="7%">Temperatura</th>
+                        <th width="7%">Conductvidad</th>
+                        <th width="7%">Brix corregido</th>
+                        <th width="7%">Pol en jugo</th>
+                        <th width="7%">Pureza</th>
+                        <th width="7%">Rend. prob.</th>
+                        <th width="7%">Pol en caña</th>
                     </tr> 
                 <tbody>
                     @foreach ($seedlingsPC as $seedling)
@@ -149,32 +147,23 @@
                                 {{$seedling->primera->testigo ? $seedling->parcela : (int)$seedling->parcela}}
                             </td>
                             <td>{{$seedling->nombre_clon}}</td>
-                            <td><input type="number" class="form-control" id="{{'tipo-' . $seedling->id}}" 
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tipo : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'tallos-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tallos : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'altura-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->altura : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'grosor-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->grosor : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'vuelco-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->vuelco : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'flor-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->flor : ''}}"></td>
+                            <td><input type="number" class="form-control" id="{{'pesomuestra-' . $seedling->id}}" 
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : ''}}"></td>
+                            <td><input type="number" class="form-control" id="{{'pesojugo-' . $seedling->id}}"
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_jugo : ''}}"></td>
                             <td><input type="number" class="form-control" id="{{'brix-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'escaldad-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->escaldad : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'carbon-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->carbon : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'roya-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->roya : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'mosaico-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->mosaico : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'estaria-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->estaria : ''}}"></td>
-                            <td><input type="number" class="form-control ultimoCampo" id="{{'amarilla-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->amarilla : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
+                            <td><input type="number" class="form-control" id="{{'polarizacion-' . $seedling->id}}"
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->polarizacion : ''}}"></td>
+                            <td><input type="number" class="form-control" id="{{'temperatura-' . $seedling->id}}"
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->temperatura : ''}}"></td>
+                            <td><input type="number" class="form-control ultimoCampo" id="{{'conductividad-' . $seedling->id}}"
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->conductividad : ''}}"></td>
+                            <td><p id={{'brixcorregido-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix_corregido : ''}}</p></td>
+                            <td><p id={{'polenjugo-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_jugo : ''}}</p></td>
+                            <td><p id={{'pureza-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pureza : ''}}</p></td>
+                            <td><p id={{'rendimiento-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->rend_prob : ''}}</p></td>
+                            <td><p id={{'polencania-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_cania : ''}}</p></td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -190,10 +179,10 @@
     <script>
         var config = {
             routes: {
-                evaluaciones: "{{route('primeraclonal.evaluaciones.camposanidad')}}",
+                evaluaciones: "{{route('primeraclonal.evaluaciones.laboratorio')}}",
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
-                saveEvaluacion: "{{route('ajax.primeraclonal.evaluaciones.saveEvCampoSanidad')}}"
+                saveEvaluacion: "{{route('ajax.primeraclonal.evaluaciones.saveEvLaboratorio')}}"
             },
             data: {
                 anioActivo: "{{$anio}}",
@@ -211,5 +200,5 @@
         };
     </script>
 
-    <script src="{{asset('js/primera/evaluaciones/campo_sanidad.js')}}"></script>
+    <script src="{{asset('js/primera/evaluaciones/laboratorio.js')}}"></script>
 @endsection

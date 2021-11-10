@@ -319,6 +319,7 @@ Route::resource('admin/primera/serie','SerieController');
 Route::get('admin/primera/seleccion/{serie?}/{sector?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
 Route::get('/admin/primera/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evCampoSanidad')->name('primeraclonal.evaluaciones.camposanidad');
+Route::get('/admin/primera/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evLaboratorio')->name('primeraclonal.evaluaciones.laboratorio');
 
 // Laboratorio
 Route::get('/admin/primera/laboratorio/{serie?}/{sector?}', 'PrimeraClonalController@laboratorio')->name('primeraclonal.laboratorio.index');
@@ -332,6 +333,7 @@ Route::put('ajax/primera/editPrimeraClonal', 'PrimeraClonalController@editPrimer
 Route::get('ajax/primera/getSeedlings', 'PrimeraClonalController@getSeedlings')->name('ajax.primeraclonal.getSeedlings');
 Route::post('ajax/primera/saveTestigos', 'PrimeraClonalController@saveTestigos')->name('ajax.primeraclonal.saveTestigos');
 Route::post('ajax/primera/evaluaciones/saveEvCampoSanidad', 'PrimeraClonalController@saveEvCampoSanidad')->name('ajax.primeraclonal.evaluaciones.saveEvCampoSanidad');
+Route::post('ajax/primera/evaluaciones/saveEvLaboratorio', 'PrimeraClonalController@saveEvLaboratorio')->name('ajax.primeraclonal.evaluaciones.saveEvLaboratorio');
 
 Route::get('/admin/incluirpg','CampaniaSemilladoController@incluirpg');
 Route::post('campaniasemillado/pg','CampaniaSemilladoController@guardarpg');
