@@ -61,7 +61,7 @@ class EtapaIndividualController extends Controller
             $seedling->idsector = $request->sector;
             $seedling->origen = $request->origen;
             
-            $seedling->parcela = $this->getUltimaParcela($request->campSeedling) + 1;
+            $seedling->parcela = $this->getUltimaParcela($request->campSeedling, $request->idsector) + 1;
             if($request->origen == 'cruzamiento'){
                 $semillado = Semillado::find($request->ordenSemillado);
                 $seedling->semillado()->associate($semillado); 
