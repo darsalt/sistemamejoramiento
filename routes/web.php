@@ -318,6 +318,7 @@ Route::get('ajax/individual/getProgenitoresSeedling', 'EtapaIndividualController
 Route::resource('admin/primera/serie','SerieController');
 Route::get('admin/primera/seleccion/{serie?}/{sector?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
+Route::get('admin/primera/inventario', 'PrimeraClonalController@inventario')->name('primeraclonal.inventario.index');
 Route::get('/admin/primera/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evCampoSanidad')->name('primeraclonal.evaluaciones.camposanidad');
 Route::get('/admin/primera/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evLaboratorio')->name('primeraclonal.evaluaciones.laboratorio');
 
@@ -344,6 +345,7 @@ Route::group(['prefix' => '/admin/segunda', 'as' => 'segundaclonal.'], function 
     Route::get('/seleccion/{anio?}/{serie?}/{sector?}', 'SegundaClonalController@index')->name('index');
     Route::delete('/{segunda?}', 'SegundaClonalController@delete')->name('delete');
     Route::delete('/testigo/{testigo?}', 'SegundaClonalController@deleteTestigo')->name('deleteTestigo');
+    Route::get('/inventario', 'SegundaClonalController@inventario')->name('inventario.index');
     Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evCampoSanidad')->name('evaluaciones.camposanidad');
     Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evLaboratorio')->name('evaluaciones.laboratorio');
 });
@@ -362,7 +364,8 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
 
 // MET
 Route::group(['prefix' => '/admin/met', 'as' => 'met.'], function () {
-    Route::get('/seleccion/{serie?}/{sector?}', 'METController@index')->name('index');
+    Route::get('/seleccion/{anio?}/{sector?}', 'METController@index')->name('index');
+    Route::get('/inventario', 'METController@inventario')->name('inventario.index');
     Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evCampoSanidad')->name('evaluaciones.camposanidad');
     Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evLaboratorio')->name('evaluaciones.laboratorio');
 });

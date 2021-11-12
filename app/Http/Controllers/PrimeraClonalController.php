@@ -438,4 +438,21 @@ class PrimeraClonalController extends Controller
             return response()->json(false);
         }
     }
+
+    public function inventario(){
+        $inventarioFinal = [];
+        $inventario = DB::select("SELECT pc.anio, pc.idserie, s.nombre as nombre_serie, pc.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM primerasclonal_detalle as pcd INNER JOIN primerasclonal as pc ON pcd.idprimeraclonal = pc.id INNER JOIN series AS s ON s.id = pc.idserie INNER JOIN sectores AS sec ON sec.id = pc.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY pc.anio, nombre_serie, pc.idsector, pc.idserie, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $origen = 'pc';
+        
+        foreach($inventario as $linea){
+
+            $cantidadPorEdadYMesCS = DB::select("select epc.mes, COUNT(case e.nombre when 'Planta' then 1 else null end) as planta, COUNT(case e.nombre when 'Soca 1' then 1 else null end) as soca1, COUNT(case e.nombre when 'Soca 2' then 1 else null end) as soca2 from evaluacionesdetalle_camposanidad_pc edcspc inner join evaluaciones_primeraclonal as epc on edcspc.idevaluacion = epc.id inner join edades as e on epc.idedad = e.id where epc.anio = ? and epc.idserie = ? and epc.idsector = ? group by epc.mes ", [$linea->anio, $linea->idserie, $linea->idsector]);
+            $cantidadPorEdadYMesLab = DB::select("select epc.mes, COUNT(case e.nombre when 'Planta' then 1 else null end) as planta, COUNT(case e.nombre when 'Soca 1' then 1 else null end) as soca1, COUNT(case e.nombre when 'Soca 2' then 1 else null end) as soca2 from evaluacionesdetalle_laboratorio_pc edlabpc inner join evaluaciones_primeraclonal as epc on edlabpc.idevaluacion = epc.id inner join edades as e on epc.idedad = e.id where epc.anio = ? and epc.idserie = ? and epc.idsector = ? group by epc.mes ", [$linea->anio, $linea->idserie, $linea->idsector]);
+            $linea->evaluacionesCS = $cantidadPorEdadYMesCS;
+            $linea->evaluacionesLab = $cantidadPorEdadYMesLab;
+            array_push($inventarioFinal, $linea);
+        }
+
+        return view('admin.primera.inventario2.index', compact('inventarioFinal', 'origen'));
+    }
 }

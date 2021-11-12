@@ -370,4 +370,20 @@ class METController extends Controller
             return response()->json(false);
         }
     }
+
+    public function inventario(){
+        $inventarioFinal = [];
+        $inventario = DB::select("SELECT met.anio, met.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM met_detalle as metd INNER JOIN met as met ON metd.idmet = met.id INNER JOIN sectores AS sec ON sec.id = met.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY met.anio, met.idsector, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $origen = 'met';
+        
+        foreach($inventario as $linea){
+            $cantidadPorEdadYMesCS = DB::select("select emet.mes, COUNT(case e.nombre when 'Planta' then 1 else null end) as planta, COUNT(case e.nombre when 'Soca 1' then 1 else null end) as soca1, COUNT(case e.nombre when 'Soca 2' then 1 else null end) as soca2 from evaluacionesdetalle_camposanidad_met edcsmet inner join evaluaciones_met as emet on edcsmet.idevaluacion = emet.id inner join edades as e on emet.idedad = e.id where emet.anio = ? and emet.idsector = ? group by emet.mes ", [$linea->anio, $linea->idsector]);
+            $cantidadPorEdadYMesLab = DB::select("select emet.mes, COUNT(case e.nombre when 'Planta' then 1 else null end) as planta, COUNT(case e.nombre when 'Soca 1' then 1 else null end) as soca1, COUNT(case e.nombre when 'Soca 2' then 1 else null end) as soca2 from evaluacionesdetalle_laboratorio_met edlabmet inner join evaluaciones_met as emet on edlabmet.idevaluacion = emet.id inner join edades as e on emet.idedad = e.id where emet.anio = ? and emet.idsector = ? group by emet.mes ", [$linea->anio, $linea->idsector]);
+            $linea->evaluacionesCS = $cantidadPorEdadYMesCS;
+            $linea->evaluacionesLab = $cantidadPorEdadYMesLab;
+            array_push($inventarioFinal, $linea);
+        }
+
+        return view('admin.primera.inventario2.index', compact('inventarioFinal', 'origen'));
+    }
 }
