@@ -57,7 +57,7 @@ class PrimeraClonalController extends Controller
             $planta = new PrimeraClonalDetalle();
             $planta->primera()->associate($primeraClonal);
             $planta->parcela = $i;
-            $planta->nombre_clon = 'NA ' . substr($primeraClonal->serie->nombre, 2, 2) . ' ' . strval($i);
+            $planta->nombre_clon = 'NA ' . substr(trim($primeraClonal->serie->nombre), strlen(trim($primeraClonal->serie->nombre))-2, 2) . ' ' . strval($i);
             $planta->laboratorio = 0;
             $planta->save();
         }
