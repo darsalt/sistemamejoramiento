@@ -27,6 +27,9 @@ class PrimeraClonalController extends Controller
         $ambientes = Ambiente::where('estado', 1)->get();
         $seedlings = PrimeraClonal::where('idserie', $idSerie)->where('idsector', $idSector)
         ->orderBy('parcelaDesde')->paginate(10);
+        $parcelas = PrimeraClonalDetalle::whereHas('primera', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
+        })->orderBy('parcela')->get();
         $campSeedling = CampaniaSeedling::where('estado', 1)->get();
         $variedades = Variedad::where('estado', 1)->get();
 
@@ -38,13 +41,15 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        return view('admin.primera.seleccion.index')->with(compact('series', 'seedlings', 'ambientes', 'campSeedling', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'variedades'));
+        return view('admin.primera.seleccion.index')->with(compact('series', 'seedlings', 'ambientes', 'campSeedling', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'variedades', 'parcelas'));
     }
 
     public function getUltimaParcela($serie, $sector){
-        $ultimoSeedling = PrimeraClonal::where('idserie', $serie)->where('idsector', $sector)->orderByDesc('parceladesde')->first();
+        $ultimoSeedling = PrimeraClonalDetalle::whereHas('primera', function($q) use($serie, $sector){
+            $q->where('idserie', $serie)->where('idsector', $sector);
+        })->orderByDesc('parcela')->first();
 
-        return $ultimoSeedling ? (int)$ultimoSeedling->parceladesde + $ultimoSeedling->cantidad - 1 : 0;
+        return $ultimoSeedling ? (int)$ultimoSeedling->parcela : 0;
     }
 
     // Obtener el numero de la ultima parcela cargada

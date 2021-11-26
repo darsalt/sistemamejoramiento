@@ -318,31 +318,21 @@ function obtenerUltimaParcelaCargada(){
 function agregarFila(element){
     let fila = '';
 
-    fila += "<tr>";
-    //fila += "<td>" + element.seedling.campania.nombre + "</td>";
-    fila += "<td>" + element.seedling.parcela + "</td>";
-    if(element.seedling.origen == 'cruzamiento')
-        fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
-    else{
-        if(element.seedling.origen == 'testigo')
-            fila += "<td>" + element.seedling.variedad.nombre + "</td>";
-        else
-            fila += "<td>" + element.seedling.observaciones + "</td>";
-    }
-    //fila += "<td>" + parseInt(element.parceladesde) + "</td>";
-    //fila += "<td>" + (parseInt(element.parceladesde) + element.cantidad - 1) + "</td>";
-    //fila += "<td>" + element.cantidad + "</td>";
-    fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
-    fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
-    fila += "</tr>";
-
-    // Subtabla con las parcelas
-    fila += "<tr>";
-    fila += '<td colspan="3"><table class="table table-sm"><thead><th>Parcela</th><th>Nombre clon</th></thead><tbody>';
     $.each(element.parcelas, function(i, item){
         fila += "<tr>";
-        fila += "<td>" + item.parcela + "</td>";
+        fila += "<td>" + parseInt(item.parcela) + "</td>";
         fila += "<td>" + item.nombre_clon + "</td>";
+        fila += "<td>" + element.seedling.parcela + "</td>";
+        if(element.seedling.origen == 'cruzamiento')
+            fila += "<td>" + element.seedling.semillado.cruzamiento.madre.nombre + " - " + element.seedling.semillado.cruzamiento.padre.nombre + "</td>";
+        else{
+            if(element.seedling.origen == 'testigo')
+                fila += "<td>" + element.seedling.variedad.nombre + "</td>";
+            else
+                fila += "<td>" + element.seedling.observaciones + "</td>";
+        }
+        fila += "<td><button class='btn editBtn' onclick='editarSeedling(" + element.id + ")'><i class='fa fa-edit fa-lg'></i></button>"
+        fila += "<button class='btn deleteBtn' data-id='" + element.id + "'><i class='fa fa-trash fa-lg'></i></button></td>"
         fila += "</tr>";
     });
     fila += "</tbody></table></td>";

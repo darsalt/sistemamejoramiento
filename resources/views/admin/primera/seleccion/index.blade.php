@@ -159,6 +159,8 @@
                     <tr>
                         {{-- <th>Campaña seedling</th> --}}
                         <th>Parcela</th>
+                        <th>Nombre clon</th>
+                        <th>Parcela seedling</th>
                         <th>Madre x Padre</th>
                         {{-- <th>Desde</th>
                         <th>Hasta</th>
@@ -167,10 +169,39 @@
                         <th width="10%"></th>
                     </tr> 
                 <tbody id="bodyTablaSeedlings">
-                    @if (isset($seedlings))
+                    @if (isset($parcelas))
+                        @foreach ($parcelas as $parcela)
+                            <tr>
+                                <td>{{!$parcela->primera->testigo ? (int)$parcela->parcela : $parcela->parcela}}</td>
+                                <td>{{!$parcela->primera->testigo ? $parcela->nombre_clon : '-'}}</td>
+                                <td>{{!$parcela->primera->testigo ? $parcela->primera->seedling->parcela : '-'}}</td>
+                                <td>
+                                    @if (!$parcela->primera->testigo)
+                                        @if ($parcela->primera->seedling->origen == 'cruzamiento')
+                                            {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}
+                                        @else
+                                            @if ($parcela->primera->seedling->origen == 'testigo')
+                                                {{$parcela->primera->seedling->variedad->nombre}}
+                                            @else
+                                                {{$parcela->primera->seedling->observaciones}}   
+                                            @endif
+                                        @endif
+                                    @else
+                                        {{$parcela->primera->variedad->nombre}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (!$parcela->primera->testigo)
+                                        <button class='btn editBtn' onclick='editarSeedling({{$parcela->idprimeraclonal}})'><i class='fa fa-edit fa-lg'></i></button>
+                                        <button class='btn deleteBtn' data-id="{{$parcela->idprimeraclonal}}"><i class='fa fa-trash fa-lg'></i></button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+{{--                     @if (isset($seedlings))
                         @foreach ($seedlings as $primera)
                             <tr>
-                                {{-- <td>{{$primera->testigo ? '-' : $primera->seedling->campania->nombre}}</td> --}}
                                 <td>{{$primera->testigo ? '-' : $primera->seedling->parcela}}</td>
                                 <td>
                                     @if (!$primera->testigo)
@@ -188,10 +219,6 @@
                                     @endif
 
                                 </td>
-                                {{-- <td>{{$primera->testigo ? $primera->parceladesde : (int)$primera->parceladesde}}</td>
-                                <td>{{$primera->testigo ? '-' : $primera->parceladesde + $primera->cantidad - 1}}</td>
-                                <td>{{$primera->cantidad}}</td> --}}
-                                {{-- <td>{{$primera->testigo ? $primera->variedad->nombre : '-'}}</td> --}}
                                 <td>
                                     @if (!$primera->testigo)
                                         <button class='btn editBtn' onclick='editarSeedling({{$primera->id}})'><i class='fa fa-edit fa-lg'></i></button>
@@ -220,7 +247,7 @@
                                 </tr>
                             @endif
                         @endforeach
-                    @endif
+                    @endif --}}
                 </tbody>
             </table>
             {{$seedlings->render()}}
