@@ -68,7 +68,8 @@ Route::get('tallosTacho/{id}', 'CruzamientoController@tallosTacho');
 // Camaras Zorras tachos.
 //Route::resource('admin/camaras','CamaraController');
 Route::get('admin/camaras/campania', 'CamaraController@cambiarCampania');
-Route::get('admin/marcotado/campania', 'MarcotadoController@cambiarCampania');
+Route::get('admin/marcotado/campania/{idcampania}', 'MarcotadoController@cambiarCampania');
+
 
 Route::get('admin/camaras', 'CamaraController@index');
 Route::get('admin/camaras/{id}', 'CamaraController@CambiarCamara');
@@ -257,6 +258,7 @@ Route::get('/admin/podergerminativo/editar','CruzamientoController@editardatos')
 
 Route::post ('podergerminativo', 'CruzamientoController@updatePoderPost')->name('podergerminativo.post');
 
+Route::resource('admin/campaniabanco','CampaniaBancoController');
 Route::resource('admin/campanias','CampaniaController');
 Route::resource('admin/campaniasemillado','CampaniaSemilladoController');
 

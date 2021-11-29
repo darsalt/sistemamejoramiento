@@ -29,7 +29,7 @@ class CamaraController extends Controller
                     ->join('tratamientos as t','t.idtratamiento','=','c.idtratamiento')
                     ->where('c.idcampania',$idcampania[0]->id)
                     ->Where('cam.id',1)
-                    ->select('idcampania','ca.nombre as campania','c.idcamara','cam.nombre','c.idcamara','c.idtratamiento','t.nombre as tratamiento')
+                    ->select('idcampania','ca.nombre as campania','c.idcamara','cam.nombre','c.idcamara','c.idtratamiento','t.nombre as tratamiento','t.descripcion as descripcion')
                     ->get();
         
         $ubicaciontacho = DB::table('ubicaciontachoxcampania as u')
@@ -62,7 +62,7 @@ class CamaraController extends Controller
             ->get();
             
         $tratamientos=DB::table('tratamientos')
-            ->select('idtratamiento','nombre')
+            ->select('idtratamiento','nombre','descripcion')
             ->where('estado','=','1')
             ->get();
         $camaras=DB::table('camaras')
@@ -80,7 +80,6 @@ class CamaraController extends Controller
             ->Where('camaras.id',1)
             ->select('u.id','u.nombre','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.id as idcamara')
             ->get();    
-
         return view('admin.camaras.index',["tachos"=>$tachos,"tratamientos"=>$tratamientos,"camaras"=>$camaras,"zorras"=>$zorras,"ubicacion"=>$ubicacion,"cctu"=>$cctu,"campanias"=>$campanias,"ubicaciontacho"=>$ubicaciontacho,"idcampania"=>$idcampania[0]->id,"nombrecampania"=>$nombrecampania[0]->nombre,"idcamara"=>1]);
     }
 

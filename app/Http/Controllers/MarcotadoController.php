@@ -35,16 +35,18 @@ class MarcotadoController extends Controller
             ->join('ubicacionestachos as ubi','ubi.id','=','u.idubicacion')
             ->join('zorras','ubi.idzorra','=','zorras.id')
             ->join('camaras','zorras.idcamara','=','camaras.id')
-        //    ->Where('u.idcctu',$idcampania[0]->id)
+            ->join('campaniacamaratratamientoubicacion as cc','cc.id','=','u.idcctu')
+         //   ->Where('cc.idcampania',$idcampania[0]->id)
             ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
             ->get();
-
         
         $tallos=DB::table('tallos')
             ->select('*')
             ->get();
         $posiciones = [1,2,3,4,5,6,7,8,9,10];
         $campanias = DB::table('campanias')
+                    ->Where('estado',1)
+                    ->OrderBy('id','DESC')
                     ->select('*')
                     ->get();
         $nombrecampania = DB::table('campanias')
@@ -71,6 +73,7 @@ class MarcotadoController extends Controller
                     ->get();
         $posiciones = [1,2,3,4,5,6,7,8,9,10];
         $campanias = DB::table('campanias')
+                            ->Where('estado',1)
                             ->select('*')
                             ->get();
         $nombrecampania = DB::table('campanias')

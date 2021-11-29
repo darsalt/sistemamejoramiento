@@ -139,7 +139,7 @@ class CampaniaSemilladoController extends Controller
                 $semillado->numero = $numero;
 
                 $semillado->fechasemillado = $date;
-                $semillado->idcampania = $request->idcampaniasemillado;
+                $semillado->idcampania = $request->idcampaniacruzamiento;
                 $semillado->idcruzamiento = $datas->id;
                 $semillado->gramos = 0.5;
                 $semillado->cajones = 0.2;

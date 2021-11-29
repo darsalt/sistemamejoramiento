@@ -15,6 +15,7 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Nombre</th>
+					<th>Año Plantación</th>
 					<th>Fecha Inicio</th>
 					<th>Fecha Fin</th>
 					<th>Operaciones</th>
@@ -22,6 +23,7 @@
                @foreach ($series as $c)
 				<tr>
 					<td>{{ $c->nombre}}</td>
+					<td>{{ $c->anio}}</td>
 					<td>{{ $c->fechainicio}}</td>
 					<td>{{ $c->fechafin}}</td>
 					<td>

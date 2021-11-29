@@ -23,7 +23,15 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
               	<label for="nombre">Nombre</label>
-               	<input type="text" name="nombre" class="form-control" placeholder="Año..." required="required">
+               	<input type="text" name="nombre" class="form-control" placeholder="Nombre..." required="required">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
+              	<label for="anio">Año de Plantación</label>
+               	<input type="number" name="anio" class="form-control" placeholder="Año de plantación..." required="required">
             </div>
         </div>
     </div>

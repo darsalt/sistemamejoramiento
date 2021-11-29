@@ -27,7 +27,7 @@ class CampaniaController extends Controller
             ->select('t.*')
             ->where ('nombre','like','%'.$query.'%') 
     		->where ('t.estado','=',1)
-    		->orderBy('id','asc')
+    		->orderBy('nombre','desc')
     		->paginate('10');
     		return view('admin.campanias.index',["campanias"=>$campanias,"searchText"=>$query]);
     	}

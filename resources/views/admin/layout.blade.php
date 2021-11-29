@@ -230,6 +230,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
+                <a href="{{url('admin/campaniabanco')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Campañas
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
                 <a href="{{url('admin/bancos')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
@@ -270,6 +280,59 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
            </li>
+
+           <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-exchange-alt"></i>
+            <p>
+                Cuarentena
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/exportaciones')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Exportación
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/ubicacionesexpo')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Boxes-Expo
+                  </p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/importaciones')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Importación
+                  </p>
+                </a>
+              </li>
+            </ul>
+            
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="{{url('admin/ubicacionesimpo')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Boxes-Impo
+                  </p>
+                </a>
+              </li>
+            </ul>
+           </li>
+
 
            <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -480,7 +543,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>          
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-arrow-up"></i>
               <p>
@@ -538,7 +601,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
             </ul>
-          </li>  
+          </li>   -->
           <li class="nav-item">
             <a href="{{url('admin/individual')}}" class="nav-link">
               <i class="nav-icon fas fa-map-marker"></i>

@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('titulo', 'Semiaaallados')
+@section('titulo', 'Semillados')
 
 @section('metadatos')
     <meta name="csrf-token" content="{{ csrf_token() }}" />

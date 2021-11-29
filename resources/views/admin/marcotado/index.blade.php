@@ -7,7 +7,7 @@
 		<h3>Marcotado</h3>
     <div class="form-group" style="text-align:center;">
       <label for="campaña">Campaña</label>
-      <form action="{{url('admin/marcotado/campania')}}" method="GET">
+      <form action="{{url('admin/marcotado/campania', [$idcampania])}}" method="GET">
         <select name="campanias" id="campanias" class="select2" style="width: 100%; " class="form-control" required onchange="this.form.submit()">
           
           <option value="{{ $idcampania }}">{{ $nombrecampania }}</option>

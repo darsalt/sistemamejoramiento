@@ -42,6 +42,7 @@ class SerieController extends Controller
     {
             $serie=new Serie;
             $serie->nombre=$request->get('nombre');
+            $serie->anio=$request->get('anio');
             $serie->fechainicio=$request->get('fechainicio');
             $serie->fechafin=$request->get('fechafin');
             $serie->comentarios=$request->get('comentarios');
@@ -70,6 +71,7 @@ class SerieController extends Controller
     {
         $serie=Serie::findOrFail($id);
         $serie->nombre=$request->get('nombre');
+        $serie->anio=$request->get('anio');
         $serie->comentarios=$request->get('comentarios');
         $serie->fechainicio=$request->get('fechainicio');
         $serie->fechafin=$request->get('fechafin');

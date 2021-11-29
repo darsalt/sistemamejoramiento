@@ -33,7 +33,10 @@ class CruzamientoController extends Controller
     		->where ('c.estado','=',1)
     		->orderBy('id','asc')
             ->paginate('10');
-            $campanias=DB::table('campanias')->orderBy('nombre', 'desc')->get();
+            $campanias=DB::table('campanias')
+            ->Where('estado',1)
+            ->orderBy('nombre', 'desc')
+            ->get();
             
     		return view('admin.cruzamientos.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query]);
     	}

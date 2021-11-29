@@ -117,7 +117,7 @@ class SanitariaController extends Controller
 
      public function edit(Sanitaria $sanitaria)
     {
-        dd($sanitaria);
+       // dd($sanitaria);
         $tipos=DB::table('tipossanitarias')
         ->where ('estado','=',1)
         ->get();

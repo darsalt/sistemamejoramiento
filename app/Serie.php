@@ -11,6 +11,7 @@ class Serie extends Model
     protected $filliable = [
     	'id',
         'nombre',
+        'anio',
         'fechainicio',
         'fechafin',
         'comentarios',

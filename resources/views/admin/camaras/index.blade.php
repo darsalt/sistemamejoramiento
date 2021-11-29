@@ -1,11 +1,11 @@
 @extends('admin.layout')
-@section('titulo', 'Tratamientos')
+@section('titulo', 'Cámaras')
 @section('content')
 
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Camaras</h3>
+		<h3>Cámaras</h3>
     <div class="form-group" style="text-align:center;">
       <label for="campaña">Campaña</label>
       <form action="{{url('admin/camaras/campania')}}" method="GET">
@@ -67,13 +67,14 @@
                                   onchange="guardarTratamiento(this.value,{{$camara->id}},{{ $idcampania }});">
                                     @foreach($cctu as $cmr)
                                         @if($cmr->idcamara === $camara->id)
-                                          <option value="{{ $cmr->idtratamiento }}"> {{ $cmr->tratamiento }} </option>
+                                          <option value="{{ $cmr->idtratamiento }}"> {{ $cmr->tratamiento }}</option>
                                         @endif
                                     @endforeach
                                     <option value="0">Ninguna</option>
                                     @foreach($tratamientos as $tratamiento)
                                       <option value="{{ $tratamiento->idtratamiento }}">
-                                        {{ $tratamiento->nombre }}
+                                        {{ $tratamiento->nombre }}     
+
                                       </option>
                                     @endforeach
                                   </select>

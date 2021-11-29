@@ -29,7 +29,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="form-group">
             <label for="cantidad">Cantidad</label>
-            <input type="number" name="cantidad" class="form-control" placeholder="Cantidad..."required="required">
+            <input type="text" name="cantidad" class="form-control" placeholder="Cantidad..."required="required">
         </div>
     </div>       
     <div class="row">

@@ -263,7 +263,7 @@ role="dialog" tabindex="-1" id="modal-delete">
                 getSubambientes: "{{route('ajax.subambientes.getSubambientesDadoAmbiente')}}",
                 getSectores: "{{route('ajax.sectores.getSectoresDadoSubambiente')}}",
                 getUltimaParcela: "{{route('ajax.individual.getUltimaParcela')}}",
-                saveSeedling: "{{route('ajax.individual.saveSeedling')}}",
+                saveSeedliMng: "{{route('ajax.individual.saveSeedling')}}",
                 getSemillados: "{{route('ajax.semillados.getSemillados')}}",
                 getSeedling: "{{route('ajax.individual.getSeedling')}}",
                 editSeedling: "{{route('ajax.individual.editSeedling')}}",

@@ -140,6 +140,7 @@ public function repicadas(Request $request,$id)
 
     public function ordenes($campActiva = 0){
         $semillados = Semillado::where('idcampania', $campActiva)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->paginate(10);
+        dd($semillados);
         $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
         $campaniasCruzamiento = Campania::where('estado', 1)->get();
 
