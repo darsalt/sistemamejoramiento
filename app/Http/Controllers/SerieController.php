@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\SerieFormRequest;
 use DB;
 use App\Exports\SerieExport;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SerieController extends Controller
@@ -97,5 +98,9 @@ class SerieController extends Controller
          return Excel::download(new SerieExport, 'series.xlsx');
      }
 
+    public function getAnioSerie(Request $request){
+        $serie = Serie::find($request->serie);
 
+        return response()->json($serie->anio);
+    }
 }

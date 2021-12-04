@@ -316,8 +316,11 @@ Route::get('ajax/individual/getSeedlings', 'EtapaIndividualController@getSeedlin
 Route::put('ajax/individual/editSeedling', 'EtapaIndividualController@editSeedling')->name('ajax.individual.editSeedling');
 Route::get('ajax/individual/getProgenitoresSeedling', 'EtapaIndividualController@getProgenitoresSeedling')->name('ajax.individual.getProgenitoresSeedling');
 
-// Primera clonal
+// Serie
 Route::resource('admin/primera/serie','SerieController');
+Route::get('ajax/primera/serie/getAnioSerie', 'SerieController@getAnioSerie')->name('ajax.primera.serie.getAnioSerie');
+
+// Primera clonal
 Route::get('admin/primera/seleccion/{serie?}/{sector?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
 Route::get('admin/primera/inventario', 'PrimeraClonalController@inventario')->name('primeraclonal.inventario.index');

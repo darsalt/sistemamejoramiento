@@ -21,10 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 class SegundaClonalController extends Controller
 {
-    public function index($anio = 0, $idSerie = 0, $idSector = 0){
-        if($anio == 0)
-            $anio = date('Y');
-        
+    public function index($idSerie = 0, $idSector = 0){        
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
         //$seedlings = SegundaClonal::where('idserie', $idSerie)->where('idsector', $idSector)->paginate(10);
@@ -43,17 +40,17 @@ class SegundaClonalController extends Controller
         
         $parcelasPC = $parcelasPC->orderBy('parcela')->get();
         $variedades = Variedad::where('estado', 1)->get();
-        $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSector){
-            $q->where('anio', $anio)->where('idsector', $idSector);
+        $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->where('testigo', 1)->get();
 
-        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'variedades', 'testigos', 'anio'));
+        return view('admin.segundaclonal.seleccion.index')->with(compact('series', 'ambientes', 'idSerie', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasPC', 'variedades', 'testigos'));
     }
 
     public function saveSegundaClonal(Request $request){
         try{
             DB::transaction(function () use($request){
-                $segunda = SegundaClonal::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+                $segunda = SegundaClonal::where('idserie', $request->serie)->where('idsector', $request->sector)->first();
 
                 /*if($segunda){
                     $parcelasCargadas = $segunda->parcelas()->where('idsector', $request->sector);
@@ -107,7 +104,7 @@ class SegundaClonalController extends Controller
                 }*/
                 if(!$segunda){
                     $segunda = new SegundaClonal();
-                    $segunda->anio = $request->anio;
+                    $segunda->idserie = $request->serie;
                     $segunda->idsector = $request->sector;
                     $segunda->fecha = now();
                     $segunda->save();
@@ -163,10 +160,11 @@ class SegundaClonalController extends Controller
                     $parcela->delete();
                 }
 
-                $i = $this->getUltimaParcela($request->serie) + 1;
+                $i = $this->getUltimaParcela($request->serie, $request->sector) + 1;
                 foreach($request->seedlingsPC as $parcela){
                     $seedling = new SegundaClonalDetalle();
                     $seedling->idsegundaclonal = $segunda->id;
+                    $parcela->idserie = $request->serie;
                     $seedling->idprimeraclonal_detalle = $parcela;
                     $seedling->parcela = $i;
                     $seedling->save();
@@ -199,16 +197,16 @@ class SegundaClonalController extends Controller
         }
     }
 
-    private function getUltimaParcela($anio, $idSector){
-        $ultimoSeedling = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSector){
-            $q->where('anio', $anio)->where('idsector', $idSector);
+    private function getUltimaParcela($idSerie, $idSector){
+        $ultimoSeedling = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->orderByDesc('parcela')->first();
 
         return $ultimoSeedling ? $ultimoSeedling->parcela : 0;
     }
 
     public function getUltimaParcelaAjax(Request $request){
-        return $this->getUltimaParcela($request->anio, $request->sector);
+        return $this->getUltimaParcela($request->serie, $request->sector);
     }
 
     private function regenerarNrosParcelas($idSerie){
@@ -227,7 +225,7 @@ class SegundaClonalController extends Controller
     public function saveTestigo(Request $request){
         try{
             $segunda_detalle = DB::transaction(function () use($request){
-                $segunda = SegundaClonal::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+                $segunda = SegundaClonal::where('idserie', $request->serie)->where('idsector', $request->sector)->first();
 
                 $segunda_detalle = new SegundaClonalDetalle();
                 $segunda_detalle->segunda()->associate($segunda);
@@ -273,7 +271,7 @@ class SegundaClonalController extends Controller
         }
 
         $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
-            $q->where('idsector', $idSector)->where('anio', $anio);
+            $q->where('idsector', $idSector)->where('idserie', $idSerie);
         })->whereHas('parcelaPC', function($q){
             $q->where('laboratorio', 0);
         })->where('idserie', $idSerie)->get();
@@ -361,7 +359,7 @@ class SegundaClonalController extends Controller
         }
 
         $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
-            $q->where('idsector', $idSector)->where('anio', $anio);
+            $q->where('idsector', $idSector)->where('idserie', $idSerie);
         })->whereHas('parcelaPC', function($q){
             $q->where('laboratorio', 1);
         })->where('idserie', $idSerie)->get();
@@ -436,7 +434,7 @@ class SegundaClonalController extends Controller
 
     public function inventario(){
         $inventarioFinal = [];
-        $inventario = DB::select("SELECT sc.anio, scd.idserie, s.nombre as nombre_serie, sc.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM segundasclonal_detalle as scd INNER JOIN segundasclonal as sc ON scd.idsegundaclonal = sc.id INNER JOIN series AS s ON s.id = scd.idserie INNER JOIN sectores AS sec ON sec.id = sc.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY sc.anio, nombre_serie, sc.idsector, scd.idserie, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $inventario = DB::select("SELECT s.anio, scd.idserie, s.nombre as nombre_serie, sc.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM segundasclonal_detalle as scd INNER JOIN segundasclonal as sc ON scd.idsegundaclonal = sc.id INNER JOIN series AS s ON s.id = scd.idserie INNER JOIN sectores AS sec ON sec.id = sc.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY s.anio, nombre_serie, sc.idsector, scd.idserie, nombre_sector, nombre_subambiente, nombre_ambiente");
         $origen = 'sc';
         
         foreach($inventario as $linea){
