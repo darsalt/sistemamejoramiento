@@ -46,8 +46,8 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>Año</th>
                             <th>Serie</th>
+                            <th>Año</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
                             <th>Sector</th>
@@ -56,13 +56,6 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select name="anio" id="anio" class="form-control">
-                                    @for ($i = (int)date('Y'); $i >= 2010; $i--)
-                                        <option value="{{$i}}" {{old('anio') == $i ? 'selected' : ''}}>{{$i}}</option>
-                                    @endfor
-                                </select>
-                            </td>
-                            <td>
                                 <select name="serie" id="serie" class="form-control">
                                     <option value="0" disabled selected>(Ninguna)</option>
                                     @foreach ($series as $serie)
@@ -70,6 +63,7 @@
                                     @endforeach
                                 </select>
                             </td>
+                            <td><p id="anio"></p></td>
                             <td>
                                 <select name="ambiente" id="ambiente" class="form-control">
                                     <option value="0" disabled selected>(Ninguno)</option>
@@ -118,6 +112,7 @@
                             <th width="10%">Parcela</th>
                             <th width="10%">Bloque</th>
                             <th>Origen</th>
+                            <th class='col-serieSC'>Serie</th>
                             <th class="col-seedlingsSC">Seedlings Segunda clonal</th>
                             <th class="col-variedades">Variedades</th>
                             <th class="col-observaciones">Observaciones</th>
@@ -132,6 +127,13 @@
                                         <option value="sc" selected>Segunda clonal</option>
                                         <option value="testigo">Testigo</option>
                                         <option value="otro">Otro</option>
+                                    </select>
+                                </td>
+                                <td class='col-serieSC'>
+                                    <select name="serieSC" id="serieSC" class="form-control">
+                                        @foreach ($series as $serie)
+                                            <option value="{{$serie->id}}">{{$serie->nombre}}</option>
+                                        @endforeach
                                     </select>
                                 </td>
                                 <td class="col-seedlingsSC">
@@ -166,6 +168,7 @@
         <h3>Parcelas cargadas</h3>
         <table class="table table-striped table-bordered table-condensed table-hover" id="tablaParcelasCargadas">
             <thead>
+                <th>Serie</th>
                 <th>Parcela</th>
                 <th>Bloque</th>
                 <th>Parcela PC</th>
@@ -174,6 +177,13 @@
             <tbody>
                 @foreach ($parcelasCargadas as $parcela)
                     <tr>
+                        <td>
+                            @if ($parcela->parcelaSC)
+                                {{$parcela->parcelaSC->segunda->serie->nombre}}
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td>{{$parcela->parcela}}</td>
                         <td>{{$parcela->bloque}}</td>
                         <td>{{$parcela->parcelaSC && $parcela->parcelaSC->parcelaPC ? (int)$parcela->parcelaSC->parcelaPC->parcela : '-'}}</td>
@@ -214,13 +224,14 @@
                 saveMET: "{{route('ajax.met.saveMET')}}",
                 METAsociado: "{{route('ajax.met.METAsociado')}}",
                 getUltimaParcela: "{{route('ajax.met.getUltimaParcela')}}",
-                saveDetalleMET: "{{route('ajax.met.saveDetalleMET')}}"
+                saveDetalleMET: "{{route('ajax.met.saveDetalleMET')}}",
+                getAnioSerie: "{{route('ajax.primera.serie.getAnioSerie')}}"
             },
             data: {
-                anioActivo: "{{$anio}}",
                 ambienteActivo: "{{$idAmbiente}}",
                 subambienteActivo: "{{$idSubambiente}}",
                 sectorActivo: "{{$idSector}}",
+                serieActiva: "{{$idSerie}}"
             },
             session: {
                 exito: "{{session()->pull('exito')}}",

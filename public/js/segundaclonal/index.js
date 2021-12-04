@@ -2,7 +2,7 @@ var ultimaParcela = 0;
 var yaSeleccionados = 0;
 
 $(document).ready(function(){    
-    // Seleccionar en el combo box la campaña activa
+    // Seleccionar en el combo box la serie activa
     $('#serie').val(config.data.serieActiva);
 
     if($('#serie').val() > 0)

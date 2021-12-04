@@ -11,4 +11,8 @@ class MET extends Model
     public function parcelas(){
         return $this->hasMany('App\METDetalle', 'idmet', 'id');
     }
+
+    public function serie(){
+        return $this->belongsTo('App\Serie', 'idserie', 'id');
+    }
 }

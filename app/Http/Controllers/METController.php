@@ -21,10 +21,7 @@ use Illuminate\Support\Facades\Log;
 
 class METController extends Controller
 {
-    public function index($anio = 0, $idSector = 0){
-        if($anio == 0)
-            $anio = (int)date('Y');
-        
+    public function index($idSerie = 0, $idSector = 0){        
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();
 
@@ -41,11 +38,11 @@ class METController extends Controller
         })->orderBy('parcela')->get();*/
         $variedades = Variedad::where('estado', 1)->get();
 
-        $parcelasCargadas = METDetalle::whereHas('met', function($query) use($anio, $idSector){
-            $query->where('anio', $anio)->where('idsector', $idSector);
+        $parcelasCargadas = METDetalle::whereHas('met', function($query) use($idSerie, $idSector){
+            $query->where('idserie', $idSerie)->where('idsector', $idSector);
         })->orderBy('parcela')->get();
 
-        return view('admin.met.seleccion.index2')->with(compact('series', 'ambientes', 'anio', 'idSector', 'idSubambiente', 'idAmbiente', 'parcelasCargadas', 'variedades'));
+        return view('admin.met.seleccion.index2')->with(compact('series', 'ambientes', 'idSector', 'idSerie', 'idSubambiente', 'idAmbiente', 'parcelasCargadas', 'variedades'));
     }
 
     public function saveMET(Request $request){
@@ -98,7 +95,7 @@ class METController extends Controller
                     }
                 }*/
                 $met = new MET();
-                $met->anio = $request->anio;
+                $met->idserie = $request->serie;
                 $met->idsector = $request->sector;
                 $met->cant_variedades = $request->cantVariedades;
                 $met->repeticiones = $request->repeticiones;
@@ -137,13 +134,13 @@ class METController extends Controller
     }
 
     public function getMETAsociado(Request $request){
-        $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first() ?? null;
+        $met = MET::where('idserie', $request->serie)->where('idsector', $request->sector)->first() ?? null;
 
         return response()->json($met);
     }
 
     public function getUltimaParcela(Request $request){
-        $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+        $met = MET::where('idserie', $request->serie)->where('idsector', $request->sector)->first();
         
         if(count($met->parcelas) > 0){
             $ultimo_met_detalle = $met->parcelas()->orderByDesc('parcela')->first();
@@ -156,8 +153,7 @@ class METController extends Controller
     public function saveDetalleMET(Request $request){
         try{
             return DB::transaction(function () use($request){
-                Log::debug($request);
-                $met = MET::where('anio', $request->anio)->where('idsector', $request->sector)->first();
+                $met = MET::where('idserie', $request->serie)->where('idsector', $request->sector)->first();
 
                 if($met){
                     $met_detalle = new METDetalle();
@@ -175,7 +171,7 @@ class METController extends Controller
                     $met_detalle->bloque = $request->nroBloque;
                     $met_detalle->save();
 
-                    return METDetalle::with(['parcelaSC.parcelaPC', 'variedad', 'parcelaSC.variedad'])->find($met_detalle->id);
+                    return METDetalle::with(['parcelaSC.parcelaPC', 'variedad', 'parcelaSC.variedad', 'parcelaSC.segunda.serie'])->find($met_detalle->id);
                 }
                 else
                     throw new Exception("No se encontro el MET correspondiente");
@@ -205,8 +201,8 @@ class METController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlings = METDetalle::whereHas('met', function($q) use($anio, $idSector){
-            $q->where('anio', $anio)->where('idsector', $idSector);
+        $seedlings = METDetalle::whereHas('met', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->whereHas('parcelaSC', function($q){
             $q->whereHas('parcelaPC', function($q2){
                 $q2->where('laboratorio', 0);
@@ -295,8 +291,8 @@ class METController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlings = METDetalle::whereHas('met', function($q) use($anio, $idSector){
-            $q->where('anio', $anio)->where('idsector', $idSector);
+        $seedlings = METDetalle::whereHas('met', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->whereHas('parcelaSC', function($q){
             $q->whereHas('parcelaPC', function($q2){
                 $q2->where('laboratorio', 1);
@@ -373,7 +369,7 @@ class METController extends Controller
 
     public function inventario(){
         $inventarioFinal = [];
-        $inventario = DB::select("SELECT met.anio, met.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM met_detalle as metd INNER JOIN met as met ON metd.idmet = met.id INNER JOIN sectores AS sec ON sec.id = met.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY met.anio, met.idsector, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $inventario = DB::select("SELECT s.anio, met.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM met_detalle as metd INNER JOIN met as met ON metd.idmet = met.id INNER JOIN sectores AS sec ON sec.id = met.idsector INNER JOIN series AS s ON met.idserie = s.id INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY s.anio, met.idsector, nombre_sector, nombre_subambiente, nombre_ambiente");
         $origen = 'met';
         
         foreach($inventario as $linea){

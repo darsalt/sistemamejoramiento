@@ -128,6 +128,7 @@ class SegundaClonalController extends Controller
             return response()->json(true);
         }
         catch(Exception $e){
+            Log::debug($e->getMessage());
             session(['error' => 'error']);
             return response()->json(false);
         }

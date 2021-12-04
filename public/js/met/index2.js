@@ -1,7 +1,4 @@
 $(document).ready(function(){
-    // Seleccionar en el combo box la campaña activa
-    $('#anio').val(config.data.anioActivo);
-
     if(config.session.exito)
         mostrarMensajeExito();
 
@@ -15,9 +12,13 @@ $(document).ready(function(){
         limit: 10,
     });
 
-    if(sessionStorage.getItem('serie')){
-        $('#serie').val(sessionStorage.getItem('serie'));
-    }
+    // Seleccionar en el combo box la serie activa
+    $('#serie').val(config.data.serieActiva);
+
+    if($('#serie').val() > 0)
+        loadAnioSerie($('#serie').val());
+
+    $('#serieSC').trigger('change');
 
     // Verificar si ya hay cargado un MET para el mismo anio y ubicacion
     chequearMETCargado();
@@ -25,7 +26,7 @@ $(document).ready(function(){
     ocultarInputsCarga();
     //habilitarDeshabilitarSeedlings($('#anio').val(), config.data.sectorActivo);
 
-    $('#anio').focus();
+    $('#serie').focus();
 
     // Validacion de los campos
     $('#formSegundaClonal').validate({
@@ -85,7 +86,7 @@ $(document).ready(function(){
                     dataType: 'json',
                     data: $(form).serialize(),
                     success: function(response){
-                        window.location.href = config.routes.met + "/" + $('#anio').val()  + "/" + $('#sector').val();
+                        window.location.href = config.routes.met + "/" + $('#serie').val()  + "/" + $('#sector').val();
                     },
                     error: function( jqXHR, textStatus, errorThrown ){
                         mostrarMensajeError();
@@ -101,7 +102,7 @@ $(document).ready(function(){
                 url: config.routes.saveDetalleMET,
                 method: 'POST',
                 dataType: 'json',
-                data: $(form).serialize() + '&anio=' + $('#anio').val() + '&sector=' + config.data.sectorActivo + '&nroParcela=' + $('#nroParcela').val() + '&nroBloque=' + $('#nroBloque').val(),
+                data: $(form).serialize() + '&serie=' + $('#serie').val() + '&sector=' + config.data.sectorActivo + '&nroParcela=' + $('#nroParcela').val() + '&nroBloque=' + $('#nroBloque').val(),
                 success: function(response){
                     $('#tablaParcelasCargadas tbody').append(agregarFila(response)); // Agrego fila a la tabla
                     $('#nroParcela').val(parseInt($('#nroParcela').val()) + 1);
@@ -116,12 +117,11 @@ $(document).ready(function(){
     });
 
     // Evento cuando se selecciona una serie
-    $('#anio').change(function(){
-        window.location.href = config.routes.met + "/" + $('#anio').val();
+    $('#serie').change(function(){
+        window.location.href = config.routes.met + "/" + $('#serie').val();
     });
 
-    $('#serie').change(function(){
-        sessionStorage.setItem('serie', $('#serie').val())
+    $('#serieSC').change(function(){
         $.ajax({
             url: config.routes.getSegundasClonales,
             method: 'GET',
@@ -140,7 +140,7 @@ $(document).ready(function(){
                             $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela PC: ' + parseInt(item.parcela_p_c.parcela) + ' - Variedad: ' + item.parcela_p_c.primera.variedad.nombre + "</option>");
                     }
                     else{
-                        $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela SC: ' + item.parcela + ' - Variedad: ' + item.variedad.nombre + "</option>");
+                        $('#seedlingsSC').append("<option value='" + item.id + "'>" + 'Parcela SC: ' + parseInt(item.parcela) + ' - Variedad: ' + item.variedad.nombre + "</option>");
                     }
                 });
             }
@@ -149,8 +149,8 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona un sector
     $('#sector').change(function(){
-        if($('#anio').val() > 0)
-            window.location.href = config.routes.met + "/" + $('#anio').val() + "/" + $('#sector').val();
+        if($('#serie').val() > 0)
+            window.location.href = config.routes.met + "/" + $('#serie').val() + "/" + $('#sector').val();
     });
 
     // Evento para cuando se selecciona un ambiente
@@ -214,25 +214,28 @@ $(document).ready(function(){
     $('#origenSeedling').change(function(){
         if($(this).val() == 'sc'){
             $('.col-seedlingsSC').show();
+            $('.col-serieSC').show();
             $('.col-variedades').hide();
             $('.col-observaciones').hide();
         }
         else if($(this).val() == 'testigo'){
             $('.col-seedlingsSC').hide();
+            $('.col-serieSC').hide();
             $('.col-variedades').show();
             $('.col-observaciones').hide();
         }
         else if($(this).val() == 'otro'){
             $('.col-seedlingsSC').hide();
+            $('.col-serieSC').hide();
             $('.col-variedades').hide();
             $('.col-observaciones').show();
         }
     });
 
-    $('#serie').trigger('change');
+    $('#serieSC').trigger('change');
 });
 
-function habilitarDeshabilitarSeedlings(anio, idSector){
+function habilitarDeshabilitarSeedlings(idSerie, idSector){
     $("input[name='seedlingsSC[]']:checked").removeAttr("checked");
 
     $("input[name='seedlingsSC[]'").each(function(){
@@ -240,7 +243,7 @@ function habilitarDeshabilitarSeedlings(anio, idSector){
         var option = $(this);
         if(mets){
             mets.forEach(function(valor, i){
-                if(valor.met.anio == anio && valor.idsector == idSector)
+                if(valor.met.idserie == idSerie && valor.idsector == idSector)
                     option.attr("checked", "checked");
             });
         }
@@ -254,7 +257,7 @@ function chequearMETCargado(){
             method: 'GET',
             dataType: 'json',
             data: {
-                'anio': $('#anio').val(),
+                'serie': $('#serie').val(),
                 'sector': config.data.sectorActivo
             },
             success: function(response){
@@ -301,7 +304,7 @@ function cargarProximaParcela(){
         method: 'GET',
         dataType: 'json',
         data: {
-            'anio': $('#anio').val(),
+            'serie': $('#serie').val(),
             'sector': config.data.sectorActivo
         },
         success: function(response){
@@ -322,6 +325,11 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
+    if(element.parcela_s_c)
+        fila += "<td>" + element.parcela_s_c.segunda.serie.nombre + "</td>";
+    else
+        fila += "<td>-</td>";
+
     fila += "<td>" + element.parcela + "</td>";
     fila += "<td>" + element.bloque + "</td>";
     if(element.parcela_s_c && element.parcela_s_c.parcela_p_c){
@@ -346,4 +354,18 @@ function agregarFila(element){
     fila += '</tr>';
 
     return fila;
+}
+
+function loadAnioSerie(idSerie){
+    $.ajax({
+        url: config.routes.getAnioSerie,
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            'serie': idSerie
+        },
+        success: function(response){
+            $('#anio').text(response);
+        }
+    });
 }
