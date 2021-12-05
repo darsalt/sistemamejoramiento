@@ -385,3 +385,6 @@ Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
     Route::post('/evaluaciones/saveEvLaboratorio', 'METController@saveEvLaboratorio')->name('evaluaciones.saveEvLaboratorio');
 });
 
+// Rutas ajax Tachos
+Route::get('/ajax/tachos/getSubtachosDeTacho', 'TachoController@getSubtachosDeTacho')->name('ajax.tachos.getSubtachosDeTacho');
+

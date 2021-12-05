@@ -23,8 +23,14 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
               	<label for="codigo">Tacho</label>
-               	<input type="number" name="codigo" class="form-control" placeholder="Tacho...">
+               	<input type="number" name="codigo" id="codigo" class="form-control" placeholder="Tacho...">
             </div>
+        </div>
+    </div>
+    <div class="row" id="subtachosYaCargados" style="display: none;">
+        <div class="col-12">
+            <label for="">Subtachos ya cargados</label>
+            <p></p>
         </div>
     </div>
     <div class="row">
@@ -116,4 +122,44 @@
 	{!!Form::close()!!}
 </div>
 
+@endsection
+
+@section('script')
+    <script>
+        $('#codigo').focusout(function(){
+            if($('#codigo').val() > 0){
+                $.ajax({
+                    url: "{{route('ajax.tachos.getSubtachosDeTacho')}}",
+                    method: "GET",
+                    dataType: "json",
+                    data: {
+                        'codigo': $('#codigo').val()
+                    },
+                    success: function(response){
+                        var parrafo = $('#subtachosYaCargados p');
+
+                        parrafo.empty();
+                        $("#subcodigo option").removeAttr("disabled");
+                        $.each(response.subtachos, function(i, item){
+                            parrafo.text(parrafo.text() + item + ' ');
+                            $("#subcodigo option[value='" + item + "']").attr("disabled", "disabled");
+                        });
+
+                        if(response.subtachos.length > 0){
+                            $('#idvariedad').val(response.variedad);
+                            $('#idvariedad').attr("readonly", "readonly");
+                        }
+                        else{
+                            parrafo.text('Ninguno');
+                            $('#idvariedad').val(0);
+                            $('#idvariedad').removeAttr("readonly");
+                        }
+                        $('#idvariedad').select2();
+
+                        $('#subtachosYaCargados').show();
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

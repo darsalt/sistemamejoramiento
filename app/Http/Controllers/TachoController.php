@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\TachoFormRequest;
 use DB;
 use App\Exports\TachosExport;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class TachoController extends Controller
@@ -131,5 +132,16 @@ class TachoController extends Controller
             ->get();
 
         return response()->json($variedad);
+    }
+
+    public function getSubtachosDeTacho(Request $request){
+        $subtachos = Tacho::where('codigo', $request->codigo)->where('estado', '<>', 3)->orderBy('subcodigo')->pluck('subcodigo');
+        
+        if(count($subtachos) > 0)
+            $variedad = Tacho::where('codigo', $request->codigo)->where('estado', '<>', 3)->pluck('idvariedad')[0];
+        else
+            $variedad = null;
+
+        return response()->json(['subtachos' => $subtachos, 'variedad' => $variedad]);
     }
 }
