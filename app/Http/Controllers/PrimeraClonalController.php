@@ -72,7 +72,6 @@ class PrimeraClonalController extends Controller
         try{
             $primeraClonal = new PrimeraClonal();
             
-            $primeraClonal->anio = $request->anio;
             $primeraClonal->idserie = $request->serie;
             $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);
@@ -101,7 +100,6 @@ class PrimeraClonalController extends Controller
             $primeraClonal = PrimeraClonal::find($request->idSeedling);
     
             PrimeraClonalDetalle::where('idprimeraclonal', $request->idSeedling)->delete();
-            $primeraClonal->anio = $request->anio;
             $primeraClonal->idserie = $request->serie;
             $primeraClonal->idsector = $request->sector;
             $seedling = Seedling::find($request->parcela);
@@ -217,7 +215,6 @@ class PrimeraClonalController extends Controller
                                 $primeraRelacionado = $detalle->primera;
                                 $primeraClonal = new PrimeraClonal();
     
-                                $primeraClonal->anio = $primeraRelacionado->anio;
                                 $primeraClonal->idserie = $primeraRelacionado->serie->id;
                                 $primeraClonal->idsector = $primeraRelacionado->sector->id;
                                 $primeraClonal->fecha = now();
@@ -286,8 +283,8 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
-            $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->where('laboratorio', 0)->get();
 
         $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
@@ -372,8 +369,8 @@ class PrimeraClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
-        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($anio, $idSerie, $idSector){
-            $q->where('idserie', $idSerie)->where('anio', $anio)->where('idsector', $idSector);
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($idSerie, $idSector){
+            $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->where('laboratorio', 1)->get();
 
         $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
@@ -446,7 +443,7 @@ class PrimeraClonalController extends Controller
 
     public function inventario(){
         $inventarioFinal = [];
-        $inventario = DB::select("SELECT pc.anio, pc.idserie, s.nombre as nombre_serie, pc.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM primerasclonal_detalle as pcd INNER JOIN primerasclonal as pc ON pcd.idprimeraclonal = pc.id INNER JOIN series AS s ON s.id = pc.idserie INNER JOIN sectores AS sec ON sec.id = pc.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY pc.anio, nombre_serie, pc.idsector, pc.idserie, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $inventario = DB::select("SELECT s.anio, pc.idserie, s.nombre as nombre_serie, pc.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM primerasclonal_detalle as pcd INNER JOIN primerasclonal as pc ON pcd.idprimeraclonal = pc.id INNER JOIN series AS s ON s.id = pc.idserie INNER JOIN sectores AS sec ON sec.id = pc.idsector INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY s.anio, nombre_serie, pc.idsector, pc.idserie, nombre_sector, nombre_subambiente, nombre_ambiente");
         $origen = 'pc';
         
         foreach($inventario as $linea){

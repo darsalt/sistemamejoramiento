@@ -2,6 +2,9 @@ $(document).ready(function(){
     // Seleccionar en el combo box la campaña activa
     $('#serie').val(config.data.serieActiva);
 
+    if($('#serie').val() > 0)
+        loadAnioSerie($('#serie').val());
+
     if(config.session.exito)
         mostrarMensajeExito();
 
@@ -12,9 +15,6 @@ $(document).ready(function(){
     $('#ambiente, #subambiente, #sector, #parcela, .testigoVariedades').select2();
 
     $('#serie').focus();
-
-    if(sessionStorage.getItem('anio'))
-        $('#anio').val(sessionStorage.getItem('anio'));
 
     if(config.data.serieActiva > 0 && config.data.sectorActivo > 0)
         $('#btnAddTestigos').show();
@@ -130,14 +130,12 @@ $(document).ready(function(){
         $(this).text() == 'Mostrar formulario' ? $(this).text('Ocultar formulario') : $(this).text('Mostrar formulario');
     });
 
-    $('#anio').change(function(){
-        sessionStorage.setItem('anio', $('#anio').val())
-    });
-
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
         if($('#sector').val() > 0)
             window.location.href = config.routes.seedlings + "/" + $('#serie').val()  + "/" + $('#sector').val();
+        else
+            loadAnioSerie($('#serie').val());
     });
 
     // Evento cuando se selecciona un sector
@@ -351,7 +349,6 @@ function editarSeedling(id){
         },
         success: function(response){
             $('#idSeedling').val(response.id);
-            $('#anio').val(response.anio);
             $('#serie').val(response.idserie);
             $('#ambiente').val(response.sector.subambiente.ambiente.id);
             $('#ambiente').trigger('change', [response.sector.subambiente.id, response.idsector]);
@@ -365,6 +362,20 @@ function editarSeedling(id){
             $('#formPrimeraClonal button[type="submit"] i').removeClass(['fa-check', 'fa-edit']);
             $('#formPrimeraClonal button[type="submit"] i').addClass('fa-edit');
             $('#serie').focus();
+        }
+    });
+}
+
+function loadAnioSerie(idSerie){
+    $.ajax({
+        url: config.routes.getAnioSerie,
+        method: 'GET',
+        dataType: 'json',
+        data: {
+            'serie': idSerie
+        },
+        success: function(response){
+            $('#anio').text(response);
         }
     });
 }

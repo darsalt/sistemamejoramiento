@@ -49,8 +49,8 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>Año</th>
                             <th>Serie</th>
+                            <th>Año</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
                             <th>Sector</th>
@@ -59,19 +59,15 @@
                     <tbody>
                         <tr>
                             <td>
-                                <select name="anio" id="anio" class="form-control">
-                                    @for ($i = (int)date('Y'); $i >= 2010; $i--)
-                                        <option value="{{$i}}" {{old('anio') == $i ? 'selected' : ''}}>{{$i}}</option>
-                                    @endfor
-                                </select>
-                            </td>
-                            <td>
                                 <select name="serie" id="serie" class="form-control">
                                     <option value="0" disabled selected>(Ninguna)</option>
                                     @foreach ($series as $serie)
                                         <option value="{{$serie->id}}">{{$serie->nombre}}</option>
                                     @endforeach
                                 </select>
+                            </td>
+                            <td>
+                                <p id="anio"></p>
                             </td>
                             <td>
                                 <select name="ambiente" id="ambiente" class="form-control">
@@ -351,8 +347,8 @@ role="dialog" tabindex="-1" id="modal-delete">
                 editPrimeraClonal: "{{route('ajax.primeraclonal.editPrimeraClonal')}}",
                 deletePrimeraClonal: "{{route('primeraclonal.delete')}}",
                 getProgenitoresSeedling: "{{route('ajax.individual.getProgenitoresSeedling')}}",
-                saveTestigos: "{{route('ajax.primeraclonal.saveTestigos')}}"
-
+                saveTestigos: "{{route('ajax.primeraclonal.saveTestigos')}}",
+                getAnioSerie: "{{route('ajax.primera.serie.getAnioSerie')}}"
             },
             data: {
                 serieActiva: "{{$idSerie}}",
