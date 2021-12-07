@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Tallo;
 use App\Tacho;
+use Illuminate\Support\Facades\Log;
 
 class MarcotadoController extends Controller
 {
@@ -24,7 +25,8 @@ class MarcotadoController extends Controller
     public function index()
     {	
         $idcampania = DB::table('campanias')
-                    ->OrderBy('created_at','DESC')
+                    ->where('estado', 1)
+                    ->OrderBy('nombre','DESC')
                     ->take(1)
                     ->select('id')
                     ->get();
@@ -36,7 +38,7 @@ class MarcotadoController extends Controller
             ->join('zorras','ubi.idzorra','=','zorras.id')
             ->join('camaras','zorras.idcamara','=','camaras.id')
             ->join('campaniacamaratratamientoubicacion as cc','cc.id','=','u.idcctu')
-         //   ->Where('cc.idcampania',$idcampania[0]->id)
+            ->Where('cc.idcampania',$idcampania[0]->id)
             ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
             ->get();
         
@@ -45,10 +47,11 @@ class MarcotadoController extends Controller
             ->get();
         $posiciones = [1,2,3,4,5,6,7,8,9,10];
         $campanias = DB::table('campanias')
-                    ->Where('estado',1)
-                    ->OrderBy('id','DESC')
                     ->select('*')
+                    ->where('estado', 1)
+                    ->OrderBy('nombre','DESC')
                     ->get();
+
         $nombrecampania = DB::table('campanias')
                     ->Where('id',$idcampania[0]->id)
                     ->select('nombre')
@@ -58,24 +61,28 @@ class MarcotadoController extends Controller
     }
 
     public function cambiarCampania(Request $request){
-       
+
         $ubicaciones=DB::table('ubicaciontachoxcampania as u')
-                    ->join('tachos','u.idtacho','=','tachos.idtacho')
-                    ->join('variedades','tachos.idvariedad','=','variedades.idvariedad')
-                    ->join('ubicacionestachos as ubi','ubi.id','=','u.idubicacion')
-                    ->join('zorras','ubi.idzorra','=','zorras.id')
-                    ->join('camaras','zorras.idcamara','=','camaras.id')
-                    ->Where('u.idcctu',$request['campanias'])
-                    ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
-                    ->get();
+                        ->join('tachos','u.idtacho','=','tachos.idtacho')
+                        ->join('variedades','tachos.idvariedad','=','variedades.idvariedad')
+                        ->join('ubicacionestachos as ubi','ubi.id','=','u.idubicacion')
+                        ->join('zorras','ubi.idzorra','=','zorras.id')
+                        ->join('camaras','zorras.idcamara','=','camaras.id')
+                        ->join('campaniacamaratratamientoubicacion as cc','cc.id','=','u.idcctu')
+                        ->Where('cc.idcampania',$request['campanias'])
+                        ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
+                        ->get();
+
         $tallos=DB::table('tallos')
                     ->select('*')
                     ->get();
         $posiciones = [1,2,3,4,5,6,7,8,9,10];
         $campanias = DB::table('campanias')
-                            ->Where('estado',1)
-                            ->select('*')
-                            ->get();
+                    ->select('*')
+                    ->where('estado', 1)
+                    ->OrderBy('nombre','DESC')
+                    ->get();
+
         $nombrecampania = DB::table('campanias')
                             ->Where('id',$request['campanias'])
                             ->select('nombre')
