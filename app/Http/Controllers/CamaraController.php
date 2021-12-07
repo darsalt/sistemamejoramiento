@@ -18,7 +18,8 @@ class CamaraController extends Controller
     public function index()
     {
         $idcampania = DB::table('campanias')
-                    ->OrderBy('created_at','DESC')
+                    ->where('estado', 1)
+                    ->OrderBy('nombre','DESC')
                     ->take(1)
                     ->select('id')
                     ->get();
@@ -45,6 +46,8 @@ class CamaraController extends Controller
         
         $campanias = DB::table('campanias')
                     ->select('*')
+                    ->where('estado', 1)
+                    ->OrderBy('nombre','DESC')
                     ->get();
         $nombrecampania = DB::table('campanias')
                     ->Where('id',$idcampania[0]->id)
@@ -57,7 +60,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores            
+            ->where ('t.destino','=',1)//1=progenitores   
+            ->where('t.idcampania', $idcampania[0]->id)         
     		->orderBy('t.codigo','asc')
             ->get();
             
@@ -107,8 +111,11 @@ class CamaraController extends Controller
                             ->get();
         
         $campanias = DB::table('campanias')
-                    ->select('*')
-                    ->get();
+                        ->select('*')
+                        ->where('estado', 1)
+                        ->OrderBy('nombre','DESC')
+                        ->get();
+
         $nombrecampania = DB::table('campanias')
                     ->Where('id',$request->idCa)
                     ->select('nombre')
@@ -121,7 +128,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores            
+            ->where ('t.destino','=',1)//1=progenitores    
+            ->where('t.idcampania', $request->idCa)          
     		->orderBy('t.codigo','asc')
             ->get();
             
@@ -170,8 +178,11 @@ class CamaraController extends Controller
                             ->get();
         
         $campanias = DB::table('campanias')
-                    ->select('*')
-                    ->get();
+                        ->select('*')
+                        ->where('estado', 1)
+                        ->OrderBy('nombre','DESC')
+                        ->get();
+
         $nombrecampania = DB::table('campanias')
                     ->Where('id',$request['campanias'])
                     ->select('nombre')
@@ -184,7 +195,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores            
+            ->where ('t.destino','=',1)//1=progenitores 
+            ->where('t.idcampania', $request['campanias'])             
     		->orderBy('t.codigo','asc')
             ->get();
             
