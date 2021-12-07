@@ -21,4 +21,12 @@ class Sanitariap extends Model
     protected $guarded  = [
         
     ];
+
+    public function campania(){
+        return $this->belongsTo('App\Campania', 'idcampania', 'id');
+    }
+
+    public function tipo(){
+        
+    }
 }

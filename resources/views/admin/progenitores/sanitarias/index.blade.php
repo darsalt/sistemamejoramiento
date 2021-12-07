@@ -15,6 +15,7 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Nombre</th>
+					<th>Campaña</th>
 					<th>Fecha Generación</th>
 					<th>Observaciones</th>
  					<th>Operaciones</th>
@@ -22,6 +23,7 @@
                @foreach ($sanitariasp as $t)
 				<tr>
 					<td>{{ $t->nombre}}</td>
+					<td>{{$t->nombre_campania}}</td>
 					<td>{{ $t->fechageneracion}}</td>
 					<td>{{ $t->observaciones}}</td>
 					<td>

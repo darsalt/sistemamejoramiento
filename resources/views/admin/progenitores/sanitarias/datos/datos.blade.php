@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Datos de la evaluación N°: <b>{{$datosasociados[0]->idevaluacion}}</b></h3>
+		<h3>Datos de la evaluación N°: <b>{{$sanitariap->id}}</b> - Nombre: <b>{{$datosasociados[0]->nombre_tipo}}</b> - Campaña: <b>{{$sanitariap->campania->nombre}}</b></h3>
 	</div>
 </div>
 

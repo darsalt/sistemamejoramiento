@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campania;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,11 +29,13 @@ class ProgenitoresSanitariaController extends Controller
             $query=trim($request->get('searchText'));
 
             $sanitariasp=DB::table('sanitariasp as a')->where ('t.nombre','like','%'.$query.'%') 
-            ->select('a.id','t.nombre','a.fechageneracion','a.observaciones')
+            ->select('a.id','t.nombre','a.fechageneracion','a.observaciones', 'c.nombre as nombre_campania')
             ->leftjoin('tipossanitarias as t','t.id','=','a.idnombre')
+            ->leftjoin('campanias as c', 'c.id', '=', 'a.idcampania')
             ->where ('a.estado','=',1)
             ->orderBy('id','desc')
             ->paginate('10');
+
 
             return view('admin.progenitores.sanitarias.index',["sanitariasp"=>$sanitariasp,"searchText"=>$query]);
         }
@@ -50,8 +53,9 @@ class ProgenitoresSanitariaController extends Controller
         ->where ('estado','=',1)
         ->get();
 
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
 
-        return view ("admin.progenitores.sanitarias.create",["tachos"=>$tachos,"tipos"=>$tipos]);
+        return view ("admin.progenitores.sanitarias.create",["tachos"=>$tachos,"tipos"=>$tipos, 'campanias'=>$campanias]);
 
     }
 
@@ -61,6 +65,7 @@ class ProgenitoresSanitariaController extends Controller
         $sanitariap=new Sanitariap;
         // El banco=null indica que es una evaluacion de progenitores
         $sanitariap->idnombre=$request->get('idnombre');
+        $sanitariap->idcampania = $request->get('campania');
         $sanitariap->fechageneracion=$request->get('fechageneracion');
         $sanitariap->observaciones=$request->get('observaciones');
         $sanitariap->estado='1';
@@ -147,12 +152,15 @@ class ProgenitoresSanitariaController extends Controller
 
     public function ubicacionesasociadas(Request $request,$id)
     {
+        $sanitariap=Sanitariap::findOrFail($id);
+
         $datosasociados=DB::table('datossanitariosp as d')
         ->select('d.*','t.codigo','t.subcodigo')
  //       ->select('d.*')
         ->join('sanitariasp as a','a.id','=','d.idevaluacion')
         ->join('tachos as t','t.idtacho','=','d.idtacho')        
         ->where ('d.idevaluacion','=',$id)
+        ->where('t.idcampania', $sanitariap->campania->id)
         ->orderBy('d.id','asc')
         ->paginate('100');
 //dd($datosasociados);
@@ -195,16 +203,16 @@ class ProgenitoresSanitariaController extends Controller
         $sanitariap=Sanitariap::findOrFail($id);
 
         $datosasociados=DB::table('datossanitariosp as d')
-        ->select('d.*')
- //       ->select('d.*')
+        ->select('d.*', 'ts.nombre as nombre_tipo')
         ->join('sanitariasp as a','a.id','=','d.idevaluacion')
+        ->join('tipossanitarias as ts', 'ts.id', '=', 'a.idnombre')
         ->where ('d.idevaluacion','=',$id)
         ->orderBy('d.id','asc')
         ->get();
 
         //dd($datosasociados);
 
-        return view("admin.progenitores.sanitarias.datos.datos",compact("sanitariap"),["sanitariap"=>$sanitariap,"datosasociados"=>$datosasociados]);
+        return view("admin.progenitores.sanitarias.datos.datos",["sanitariap"=>$sanitariap,"datosasociados"=>$datosasociados]);
         //return Redirect::to('admin/importaciones/inspecciones/'.$request->get('idimportacion').'/');
 
 

@@ -17,6 +17,7 @@
 					<th>Producto</th>
 					<th>Cantidad</th>
 					<th>Fecha Fertilización</th>
+					<th>Campaña</th>
 					<th>Observaciones</th>
  					<th>Operaciones</th>
 				</thead>
@@ -25,6 +26,7 @@
 					<td>{{ $f->producto}}</td>
 					<td>{{ $f->cantidad}}</td>
 					<td>{{ $f->fechafertilizacion}}</td>
+					<td>{{$f->nombre_campania}}</td>
 					<td>{{ $f->observaciones}}</td>
 					<td>
  					    <a href="" data-target="#view" data-toggle="modal"> 

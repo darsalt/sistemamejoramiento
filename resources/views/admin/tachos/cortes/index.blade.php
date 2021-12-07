@@ -15,12 +15,14 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Fecha Corte</th>
+					<th>Campaña</th>
 					<th>Observaciones</th>
  					<th>Operaciones</th>
 				</thead>
                @foreach ($cortes as $c)
 				<tr>
 					<td>{{ $c->fechacorte}}</td>
+					<td>{{$c->nombre_campania}}</td>
 					<td>{{ $c->observaciones}}</td>
 					<td>
  					    <a href="" data-target="#view" data-toggle="modal"> 

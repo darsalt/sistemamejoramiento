@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campania;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -25,9 +26,14 @@ class FertilizacionController extends Controller
     	if($request){
     		$query=trim($request->get('searchText'));
 
-            $fertilizaciones=DB::table('fertilizaciones as f')->where ('f.producto','like','%'.$query.'%') 
-            ->select('f.idfertilizacion','f.producto','f.cantidad','f.fechafertilizacion','f.observaciones')
-            ->where ('f.estado','=',1)
+            $fertilizaciones=DB::table('fertilizaciones as f')
+            ->select('f.idfertilizacion','f.producto','f.cantidad','f.fechafertilizacion','f.observaciones', 'c.nombre as nombre_campania');
+            
+            if(!empty($query))
+                $fertilizaciones=$fertilizaciones->where ('f.producto','like','%'.$query.'%'); 
+
+            $fertilizaciones=$fertilizaciones->where ('f.estado','=',1)
+            ->join('campanias as c', 'c.id', '=', 'f.idcampania')
             ->orderBy('idfertilizacion','desc')
             ->paginate('10');
     		return view('admin.tachos.fertilizaciones.index',["fertilizaciones"=>$fertilizaciones,"searchText"=>$query]);
@@ -36,7 +42,9 @@ class FertilizacionController extends Controller
 
     public function create()
     {
-        return view ("admin.tachos.fertilizaciones.create");
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
+
+        return view ("admin.tachos.fertilizaciones.create",compact('campanias'));
     }
 
     public function store(FertilizacionFormRequest $request)
@@ -45,6 +53,7 @@ class FertilizacionController extends Controller
     	$fertilizacion->producto=$request->get('producto');
         $fertilizacion->cantidad=$request->get('cantidad');
         $fertilizacion->fechafertilizacion=$request->get('fechafertilizacion');
+        $fertilizacion->idcampania = $request->get('campania');
         $fertilizacion->observaciones=$request->get('observaciones');
     	$fertilizacion->estado='1';
     	$fertilizacion->save();
@@ -65,8 +74,10 @@ class FertilizacionController extends Controller
  
     public function edit($id)
      {
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
+
          //dd($fertilizacion);
-         return view('admin.tachos.fertilizaciones.edit',["Fertilizacion"=>Fertilizacion::findOrFail($id)]);
+         return view('admin.tachos.fertilizaciones.edit',["Fertilizacion"=>Fertilizacion::findOrFail($id), 'campanias'=>$campanias]);
 
      }
 
@@ -81,6 +92,7 @@ class FertilizacionController extends Controller
         $fertilizacion->producto=$request->get('producto');
         $fertilizacion->cantidad=$request->get('cantidad');
         $fertilizacion->fechafertilizacion=$request->get('fechafertilizacion');
+        $fertilizacion->idcampania = $request->get('campania');
         $fertilizacion->observaciones=$request->get('observaciones');
 
         $fertilizacion->estado='1';

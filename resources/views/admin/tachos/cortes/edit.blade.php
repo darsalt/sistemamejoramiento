@@ -31,6 +31,18 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
+                <label for="campania">Campaña</label><br>
+                <select name="campania" id="campania" class="form-control" required>
+                    @foreach ($campanias as $campania)
+                        <option value="{{$campania->id}}" {{$campania->id == $corte->idcampania ? 'selected' : ''}}>{{$campania->nombre}}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group">
                 <label for="observaciones">Observaciones</label>
                 <textarea  maxlength="1000" name="observaciones" id="observaciones" class="form-control">{{$corte->observaciones}}</textarea>
             </div>  

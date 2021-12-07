@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campania;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -25,18 +26,26 @@ class CorteController extends Controller
     	if($request){
     		$query=trim($request->get('searchText'));
 
-            $cortes=DB::table('cortes as c')->where ('c.observaciones','like','%'.$query.'%') 
-            ->select('c.idcorte','c.fechacorte','c.observaciones')
-            ->where ('c.estado','=',1)
+            $cortes=DB::table('cortes as c')
+            ->select('c.idcorte','c.fechacorte','c.observaciones', 'ca.nombre as nombre_campania');
+
+            if(!empty($query))
+                $cortes = $cortes->where ('c.observaciones','like','%'.$query.'%');
+
+            $cortes = $cortes->where ('c.estado','=',1)
+            ->join('campanias as ca', 'ca.id', '=', 'c.idcampania')
             ->orderBy('idcorte','desc')
             ->paginate('10');
+
     		return view('admin.tachos.cortes.index',["cortes"=>$cortes,"searchText"=>$query]);
     	}
     }
 
     public function create()
     {
-    	return view ("admin.tachos.cortes.create");
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
+
+    	return view ("admin.tachos.cortes.create", compact('campanias'));
     }
 
     public function store(CorteFormRequest $request)
@@ -45,15 +54,21 @@ class CorteController extends Controller
 
     	$corte=new Corte;
         $corte->fechacorte=$request->get('fechacorte');
+        $corte->idcampania = $request->get('campania');
         $corte->observaciones=$request->get('observaciones');
     	$corte->estado='1';
     	$corte->save();
 
-         $cortes=DB::table('cortes as c')->where ('c.observaciones','like','%'.$query.'%') 
-         ->select('c.idcorte','c.fechacorte','c.observaciones')
-         ->where ('c.estado','=',1)
-         ->orderBy('idcorte','desc')
-         ->paginate('10');
+        $cortes=DB::table('cortes as c')
+        ->select('c.idcorte','c.fechacorte','c.observaciones', 'ca.nombre as nombre_campania');
+
+        if(!empty($query))
+            $cortes = $cortes->where ('c.observaciones','like','%'.$query.'%');
+
+        $cortes = $cortes->where ('c.estado','=',1)
+        ->join('campanias as ca', 'ca.id', '=', 'c.idcampania')
+        ->orderBy('idcorte','desc')
+        ->paginate('10');
 
        // return Redirect::to('admin/tachos');
         return view('admin.tachos.cortes.index',["cortes"=>$cortes,"searchText"=>$query]);
@@ -66,7 +81,9 @@ class CorteController extends Controller
 
     public function edit(Corte $corte)
     {
-        return view('admin.tachos.cortes.edit',compact('corte'));
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
+
+        return view('admin.tachos.cortes.edit',compact('corte', 'campanias'));
     }
  
     // public function view(Corte $corte)
@@ -78,6 +95,7 @@ class CorteController extends Controller
     {
         $corte=Corte::findOrFail($id);
         $corte->fechacorte=$request->get('fechacorte');
+        $corte->idcampania = $request->get('campania');
         $corte->observaciones=$request->get('observaciones');
         $corte->estado=1;//$request->get('estado');
 
@@ -85,9 +103,14 @@ class CorteController extends Controller
 
         $query=trim($request->get('searchText'));
 
-        $cortes=DB::table('cortes as c')->where ('c.observaciones','like','%'.$query.'%') 
-        ->select('c.idcorte','c.fechacorte','c.observaciones')
-        ->where ('c.estado','=',1)
+        $cortes=DB::table('cortes as c')
+        ->select('c.idcorte','c.fechacorte','c.observaciones', 'ca.nombre as nombre_campania');
+
+        if(!empty($query))
+            $cortes = $cortes->where ('c.observaciones','like','%'.$query.'%');
+
+        $cortes = $cortes->where ('c.estado','=',1)
+        ->join('campanias as ca', 'ca.id', '=', 'c.idcampania')
         ->orderBy('idcorte','desc')
         ->paginate('10');
 
