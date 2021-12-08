@@ -28,8 +28,8 @@
 					<th>Tipo Cruzamiento</th>
 					<th>Cubículo</th>
 					<th>Nro. de cruzamientos</th>
-					<th>Padre</th>
 					<th>Madre</th>
+					<th>Padre</th>
 					<th>Fecha Cruzamiento</th>
 				</thead>
                @foreach ($cruzamientos as $c)
@@ -43,7 +43,6 @@
 						$padre = 'poli';
 					}
 					?>
-					<td>{{$padre}}</td>
 					<?php $tachomadre=DB::table('tachos')
 							->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
 							->select('codigo','subcodigo','tachos.idvariedad','variedades.nombre')
@@ -61,6 +60,7 @@
 						  }	
 					?>			
 					<td>{{ $madre }}</td>		
+					<td>{{$padre}}</td>
                     <td>{{ $c->fechacruzamiento}}</td>
 					<td>
  					    <a href="{{URL::action('CruzamientoController@show', $c->id)}}" data-target="#view"> 

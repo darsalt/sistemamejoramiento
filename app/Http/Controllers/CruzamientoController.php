@@ -52,8 +52,9 @@ class CruzamientoController extends Controller
 
         $tachos=DB::table('tachos')
             ->join('tallos','tachos.idtacho','=','tallos.idtacho')
-            ->select('tachos.idtacho', 'tachos.codigo' , 'tachos.subcodigo','tachos.estado')
+            ->select('tachos.idtacho', 'tachos.codigo' , 'tachos.subcodigo','tachos.estado','tachos.idvariedad','variedades.nombre')
         //    ->where ('tachos.estado','=','Ocupado')
+            ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
             ->where('tallos.fechafloracion', '!=', 'null')
             ->distinct('tachos.codigo')
             ->get();
