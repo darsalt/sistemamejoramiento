@@ -55,7 +55,7 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
-              	<button class="btn btn-primary" type="submit">Guardar</button>
+              	<button class="btn btn-primary" type="submit" id="btnSave">Guardar</button>
                	<button type="button" class="btn btn-danger" onclick="history.go(-1); return false;">Cancelar</button>
             </div>
         </div>
@@ -63,4 +63,19 @@
 	{!!Form::close()!!}
 </div>
 
+@endsection
+
+@section('script')
+    <script>
+        $('#btnSave').click(function(){
+            Swal.fire({
+                title: 'Creando campaña',
+                text: 'Se están asociando los tachos activos a la campaña creada. Por favor espere...',
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                allowOutsideClick: false
+            });
+        });
+    </script>
 @endsection

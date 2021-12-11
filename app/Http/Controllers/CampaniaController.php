@@ -54,7 +54,10 @@ class CampaniaController extends Controller
             $campania->save();
 
             // Asociar a los tachos activos y con destino 'tachos de progenitores' la campaña recien creada
-            DB::table('tachos')->where('estado', 2)->where('destino', 1)->update(['idcampania' => $campania->id]);
+            $tachos = DB::table('tachos')->where('estado', 2)->where('destino', 1)->get();
+            foreach($tachos as $tacho){
+                DB::table('tachos_campanias')->insert(['idtacho' => $tacho->idtacho, 'idcampania' => $campania->id]);
+            }
     	return Redirect::to('admin/campanias');
     }
 

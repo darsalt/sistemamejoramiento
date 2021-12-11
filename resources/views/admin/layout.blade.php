@@ -966,6 +966,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="{{asset('js/paging.js')}}"></script>
 
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!--Scripts propios-->
 <script src="{{asset('js/scripts.js')}}"></script>
 

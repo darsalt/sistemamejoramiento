@@ -60,8 +60,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores   
-            ->where('t.idcampania', $idcampania[0]->id)         
+            ->where ('t.destino','=',1)//1=progenitores         
+            ->whereIn('t.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $idcampania[0]->id)->pluck('tc.idtacho'))
     		->orderBy('t.codigo','asc')
             ->get();
             
@@ -128,8 +128,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores    
-            ->where('t.idcampania', $request->idCa)          
+            ->where ('t.destino','=',1)//1=progenitores            
+            ->whereIn('t.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $request->idCa)->pluck('tc.idtacho'))
     		->orderBy('t.codigo','asc')
             ->get();
             
@@ -195,8 +195,8 @@ class CamaraController extends Controller
                                             ->select('u.idtacho'))
             ->select('t.*','v.nombre as variedad')
             ->where ('t.estado','!=',3)//3=baja
-            ->where ('t.destino','=',1)//1=progenitores 
-            ->where('t.idcampania', $request['campanias'])             
+            ->where ('t.destino','=',1)//1=progenitores             
+            ->whereIn('t.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $request['campanias'])->pluck('tc.idtacho'))
     		->orderBy('t.codigo','asc')
             ->get();
             
