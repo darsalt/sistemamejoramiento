@@ -13,7 +13,11 @@ class Semillado extends Model
         return $this->belongsTo('App\Cruzamiento', 'idcruzamiento', 'id');
     }
 
-    public function campania(){
-        return $this->belongsTo('App\CampaniaSemillado', 'idcampania', 'id');
+    public function campaniasemillado(){
+        return $this->belongsTo('App\CampaniaSemillado', 'idcampaniasemillado', 'id');
+    }
+
+    public function campaniacruzamiento(){
+        return $this->belongsTo('App\CampaniaCruzamiento', 'idcampaniacruzamiento', 'id');
     }
 }

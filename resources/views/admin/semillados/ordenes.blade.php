@@ -128,7 +128,7 @@
                     @if (isset($semillados))
                         @foreach ($semillados as $semillado)
                             <tr>
-                                <td>{{$semillado->campania->nombre}}</td>
+                                <td>{{$semillado->campaniasemillado->nombre}}</td>
                                 <td>{{$semillado->numero}}</td>
                                 <td>{{$semillado->cruzamiento->campaniaCruzamiento->nombre}}</td>
                                 <td>{{$semillado->idcruzamiento . " - " . $semillado->cruzamiento->madre->nombre . " - " . $semillado->cruzamiento->padre->nombre}}</td>

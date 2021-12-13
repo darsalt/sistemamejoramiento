@@ -16,7 +16,8 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Campaña</th>
-					<th>Fecha</th>
+					<th>Cruza</th>
+					<!-- <th>Fecha</th> -->
 					<th>Cubículo</th>
 					<th>Madre</th>
 					<th>Padre</th>
@@ -26,22 +27,23 @@
 					<th>Stock Actual</th>					
 
 				</thead>
-               @foreach ($cruzamientos as $c)
+               @foreach ($semillas as $c)
 				<tr>
 					<td>{{ $c->campania}}</td>
-                    <td>{{ $c->fechacruzamiento}}</td>
+					<td>{{ $c->cruza}}</td>
+                    <!-- <td>{{ $c->fechacruzamiento}}</td> -->
 					<td>{{ $c->cubiculo}}</td>
 					<td>{{ $c->cm}}-{{ $c->sm}}-{{$c->vm}}</td>
 					<td>{{ $c->cp}}-{{$c->sp}}-{{$c->vp}}</td>
-                    <td>{{ $c->poder}}</td>
+                    <td>{{ $c->podergerminativo}}</td>
                     <td>{{ $c->plantines}}</td>
                     <td>{{ $c->gramos}}</td>
-                    <td>{{ $c->stock}}</td>
+                    <td>{{ $c->stockactual}}</td>
 
 					<td>
 <!--  					    <a href="" data-target="#view" data-toggle="modal"> 
 					   	<i class="fa fa-search fa-lg"></i></a>&nbsp;&nbsp;
-					    <a href="" data-target="#modal-delete-{{$c->id}}" data-toggle="modal">  <i class="fa fa-trash fa-lg"></i></a> -->
+					    <a href="" data-target="#modal-delete-{{$c->idsemilla}}" data-toggle="modal">  <i class="fa fa-trash fa-lg"></i></a> -->
 					</td>
 				</tr>
 				@endforeach

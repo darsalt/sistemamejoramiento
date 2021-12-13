@@ -36,23 +36,38 @@ class InventarioController extends Controller
     	// 	return view('admin.cruzamientos.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query]);
     	// }
 
-        if($request){
-            $query=trim($request->get('searchText'));
-            $cruzamientos=DB::table('cruzamientos as c')
-            ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
-            ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
-            ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
-            ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')        
-            ->leftjoin('campanias as ca','ca.id','=','c.idcampania')            
+        // if($request){
+        //     $query=trim($request->get('searchText'));
+        //     $cruzamientos=DB::table('cruzamientos as c')
+        //     ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
+        //     ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
+        //     ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
+        //     ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')        
+        //     ->leftjoin('campanias as ca','ca.id','=','c.idcampania')            
 
-            ->select('c.*', 'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm', 'ca.nombre as campania')
-            ->where ('tipocruzamiento','like','%'.$query.'%') 
-            ->where ('c.estado','=',1)
-            ->orderBy('id','asc')
-            ->paginate('10');
-           // dd($cruzamientos);
-            return view('admin.inventario.index',["cruzamientos"=>$cruzamientos,"searchText"=>$query]);
-        }
+        //     ->select('c.*', 'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm', 'ca.nombre as campania')
+        //     ->where ('tipocruzamiento','like','%'.$query.'%') 
+        //     ->where ('c.estado','=',1)
+        //     ->orderBy('id','asc')
+        //     ->paginate('10');
+        //     return view('admin.inventario.index',["cruzamientos"=>$cruzamientos,"searchText"=>$query]);
+        
+        $query=trim($request->get('searchText'));
+        $semillas=DB::table('semillas as s')
+        ->leftjoin('cruzamientos as c','s.idcruzamiento','=','c.id')
+        ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
+        ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
+        ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
+        ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')        
+        ->leftjoin('campanias as ca','ca.id','=','c.idcampania')            
+
+        ->select('s.*','c.fechacruzamiento','c.cruza', 'c.cubiculo','c.plantines','c.gramos' ,'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm', 'ca.nombre as campania')
+        ->where ('tipocruzamiento','like','%'.$query.'%') 
+       // ->where ('s.estado','=',1)
+        ->orderBy('idsemilla','asc')
+        ->paginate('10');
+        return view('admin.inventario.index',["semillas"=>$semillas,"searchText"=>$query]);
+        
     }
 
     /**

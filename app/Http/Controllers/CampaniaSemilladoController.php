@@ -114,7 +114,7 @@ class CampaniaSemilladoController extends Controller
      }
 
      private function getUltimaOrden($campaniaSemillado){
-        $ultimoSemillado = Semillado::where('idcampania', $campaniaSemillado)->orderByDesc('numero')->first();
+        $ultimoSemillado = Semillado::where('idcampaniasemillado', $campaniaSemillado)->orderByDesc('numero')->first();
 
         return $ultimoSemillado ? $ultimoSemillado->numero : 0;
     }
@@ -139,7 +139,8 @@ class CampaniaSemilladoController extends Controller
                 $semillado->numero = $numero;
 
                 $semillado->fechasemillado = $date;
-                $semillado->idcampania = $request->idcampaniacruzamiento;
+                $semillado->idcampaniacruzamiento = $request->idcampaniacruzamiento;
+                $semillado->idcampaniasemillado = $request->idcampaniasemillado;
                 $semillado->idcruzamiento = $datas->id;
                 $semillado->gramos = 0.5;
                 $semillado->cajones = 0.2;
@@ -147,10 +148,10 @@ class CampaniaSemilladoController extends Controller
                 $semillado->save();
             }
             $inventario=DB::table('semillados as s') 
-            ->leftjoin('campanias as c','c.id','=','s.idcampania')
+            ->leftjoin('campanias as c','c.id','=','s.idcampaniacruzamiento')
             ->leftjoin('cruzamientos as cru','cru.id','=','s.idcruzamiento')
-            ->select(DB::raw('s.idcampania,c.nombre,COUNT(s.idcampania) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
-            ->groupBy('s.idcampania')
+            ->select(DB::raw('s.idcampaniacruzamiento,c.nombre,COUNT(s.idcampaniacruzamiento) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
+            ->groupBy('s.idcampaniacruzamiento')
             ->groupBy('c.nombre')
                 //->orderBy('nombre','asc')
             ->paginate('10');

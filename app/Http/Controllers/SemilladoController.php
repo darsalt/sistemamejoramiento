@@ -17,10 +17,10 @@ class SemilladoController extends Controller
     {
         if($request){
             $inventario=DB::table('semillados as s') 
-            ->leftjoin('campanias as c','c.id','=','s.idcampania')
+            ->leftjoin('campanias as c','c.id','=','s.idcampaniacruzamiento')
             ->leftjoin('cruzamientos as cru','cru.id','=','s.idcruzamiento')
-            ->select(DB::raw('s.idcampania,c.nombre,COUNT(s.idcampania) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
-            ->groupBy('s.idcampania')
+            ->select(DB::raw('s.idcampaniasemillado,c.nombre,COUNT(s.idcampaniasemillado) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
+            ->groupBy('s.idcampaniasemillado')
             ->groupBy('c.nombre')
                 //->orderBy('nombre','asc')
             ->paginate('10');
@@ -33,7 +33,7 @@ class SemilladoController extends Controller
     {
 
         $inventario=DB::table('semillados as s')
-        ->leftjoin('campanias as c','c.id','=','s.idcampania')
+        ->leftjoin('campanias as c','c.id','=','s.idcampaniacruzamiento')
         ->select('c.idcampania')
         ->paginate('100');
 
@@ -139,8 +139,16 @@ public function repicadas(Request $request,$id)
     }
 
     public function ordenes($campActiva = 0){
-        $semillados = Semillado::where('idcampania', $campActiva)->with(['campania', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->paginate(10);
-        dd($semillados);
+        // $semillados=DB::table('semillados as s')
+        // ->leftjoin('campaniasemillado as cs','s.id','=','cs.id')
+        // ->leftjoin('campaniacruzamiento as cc','s.id','=','cc.id')
+        // ->leftjoin('cruzamientos as c','s.idcruzamiento','=','c.cruzamiento')
+
+        // ->select('cs.nombre','s.numero','cc.nombre','')
+        // ->where ('tc.idcruzamiento','=',$cruzamiento->id)
+        // ->get();
+        $semillados = Semillado::where('idcampaniasemillado', $campActiva)->with(['campaniasemillado','campaniasemillado', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->paginate(10);
+       // dd($semillados);
         $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
         $campaniasCruzamiento = Campania::where('estado', 1)->get();
 
@@ -148,8 +156,7 @@ public function repicadas(Request $request,$id)
     }
 
     private function getUltimaOrden($campaniaSemillado){
-        $ultimoSemillado = Semillado::where('idcampania', $campaniaSemillado)->orderByDesc('numero')->first();
-
+        $ultimoSemillado = Semillado::where('idcampaniasemillado', $campaniaSemillado)->orderByDesc('numero')->first();
         return $ultimoSemillado ? $ultimoSemillado->numero : 0;
     }
 
@@ -165,7 +172,7 @@ public function repicadas(Request $request,$id)
     
             $semillado->numero = $this->getUltimaOrden($request->campSemillado) + 1;
             $semillado->fechasemillado = $request->fechaSemillado;
-            $semillado->idcampania = $request->campSemillado;
+            $semillado->idcampaniasemillado = $request->campSemillado;
             $semillado->idcruzamiento = $request->nroCruza;
             $semillado->gramos = $request->cantGramos;
             $semillado->cajones = $request->cantCajones;

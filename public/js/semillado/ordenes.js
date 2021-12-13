@@ -82,7 +82,7 @@ $(document).ready(function(){
                         $('#stockActual').text('');
 
                         $('#nroOrden').text(response.numero + 1); // Nro. de orden es el siguiente al que se guardó
-                        $('#stockActual').text(response.cruzamiento.semilla.stockactual);
+                     //   $('#stockActual').text(response.cruzamiento.semilla.stockactual);
                         $('#campSemillado').focus();
 
                         $('#tablaOrdenes tbody').append(agregarFila(response)); // Agrego fila a la tabla

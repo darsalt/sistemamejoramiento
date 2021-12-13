@@ -84,8 +84,11 @@ class CruzamientoController extends Controller
         $fechainicio = date_create($anio."-01-01");
         $fechafin = date_create($anio."-12-31");
         $campania = DB::table('campanias')->where('nombre', '=', $request->get('campania'))->value('id');
-       
-        $ultimoCruzamiento=DB::table('cruzamientos')->whereBetween('fechacruzamiento', [$fechainicio, $fechafin])->get()->last();
+        $ultimoCruzamiento = $this->getUltimoCruzamiento($campania) + 1;
+      //  $ultimoCruzamiento=DB::table('cruzamientos')->whereBetween('fechacruzamiento', [$fechainicio, $fechafin])->get()->last();
+      //  $ultimoCruzamiento = Cruzamiento::where('idcampania', $campania)->orderByDesc('cruza')->first();
+        $ultimoCruzamiento=DB::table('cruzamientos')->where('idcampania', $campania)->orderByDesc('cruza')->first();
+
 
         if($ultimoCruzamiento != null){
             $ultimoCruza = $ultimoCruzamiento->cruza + 1;  
@@ -383,18 +386,16 @@ class CruzamientoController extends Controller
         $input = $request->all();
         \Log::info($input);
 
-            //SI el cruzamiento ya existe actualizo las semillas, caso contrario la doy de alta
 
             $cruzamiento=Cruzamiento::findOrFail($request->get('id'));
             if($cruzamiento != null){
-                $semilla = Semilla::where('idcruzamiento', '=', $request->get('id'))->get();
+                $cruzamiento->gramos=$request->get('gramos');
+                $cruzamiento->conteo=$request->get('conteo');
+                $cruzamiento->poder=$request->get('conteo')*2;
+                $cruzamiento->plantines=$request->get('gramos')*$request->get('conteo');
+                $cruzamiento->stock=$request->get('gramos');
+                $cruzamiento->update(); 
 
-            $cruzamiento->gramos=$request->get('gramos');
-            $cruzamiento->conteo=$request->get('conteo');
-            $cruzamiento->poder=$request->get('conteo')*2;
-            $cruzamiento->plantines=$request->get('gramos')*$request->get('conteo');
-            $cruzamiento->stock=$request->get('gramos');
-            $cruzamiento->update(); 
             } else {
                 $cruzamiento = new Cruzamiento;
                 $cruzamiento->tipocruzamiento = $request->get('tipocruzamiento');
@@ -407,7 +408,44 @@ class CruzamientoController extends Controller
                 $cruzamiento->idcampania = $campania;  
             }
 
+          //  $semilla = Semilla::where('idcruzamiento', $request->get('id'))->get();
+         //   $semilla = Semilla::where('idcruzamiento', '=', $request->get('id'))->firstOrFail();
+         //   $semilla = Semilla::where('idcruzamiento', $request->get('id'))->first();
+            $semilla=DB::table('semilla as s')
+            ->leftjoin('cruzamientos as c','c.id','=','s.idcruzamiento')
+            ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
+            ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
+            ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
+            ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad') 
+            ->where('idcruzamiento', $request->get('id'))
+            ->first();
 
+            if($semilla){
+                $semilla->idcruzamiento = $request->get('id');
+                $semilla->stockinicial = 0;
+                $semilla->stockactual = $request->get('gramos');
+                $semilla->fechaingreso = $request->get('fechacruzamiento');
+                $semilla->madre = $cruzamiento->idmadre;
+                $semilla->padre = $cruzamiento->idpadre;
+                $semilla->podergerminativo = $request->get('conteo')*2;
+                $semilla->procedencia = 'Cruzamiento';
+                $semilla->observaciones = 'Origen de un cruzamiento - Fecha de ingreso = fecha de cruzamiento';
+                $semilla->update();
+            } else {
+                $semilla = new Semilla;
+                $semilla->idcruzamiento = $request->get('id');
+                $semilla->stockinicial = 0;
+                $semilla->stockactual = $request->get('gramos');
+                $semilla->fechaingreso = $request->get('fechacruzamiento');
+                $semilla->madre = $cruzamiento->idmadre;
+                $semilla->padre = $cruzamiento->idpadre;
+                $semilla->podergerminativo = $request->get('conteo')*2;
+                $semilla->procedencia = 'Cruzamiento';
+                $semilla->observaciones = 'Origen de un cruzamiento - Fecha de ingreso = fecha de cruzamiento';
+                $semilla->save();
+
+                
+            }
             
         return response()->json();
     }
@@ -430,6 +468,9 @@ class CruzamientoController extends Controller
         return response()->json($cruzamientos);
     }
 
-
+    private function getUltimoCruzamiento($campania){
+        $ultimoCruzamiento = Cruzamiento::where('idcampania', $campania)->orderByDesc('cruza')->first();
+        return $ultimoCruzamiento ? $ultimoCruzamiento->cruza : 0;
+    }
 
 }
