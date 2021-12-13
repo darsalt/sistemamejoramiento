@@ -160,7 +160,7 @@ class ProgenitoresSanitariaController extends Controller
         ->join('sanitariasp as a','a.id','=','d.idevaluacion')
         ->join('tachos as t','t.idtacho','=','d.idtacho')        
         ->where ('d.idevaluacion','=',$id)
-        ->where('t.idcampania', $sanitariap->campania->id)
+        ->whereIn('t.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $sanitariap->campania->id)->pluck('tc.idtacho'))
         ->orderBy('d.id','asc')
         ->paginate('100');
 //dd($datosasociados);
