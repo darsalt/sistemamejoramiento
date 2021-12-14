@@ -7,13 +7,16 @@
 		<h3>Poder Germinativo de los Cruzamientos <a href="{{URL::action('CruzamientoController@podergerminativo')}}">&nbsp;<button class="btn btn-success">Carga</button></a></h3>
 		<div class="row">
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <div class="form-group">
-                <label for="campania">Campaña:</label>
-                <select class="form-control" id="campania" name="campania">
-                   <option value="0" selected> Todas </option>
-					
-                </select>
-            </div>
+			<form action="{{url('/admin/podergerminativo')}}" method='GET'>
+				<div class="form-group">
+					<label for="campania">Campaña:</label>
+					<select class="form-control" id="campania" name="campania" onchange="this.form.submit()">
+						@foreach ($campanias as $c)
+							<option value="{{$c->id}}" {{$c->id == $idCampania ? 'selected' : ''}}>{{$c->nombre}}</option>
+						@endforeach	
+					</select>
+				</div>
+			</form>
         </div>
     </div>@include('admin.cruzamientos.search')
 	</div>

@@ -24,21 +24,28 @@ class CruzamientoController extends Controller
     public function index(Request $request)
     {
         if($request){
-    		$query=trim($request->get('searchText'));
+            $campanias=DB::table('campanias')
+            ->Where('estado',1)
+            ->orderBy('nombre', 'desc')
+            ->get();
+
+            if($request->has('campania'))
+                $idCampania = $request->campania;
+            else
+                $idCampania = $campanias[0]->id;
+
+            $query=trim($request->get('searchText'));
             $cruzamientos=DB::table('cruzamientos as c')
             ->leftjoin('tachos','idpadre','=','tachos.idtacho')
             ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
             ->select('c.*','tachos.idtacho','tachos.codigo','tachos.subcodigo','tachos.idvariedad','variedades.nombre')
             ->where ('tipocruzamiento','like','%'.$query.'%') 
-    		->where ('c.estado','=',1)
-    		->orderBy('id','asc')
+            ->where('c.idcampania', $idCampania)
+            ->where ('c.estado','=',1)
+            ->orderBy('id','asc')
             ->paginate('10');
-            $campanias=DB::table('campanias')
-            ->Where('estado',1)
-            ->orderBy('nombre', 'desc')
-            ->get();
             
-    		return view('admin.cruzamientos.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query]);
+    		return view('admin.cruzamientos.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query, "idCampania" => $idCampania]);
     	}
     }
 
@@ -47,8 +54,15 @@ class CruzamientoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+
+        $campanias=DB::table('campanias')->where('estado', 1)->orderBy('nombre', 'desc')->get();
+
+        if($request->has('campania'))
+            $idCampania = $request->campania;
+        else
+            $idCampania = $campanias[0]->id;
 
         $tachos=DB::table('tachos')
             ->join('tallos','tachos.idtacho','=','tallos.idtacho')
@@ -56,14 +70,14 @@ class CruzamientoController extends Controller
         //    ->where ('tachos.estado','=','Ocupado')
             ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
             ->where('tallos.fechafloracion', '!=', 'null')
+            ->whereIn('tachos.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $idCampania)->pluck('tc.idtacho'))
             ->distinct('tachos.codigo')
             ->get();
 
            // dd($tachos);
 
-        $campanias=DB::table('campanias')->orderBy('nombre', 'desc')->get();
 
-        return view ("admin.cruzamientos.create", ["tachos"=>$tachos, "campanias"=>$campanias]);
+        return view ("admin.cruzamientos.create", ["tachos"=>$tachos, "campanias"=>$campanias, "idCampania" => $idCampania]);
     }
 
     /**
@@ -298,6 +312,17 @@ class CruzamientoController extends Controller
         
         if($request){
             $query=trim($request->get('searchText'));
+
+            $campanias=DB::table('campanias')
+            ->Where('estado',1)
+            ->orderBy('nombre', 'desc')
+            ->get();
+
+            if($request->has('campania'))
+                $idCampania = $request->campania;
+            else
+                $idCampania = $campanias[0]->id;
+
             $cruzamientos=DB::table('cruzamientos as c')
             ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
             ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
@@ -305,6 +330,7 @@ class CruzamientoController extends Controller
             ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')            
             ->select('c.*', 'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm')
             ->where ('tipocruzamiento','like','%'.$query.'%') 
+            ->where('c.idcampania', $idCampania)
             ->where ('c.estado','=',1)
             ->orderBy('id','asc')
             ->paginate('10');
@@ -314,9 +340,7 @@ class CruzamientoController extends Controller
 
            // dd($cruzamientos);
 
-        $campanias=DB::table('campanias')->orderBy('nombre', 'desc')->get();
-
-            return view('admin.podergerminativo.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query]);
+            return view('admin.podergerminativo.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query, "idCampania" => $idCampania]);
         }
     }
 

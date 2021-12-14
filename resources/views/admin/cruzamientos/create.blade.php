@@ -430,22 +430,24 @@
         <!--Sector izquierdo con el form-->
         <div class="col-6">
         
-            {!!Form::open(array('url'=>'admin/cruzamientos', 'name'=>'formcruza', 'id'=>'formcruza','method'=>'POST','autocomplete'=>'off'))!!}
-            {{Form::token()}}
-        
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        <label for="campania">Campaña:</label>
-                        <select class="form-control" id="campania" name="campania">
-                        @foreach ($campanias as $camp)
-                            <option value='{{$camp->nombre}}'>{{$camp->nombre}}</option>
-                        @endforeach	
-                        </select>
+                        <form action="{{url('/admin/cruzamientos/create')}}" method="GET">
+                            <label for="campania">Campaña:</label>
+                            <select class="form-control" id="campania" name="campania" onchange="this.form.submit()">
+                            @foreach ($campanias as $camp)
+                                <option value='{{$camp->id}}' {{$camp->id == $idCampania ? 'selected' : ''}}>{{$camp->nombre}}</option>
+                            @endforeach	
+                            </select>
+                        </form>
                     </div>
                 </div>
             </div>    
-        
+
+            {!!Form::open(array('url'=>'admin/cruzamientos', 'name'=>'formcruza', 'id'=>'formcruza','method'=>'POST','autocomplete'=>'off'))!!}
+            {{Form::token()}}
+            
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">

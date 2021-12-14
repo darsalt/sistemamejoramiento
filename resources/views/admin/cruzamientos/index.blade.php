@@ -7,14 +7,16 @@
 	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
 		<h3>Listado de Cruzamientos <a href="cruzamientos/create">&nbsp;<button class="btn btn-success">Nuevo</button></a></h3>
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-            <div class="form-group">
-                <label for="campania">Campaña:</label>
-                <select class="form-control" id="campania" name="campania">
-				@foreach ($campanias as $camp)
-					<option value='{{$camp->nombre}}'>{{$camp->nombre}}</option>
-				@endforeach	
-                </select>
-            </div>
+			<form action="{{url('/admin/cruzamientos')}}" method="GET">
+				<div class="form-group">
+					<label for="campania">Campaña:</label>
+					<select class="form-control" id="campania" name="campania" onchange="this.form.submit()">
+					@foreach ($campanias as $camp)
+						<option value='{{$camp->id}}' {{$camp->id == $idCampania ? 'selected' : ''}}>{{$camp->nombre}}</option>
+					@endforeach	
+					</select>
+				</div>
+			</form>
         </div>
 		@include('admin.cruzamientos.search')
 	</div>
