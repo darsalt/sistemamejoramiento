@@ -429,25 +429,22 @@
     <div class="row">
         <!--Sector izquierdo con el form-->
         <div class="col-6">
-        
+            {!!Form::open(array('url'=>'admin/cruzamientos', 'name'=>'formcruza', 'id'=>'formcruza','method'=>'POST','autocomplete'=>'off'))!!}
+            {{Form::token()}}
+
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
-                        <form action="{{url('/admin/cruzamientos/create')}}" method="GET">
-                            <label for="campania">Campaña:</label>
-                            <select class="form-control" id="campania" name="campania" onchange="this.form.submit()">
-                            @foreach ($campanias as $camp)
-                                <option value='{{$camp->id}}' {{$camp->id == $idCampania ? 'selected' : ''}}>{{$camp->nombre}}</option>
-                            @endforeach	
-                            </select>
-                        </form>
+                        <label for="campania">Campaña:</label>
+                        <select class="form-control" id="campania" name="campania">
+                        @foreach ($campanias as $camp)
+                            <option value='{{$camp->id}}' {{$camp->id == $idCampania ? 'selected' : ''}}>{{$camp->nombre}}</option>
+                        @endforeach	
+                        </select>
                     </div>
                 </div>
             </div>    
 
-            {!!Form::open(array('url'=>'admin/cruzamientos', 'name'=>'formcruza', 'id'=>'formcruza','method'=>'POST','autocomplete'=>'off'))!!}
-            {{Form::token()}}
-            
             <div class="row">
                 <div class="col-12">
                     <div class="form-group">
@@ -575,4 +572,12 @@
     </div>
 </div> 
 
+@endsection
+
+@section('script')
+<script>
+    $('#campania').change(function(){
+        window.location.href = "{{url('/admin/cruzamientos/create')}}" + '/' + $(this).val();
+    });
+</script>
 @endsection

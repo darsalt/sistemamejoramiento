@@ -54,14 +54,12 @@ class CruzamientoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create($idCampania = 0)
     {
 
         $campanias=DB::table('campanias')->where('estado', 1)->orderBy('nombre', 'desc')->get();
 
-        if($request->has('campania'))
-            $idCampania = $request->campania;
-        else
+        if($idCampania == 0)
             $idCampania = $campanias[0]->id;
 
         $tachos=DB::table('tachos')
