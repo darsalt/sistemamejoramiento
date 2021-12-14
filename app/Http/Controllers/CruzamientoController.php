@@ -463,7 +463,7 @@ class CruzamientoController extends Controller
 
     // Obtener cruzamientos segun la campania elegida
     public function getCruzamientos(Request $request){
-        $cruzamientos = Cruzamiento::where('idcampania', $request->campania)->with('madre')->with('padre')->get();
+        $cruzamientos = Cruzamiento::has('semilla')->where('idcampania', $request->campania)->with('madre')->with('padre')->get();
 
         return response()->json($cruzamientos);
     }

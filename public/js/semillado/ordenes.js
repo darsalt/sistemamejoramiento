@@ -192,7 +192,7 @@ function agregarFila(element){
     let fila = '';
 
     fila += "<tr>";
-    fila += "<td>" + element.campania.nombre + "</td>";
+    fila += "<td>" + element.campaniasemillado.nombre + "</td>";
     fila += "<td>" + element.numero + "</td>";
     fila += "<td>" + element.cruzamiento.campania_cruzamiento.nombre + "</td>";
     fila += "<td>" + element.idcruzamiento + " - " + element.cruzamiento.madre.nombre + " - " + element.cruzamiento.padre.nombre + "</td>";
