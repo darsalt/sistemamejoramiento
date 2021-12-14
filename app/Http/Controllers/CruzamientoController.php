@@ -411,7 +411,7 @@ class CruzamientoController extends Controller
           //  $semilla = Semilla::where('idcruzamiento', $request->get('id'))->get();
          //   $semilla = Semilla::where('idcruzamiento', '=', $request->get('id'))->firstOrFail();
          //   $semilla = Semilla::where('idcruzamiento', $request->get('id'))->first();
-            $semilla=DB::table('semilla as s')
+            $semilla=DB::table('semillas as s')
             ->leftjoin('cruzamientos as c','c.id','=','s.idcruzamiento')
             ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
             ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
@@ -422,7 +422,7 @@ class CruzamientoController extends Controller
 
             if($semilla){
                 $semilla->idcruzamiento = $request->get('id');
-                $semilla->stockinicial = 0;
+                $semilla->stockinicial = $request->get('gramos');;
                 $semilla->stockactual = $request->get('gramos');
                 $semilla->fechaingreso = $request->get('fechacruzamiento');
                 $semilla->madre = $cruzamiento->idmadre;
@@ -434,7 +434,7 @@ class CruzamientoController extends Controller
             } else {
                 $semilla = new Semilla;
                 $semilla->idcruzamiento = $request->get('id');
-                $semilla->stockinicial = 0;
+                $semilla->stockinicial = $request->get('gramos');;
                 $semilla->stockactual = $request->get('gramos');
                 $semilla->fechaingreso = $request->get('fechacruzamiento');
                 $semilla->madre = $cruzamiento->idmadre;

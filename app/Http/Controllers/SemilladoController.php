@@ -17,7 +17,7 @@ class SemilladoController extends Controller
     {
         if($request){
             $inventario=DB::table('semillados as s') 
-            ->leftjoin('campanias as c','c.id','=','s.idcampaniacruzamiento')
+            ->leftjoin('campaniasemillado as c','c.id','=','s.idcampaniasemillado')
             ->leftjoin('cruzamientos as cru','cru.id','=','s.idcruzamiento')
             ->select(DB::raw('s.idcampaniasemillado,c.nombre,COUNT(s.idcampaniasemillado) as cantidad,SUM(s.gramos) as gramos,round(SUM(s.gramos*cru.conteo),0) as plantas,SUM(2*cru.conteo) as poder,SUM(s.cajones) as cajones,SUM(s.repicadas) as repicadas'))
             ->groupBy('s.idcampaniasemillado')
