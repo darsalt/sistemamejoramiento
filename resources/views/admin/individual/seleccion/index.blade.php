@@ -192,7 +192,7 @@
                         @foreach ($seedlings as $seedling)
                             <tr>
                                 <td>{{$seedling->parcela}}</td>
-                                <td>{{$seedling->semillado ? $seedling->semillado->campania->nombre : '-'}}</td>
+                                <td>{{$seedling->semillado ? $seedling->semillado->campaniasemillado->nombre : '-'}}</td>
                                 <td>{{$seedling->semillado ? $seedling->semillado->numero : '-'}}</td>
                                 <td>
                                     @if ($seedling->origen == 'testigo')

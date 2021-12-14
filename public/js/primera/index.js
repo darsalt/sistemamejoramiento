@@ -207,7 +207,8 @@ $(document).ready(function(){
             url: config.routes.getSeedlings,
             type: 'GET',
             data: {
-                'campania': $(this).val()
+                'campania': $(this).val(),
+                'sector': $('#sector').val()
             },
             success: function(response){
                 $('#parcela').empty();

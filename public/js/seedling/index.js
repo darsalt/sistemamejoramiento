@@ -344,7 +344,7 @@ function agregarFila(element){
     fila += "<tr>";
     fila += "<td>" + element.parcela + "</td>";
     if(element.semillado){
-        fila += "<td>" + element.semillado.campania.nombre + "</td>"
+        fila += "<td>" + element.semillado.campaniasemillado.nombre + "</td>"
         fila += "<td>" + element.semillado.numero + "</td>";
     }
     else{

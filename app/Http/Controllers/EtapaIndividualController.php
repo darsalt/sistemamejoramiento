@@ -81,7 +81,7 @@ class EtapaIndividualController extends Controller
             
             $seedling->save();
 
-            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente', 'variedad', 'semillado.cruzamiento.madre',
+            return Seedling::where('id', $seedling->id)->with(['campania', 'semillado.campaniasemillado', 'sector.subambiente.ambiente', 'variedad', 'semillado.cruzamiento.madre',
             'semillado.cruzamiento.padre'])->first();
         }
         catch(Exception $e){
@@ -90,7 +90,7 @@ class EtapaIndividualController extends Controller
     }
 
     public function getSeedling(Request $request){
-        return Seedling::where('id', $request->id)->with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->first();
+        return Seedling::where('id', $request->id)->with(['campania', 'semillado.campaniasemillado', 'sector.subambiente.ambiente'])->first();
     }
 
     public function editSeedling(Request $request){
@@ -112,7 +112,7 @@ class EtapaIndividualController extends Controller
 
             session(['exito' => 'exito']);
 
-            return Seedling::with(['campania', 'semillado.campania', 'sector.subambiente.ambiente'])->get();
+            return Seedling::with(['campania', 'semillado.campaniasemillado', 'sector.subambiente.ambiente'])->get();
         }
         catch(Exception $e){
             return response()->json($e->getMessage());
@@ -133,7 +133,7 @@ class EtapaIndividualController extends Controller
     }
 
     public function getSeedlings(Request $request){
-        return Seedling::where('idcampania', $request->campania)->get();
+        return Seedling::where('idcampania', $request->campania)->where('idsector', $request->sector)->get();
     }
 
     public function getProgenitoresSeedling(Request $request){
