@@ -114,7 +114,6 @@ class SectorController extends Controller
 
      public function getSectoresDadoSubambiente(Request $request){
         $sectores = Sector::where('idsubambiente', $request->subambiente)->get();
-      //  Log::debug($sectores);
 
         return response()->json($sectores);
     }

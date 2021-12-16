@@ -17,7 +17,6 @@ use App\SegundaClonalDetalle;
 use App\Variedad;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class SegundaClonalController extends Controller
 {
@@ -128,7 +127,6 @@ class SegundaClonalController extends Controller
             return response()->json(true);
         }
         catch(Exception $e){
-            Log::debug($e->getMessage());
             session(['error' => 'error']);
             return response()->json(false);
         }

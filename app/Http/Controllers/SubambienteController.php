@@ -109,7 +109,6 @@ class SubambienteController extends Controller
 
     public function getSubambientesDadoAmbiente(Request $request){
         $subambientes = Subambiente::where('idambiente', $request->ambiente)->where('estado', 1)->get();
-      //  Log::debug($subambientes);
 
         return response()->json($subambientes);
     }
