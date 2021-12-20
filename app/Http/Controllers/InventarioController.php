@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campania;
 use App\Inventario;
 use App\Cruzamiento;
 use App\Semilla;
@@ -10,6 +11,7 @@ use App\Tallo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use DB;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class InventarioController extends Controller
@@ -425,4 +427,121 @@ class InventarioController extends Controller
         return response()->json($semilla);
     }
 
+    public function egresos(){
+        $egresos = DB::table('egresos_semillas as es')
+        ->select('es.id', 'ca.nombre as nombre_campania', 'me.nombre as nombre_motivo', 'v1.nombre as padre', 'v2.nombre as madre', 'es.cantidad', 'es.fecha_egreso', 'es.observaciones')
+        ->join('cruzamientos as c', 'es.idcruzamiento', '=', 'c.id')
+        ->join('campanias as ca', 'ca.id', '=', 'c.idcampania')
+        ->join('motivos_egreso as me', 'es.idmotivo', '=', 'me.id')
+        ->join('variedades as v1', 'c.idpadre', '=', 'v1.idvariedad')
+        ->join('variedades as v2', 'c.idmadre', '=', 'v2.idvariedad')
+        ->where('es.estado', 1)
+        ->orderByDesc('es.fecha_egreso')
+        ->get();
+
+        return view('admin.inventario.egresos.index', compact('egresos'));
+    }
+
+    public function createEgreso(){
+        $campanias = Campania::where('estado', 1)->orderByDesc('nombre')->get();
+        $motivos = DB::table('motivos_egreso')->where('estado', 1)->get();
+
+        return view('admin.inventario.egresos.create', compact('campanias', 'motivos'));
+    }
+
+    public function storeEgreso(Request $request){
+        try{
+            DB::transaction(function () use($request){
+                DB::table('egresos_semillas')->insert([
+                    'idcruzamiento' => $request->cruzamiento,
+                    'idmotivo' => $request->motivo,
+                    'cantidad' => $request->cantidad,
+                    'fecha_egreso' => $request->fechaegreso,
+                    'observaciones' => $request->observaciones 
+                ]);
+
+                $cruzamiento = Cruzamiento::findOrFail($request->cruzamiento);
+                $semilla = $cruzamiento->semilla;
+
+                if($request->cantidad <= $semilla->stockactual)
+                    $semilla->stockactual -= $request->cantidad;
+                else
+                    throw new Exception('Cantidad mayor que el stock actual');
+
+                $semilla->save();
+            });
+
+            return redirect()->route('inventario.egresos.index')->with('exito', 'exito');
+        }
+        catch(Exception $e){
+            return redirect()->route('inventario.egresos.index')->with('error', 'error');
+        }
+    }
+
+    public function deleteEgreso(Request $request){
+        try{
+            DB::transaction(function () use($request){
+                DB::table('egresos_semillas')->where('id', $request->id_egreso)->update(['estado' => 0]);
+
+                $egreso = DB::table('egresos_semillas')->where('id', $request->id_egreso)->first();
+                $cruzamiento = Cruzamiento::findOrFail($egreso->idcruzamiento);
+                $semilla = $cruzamiento->semilla;
+
+                $semilla->stockactual += $egreso->cantidad;
+                $semilla->save();
+            });
+
+            return redirect()->route('inventario.egresos.index')->with('exito', 'exito');
+        }
+        catch(Exception $e){
+            return redirect()->route('inventario.egresos.index')->with('error', 'error');
+        }
+    }
+
+    public function editEgreso($id){
+        $egreso = DB::table('egresos_semillas as es')->where('es.id', $id)->select('es.*', 'v1.nombre as padre', 'v2.nombre as madre', 'c.idcampania as idcampania')
+        ->join('cruzamientos as c', 'es.idcruzamiento', '=', 'c.id')
+        ->join('variedades as v1', 'c.idpadre', '=', 'v1.idvariedad')
+        ->join('variedades as v2', 'c.idmadre', '=', 'v2.idvariedad')
+        ->first();
+
+        $campanias = Campania::where('estado', 1)->get();
+        $cruzamientos = Cruzamiento::where('idcampania', $egreso->idcampania)->get();
+        $motivos = DB::table('motivos_egreso')->where('estado', 1)->get();
+
+        return view('admin.inventario.egresos.edit', compact('egreso', 'cruzamientos', 'campanias', 'motivos'));
+    }
+
+    public function updateEgreso(Request $request, $id){
+        try{
+            DB::transaction(function () use($request, $id){
+                $egresoAnterior = DB::table('egresos_semillas')->where('id', $id)->first();
+
+                $cruzamiento = Cruzamiento::findOrFail($egresoAnterior->idcruzamiento);
+                $semilla = $cruzamiento->semilla;
+
+                $semilla->stockactual += $egresoAnterior->cantidad;
+                $semilla->save();
+                
+                DB::table('egresos_semillas')->where('id', $id)->update([
+                    'idcruzamiento' => $request->cruzamiento,
+                    'idmotivo' => $request->motivo,
+                    'cantidad' => $request->cantidad,
+                    'fecha_egreso' => $request->fechaegreso,
+                    'observaciones' => $request->observaciones
+                ]);
+
+                $cruzamiento = Cruzamiento::findOrFail($request->cruzamiento);
+                $semilla = $cruzamiento->semilla;
+
+                $semilla->stockactual -= $request->cantidad;
+                $semilla->save();
+            });
+
+            return redirect()->route('inventario.egresos.index')->with('exito', 'exito');
+        }
+        catch(Exception $e){
+            return redirect()->route('inventario.egresos.index')->with('error', 'error');
+        }
+    }
 }

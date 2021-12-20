@@ -473,7 +473,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
-                <a href="{{url('admin/inventario/egreso')}}" class="nav-link">
+                <a href="{{url('admin/inventario/egresos')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Egresos

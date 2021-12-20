@@ -17,9 +17,12 @@ Route::get('/admin/inventario/ingreso', function () {
     return view('admin.inventario.ingreso');
 });
 
-Route::get('/admin/inventario/egreso', function () {
-    return view('admin.inventario.egreso');
-});
+Route::get('/admin/inventario/egresos/', 'InventarioController@egresos')->name('inventario.egresos.index');
+Route::get('/admin/inventario/egresos/create', 'InventarioController@createEgreso')->name('inventario.egresos.create');
+Route::post('/admin/inventario/egresos', 'InventarioController@storeEgreso')->name('inventario.egresos.store');
+Route::get('/admin/inventario/egresos/edit/{id}', 'InventarioController@editEgreso')->name('inventario.egresos.edit');
+Route::put('/admin/inventario/egresos/{id}', 'InventarioController@updateEgreso')->name('inventario.egresos.update');
+Route::delete('/admin/inventario/egresos/delete', 'InventarioController@deleteEgreso')->name('inventario.egresos.delete');
 
 //Route::get('/admin/semillados', function () {
 //    return view('admin.semillados.index');
