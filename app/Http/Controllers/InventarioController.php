@@ -68,7 +68,10 @@ class InventarioController extends Controller
        // ->where ('s.estado','=',1)
         ->orderBy('idsemilla','asc')
         ->paginate('10');
-        return view('admin.inventario.index',["semillas"=>$semillas,"searchText"=>$query]);
+
+        $semillasIngresos = Semilla::whereNull('idcruzamiento')->get();
+
+        return view('admin.inventario.index',["semillas"=>$semillas,"searchText"=>$query, 'semillasIngresos' => $semillasIngresos]);
         
     }
 
@@ -543,5 +546,26 @@ class InventarioController extends Controller
         catch(Exception $e){
             return redirect()->route('inventario.egresos.index')->with('error', 'error');
         }
+    }
+
+    public function createIngreso(){
+        return view('admin.inventario.ingreso');
+    }
+
+    public function storeIngreso(Request $request){
+        $semilla = new Semilla();
+
+        $semilla->nombre = $request->nombre;
+        $semilla->madre = $request->madre;
+        $semilla->padre = $request->padre;
+        $semilla->fechaingreso = $request->fechaingreso;
+        $semilla->procedencia = $request->procedencia;
+        $semilla->podergerminativo = $request->poder;
+        $semilla->stockinicial = $request->stock;
+        $semilla->stockactual = $request->stock;
+        $semilla->observaciones = $request->observaciones;
+        $semilla->save();
+
+        return redirect()->route('inventario.index');
     }
 }

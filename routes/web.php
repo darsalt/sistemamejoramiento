@@ -13,9 +13,9 @@ use Maatwebsite\Excel\Facades\Excel;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/admin/inventario/ingreso', function () {
-    return view('admin.inventario.ingreso');
-});
+
+Route::get('/admin/inventario/ingresos/create', 'InventarioController@createIngreso')->name('inventario.ingresos.create');
+Route::post('/admin/inventario/ingresos', 'InventarioController@storeIngreso')->name('inventario.ingresos.store');
 
 Route::get('/admin/inventario/egresos/', 'InventarioController@egresos')->name('inventario.egresos.index');
 Route::get('/admin/inventario/egresos/create', 'InventarioController@createEgreso')->name('inventario.egresos.create');
