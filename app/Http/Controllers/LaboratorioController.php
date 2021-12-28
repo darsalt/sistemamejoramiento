@@ -177,10 +177,11 @@ class LaboratorioController extends Controller
         // ->get();
 
         $datosasociados=DB::table('datoslaboratorios as d')
-        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad')
+        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad','tl.nombre')
  //       ->select('d.*')
         ->join('bancos as b','b.idbanco','=','d.idbanco')
         ->join('laboratorios as a','a.id','=','d.idevaluacion')
+        ->join('tiposlaboratorios as tl','tl.id','=','a.id')
         ->join('variedadesbanco as vb','vb.id','=','d.idubicacion')
         ->leftjoin('variedades as v','v.idvariedad','=','vb.idvariedad')
         ->where ('d.idevaluacion','=',$id)
@@ -242,10 +243,11 @@ class LaboratorioController extends Controller
 
 
         $datosasociados=DB::table('datoslaboratorios as d')
-        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad')
+        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad','tl.nombre')
  //       ->select('d.*')
         ->join('bancos as b','b.idbanco','=','d.idbanco')
         ->join('laboratorios as a','a.id','=','d.idevaluacion')
+        ->join('tiposlaboratorios as tl','tl.id','=','a.id')
         ->join('variedadesbanco as vb','vb.id','=','d.idubicacion')
         ->leftjoin('variedades as v','v.idvariedad','=','vb.idvariedad')
         ->where ('d.idevaluacion','=',$id)

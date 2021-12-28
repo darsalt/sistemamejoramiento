@@ -273,6 +273,7 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
                 $data.='<td width=15%><label for="tabla">'.$ubicacion->parcela.'</label></td>';
                 $data.='<td width=25%><div class="form-group">';
                 $data.='<select class="select2" name="'.$ubicacion->id.'" id="'.$ubicacion->id.'" style="width: 100%;"class="form-control" onchange="guardavariedad(this.name,this.value)">';
+                
 
                 $data.='<option value="0">Ninguna</option>';
                 foreach ($variedades as $variedad){

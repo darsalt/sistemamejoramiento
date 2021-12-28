@@ -29,7 +29,8 @@ class TachoController extends Controller
             ->select('t.*', 'v.nombre as nombrevariedad')
             ->where ('codigo','like','%'.$query.'%') 
     		->where ('t.estado','!=',3)//3=baja
-    		->orderBy('idtacho','asc')
+    		->orderBy('codigo','asc')
+            ->orderBy('subcodigo','asc')
     		->paginate('10');
     		return view('admin.tachos.index',["tachos"=>$tachos,"searchText"=>$query]);
     	}

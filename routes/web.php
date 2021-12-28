@@ -263,6 +263,8 @@ Route::get('/admin/podergerminativo/editar','CruzamientoController@editardatos')
 Route::post ('podergerminativo', 'CruzamientoController@updatePoderPost')->name('podergerminativo.post');
 
 Route::resource('admin/campaniabanco','CampaniaBancoController');
+Route::resource('admin/campaniacuarentena','CampaniaCuarentenaController');
+
 Route::resource('admin/campanias','CampaniaController');
 Route::resource('admin/campaniasemillado','CampaniaSemilladoController');
 

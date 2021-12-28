@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h3>Nueva Evaluación - (Cantidad de variedades activas: {{$variedades}})</h3>
+            <h3>Nueva Evaluación</h3>
             @if (count($errors)>0)
             <div class="alert alert-danger">
                 <ul>

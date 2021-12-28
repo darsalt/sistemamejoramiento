@@ -40,7 +40,7 @@ class AgronomicaController extends Controller
     public function create()
     {
 
-        $variedades=DB::table('variedades')
+        $variedades=DB::table('variedadesbanco')
         ->where ('estado','=',1)
         ->count();
 
@@ -173,15 +173,17 @@ $array []= array("idevaluacion" => $key, "idbanco" => $vb->idbanco,"idubicacion"
         // return view("admin.bancos.ubicaciones.ubicaciones",compact("banco"),["banco"=>$banco,"ubicacionesasociadas"=>$ubicacionesasociadas]);
 
         $datosasociados=DB::table('datosagronomicos as d')
-        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad')
+        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad','ta.nombre')
  //       ->select('d.*')
         ->join('bancos as b','b.idbanco','=','d.idbanco')
         ->join('agronomicas as a','a.id','=','d.idevaluacion')
+        ->join('tiposagronomicas as ta','ta.id','=','a.id')
         ->join('variedadesbanco as vb','vb.id','=','d.idubicacion')
         ->leftjoin('variedades as v','v.idvariedad','=','vb.idvariedad')
         ->where ('d.idevaluacion','=',$id)
         ->orderBy('d.id','asc')
         ->paginate('100');
+       // dd($datosasociados);
 
         $data = '';
 
@@ -232,10 +234,11 @@ $array []= array("idevaluacion" => $key, "idbanco" => $vb->idbanco,"idubicacion"
 
 
         $datosasociados=DB::table('datosagronomicos as d')
-        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad')
+        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad','ta.nombre')
  //       ->select('d.*')
         ->join('bancos as b','b.idbanco','=','d.idbanco')
         ->join('agronomicas as a','a.id','=','d.idevaluacion')
+        ->join('tiposagronomicas as ta','ta.id','=','a.id')
         ->join('variedadesbanco as vb','vb.id','=','d.idubicacion')
         ->leftjoin('variedades as v','v.idvariedad','=','vb.idvariedad')
         ->where ('d.idevaluacion','=',$id)

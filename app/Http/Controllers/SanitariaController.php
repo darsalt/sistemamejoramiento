@@ -226,10 +226,11 @@ class SanitariaController extends Controller
 
 
         $datosasociados=DB::table('datossanitarios as d')
-        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad')
+        ->select('vb.*','d.*','v.idvariedad','v.nombre as nombrevariedad', 'ts.nombre')
  //       ->select('d.*')
         ->join('bancos as b','b.idbanco','=','d.idbanco')
         ->join('sanitarias as a','a.id','=','d.idevaluacion')
+        ->join('tipossanitarias as ts','ts.id','=','a.id')
         ->join('variedadesbanco as vb','vb.id','=','d.idubicacion')
         ->leftjoin('variedades as v','v.idvariedad','=','vb.idvariedad')
         ->where ('d.idevaluacion','=',$id)

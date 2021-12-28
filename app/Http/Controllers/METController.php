@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Log;
 
 class METController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index($idSerie = 0, $idSector = 0){        
         $series = Serie::where('estado', 1)->get();
         $ambientes = Ambiente::where('estado', 1)->get();

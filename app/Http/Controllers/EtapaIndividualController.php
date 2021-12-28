@@ -18,6 +18,11 @@ use Illuminate\Support\Facades\Log;
 
 class EtapaIndividualController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index($idCampania = 0, $idSector = 0){
         $seedlings = Seedling::where('idcampania', $idCampania)->where('idsector', $idSector)->paginate(10);
         $campaniasSeedling = CampaniaSeedling::where('estado', 1)->get();
