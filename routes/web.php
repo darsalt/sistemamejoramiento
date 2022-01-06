@@ -55,7 +55,6 @@ Route::resource("admin/niveles", "NivelesController")->parameters(["niveles"=>"n
 
 Route::resource('admin/tachos','TachoController');
 Route::resource('admin/variedades','VariedadController')->parameters(["variedades"=>"variedad"]);
-Route::resource('admin/exportaciones','ExportacionController')->parameters(["exportaciones"=>"exportacion"]);
 Route::resource('admin/tareas','TareaController')->parameters(["tareas"=>"tarea"]);
 Route::resource('admin/evaluaciones','EvaluacionController')->parameters(["evaluaciones"=>"evaluacion"]);
 Route::resource('admin/salidas','SalidaController')->parameters(["salidas"=>"salida"]);
@@ -106,7 +105,18 @@ Route::resource('admin/ubicacionesimpo','UbicacionimpoController');
 Route::resource('admin/inspecciones','InspeccionController');
 
 
+//Rutas exportaciones - Ingresos
+Route::get('admin/exportaciones/ingresos', 'ExportacionController@index')->name('exportaciones.ingresos.index');
+Route::get('admin/exportaciones/ingresos/create', 'ExportacionController@create')->name('exportaciones.ingresos.create');
+Route::post('admin/exportaciones/ingresos', 'ExportacionController@store')->name('exportaciones.ingresos.store');
+Route::delete('admin/exportaciones/ingresos/delete/{idexportacion}', 'ExportacionController@destroy');
+Route::patch('admin/exportaciones/ingresos/bajaTacho/{idexportacion}', 'ExportacionController@bajaTacho')->name('exportaciones.ingresos.bajaTacho');
 
+//Rutas exportaciones - Envios
+Route::get('admin/exportaciones/envios', 'ExportacionController@envios')->name('exportaciones.envios.index');
+Route::get('admin/exportaciones/envios/create', 'ExportacionController@enviosCreate')->name('exportaciones.envios.create');
+Route::post('admin/exportaciones/envios', 'ExportacionController@enviosStore')->name('exportaciones.envios.store');
+Route::delete('admin/exportaciones/envios/{id}', 'ExportacionController@destroyEnvio')->name('exportaciones.envios.destroy');
 
 
 Route::get('export', 'TachoController@export');
@@ -123,9 +133,6 @@ Route::get('/admin/variedades/view', function () {
 });
 Route::get('/admin/tachos/view', function () {
     return view('admin.tachos.view');
-});
-Route::get('/admin/exportaciones/view', function () {
-    return view('admin.exportaciones.view');
 });
 Route::get('/admin/importaciones/view', function () {
     return view('admin.importaciones.view');
@@ -393,4 +400,5 @@ Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
 
 // Rutas ajax Tachos
 Route::get('/ajax/tachos/getSubtachosDeTacho', 'TachoController@getSubtachosDeTacho')->name('ajax.tachos.getSubtachosDeTacho');
+Route::get('/ajax/tachos/getTachosBoxExportacion', 'TachoController@getTachosBoxExportacion')->name('ajax.tachos.getTachosBoxExportacion');
 

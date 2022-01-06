@@ -17,24 +17,19 @@ class ExportacionesExport implements FromCollection, WithHeadings, ShouldAutoSiz
     public function headings(): array
     {
         return [
-        'Variedad',
+        'Box',
         'Tacho',
-        'Ubicación',
         'Fecha Ingreso',
         'Observaciones',
+        'Estado'
         ];
     }
     public function collection()
     {
     	$exportaciones=DB::table('exportaciones as e')
-        ->select('v.nombre',DB::raw('CONCAT(codigo,"-",subcodigo)'),'nombreubicacion','fechaingreso','e.observaciones')
-        ->join('variedades as v','v.idvariedad','=','v.idvariedad')
+        ->select('b.nombre',DB::raw('CONCAT(codigo,"-",subcodigo)'),'e.fechaingreso','e.observaciones', 'e.estado')
         ->join('tachos as t','t.idtacho','=','e.idtacho')
-        ->join('ubicaciones as u','u.idubicacion','=','e.idubicacion')
-
-        //->where ('nombre','like','%'.$query.'%') 
-    		//->where ('activo','=',1)
-    	->orderBy('v.nombre','desc')
+        ->join('boxesexpo as b', 'b.id', '=', 'e.idbox')
         ->get(); 
 
          return $exportaciones;

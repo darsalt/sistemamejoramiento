@@ -301,12 +301,27 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
-                <a href="{{url('admin/exportaciones')}}" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Exportación
+                    <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{route('exportaciones.ingresos.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ingresos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('exportaciones.envios.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Envios</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
             <ul class="nav nav-treeview">

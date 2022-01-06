@@ -22,4 +22,8 @@ class Tacho extends Model
     protected $guarded  = [
     	
     ];
+
+    public function exportaciones(){
+        return $this->hasMany('App\Exportacion', 'idtacho', 'idtacho');
+    }
 }

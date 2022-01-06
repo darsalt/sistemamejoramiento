@@ -145,4 +145,12 @@ class TachoController extends Controller
 
         return response()->json(['subtachos' => $subtachos, 'variedad' => $variedad]);
     }
+
+    public function getTachosBoxExportacion(Request $request){
+        $tachos = Tacho::whereHas('exportaciones', function($q) use($request){
+            $q->where('idbox', $request->box)->where('estado', 1);
+        })->get();
+
+        return response()->json($tachos);
+    }
 }

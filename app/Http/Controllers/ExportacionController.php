@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\BoxExportacion;
+use App\CampaniaCuarentena;
+use App\EnvioExportacion;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,6 +15,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ExportacionFormRequest;
 use DB;
 use App\Exports\exportacionesExport;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ExportacionController extends Controller
@@ -27,14 +31,16 @@ class ExportacionController extends Controller
 
             // estamos mostrando todas, ¡ solo las que estan actualmente?
     		$query=trim($request->get('searchText'));
-    		$exportaciones=DB::table('exportaciones as e')
+
+            $exportaciones = Exportacion::where('estado', '<>', 'Baja')->paginate(10);
+    		/*$exportaciones=DB::table('exportaciones as e')
             ->leftjoin('tachos as t','e.idtacho','=','t.idtacho')
             ->leftjoin('variedades as v','e.idvariedad','=','v.idvariedad')
             ->select('e.idexportacion','e.idvariedad','t.codigo','t.subcodigo','v.nombre as nombrevariedad','e.idubicacion','e.fechaingreso','e.fechaegreso','e.estado','e.observaciones')
             ->where ('v.nombre','like','%'.$query.'%') 
     		->where ('e.estado','=','Sigue en Cuarentena')
     		->orderBy('e.idtacho','desc')
-    		->paginate('10');
+    		->paginate('10');*/
 
             return view('admin.exportaciones.index',["exportaciones"=>$exportaciones,"searchText"=>$query]);
     	}
@@ -42,45 +48,35 @@ class ExportacionController extends Controller
 
     public function create()
     {
-            $variedades = DB::table('variedades as v')
-            ->select('v.idvariedad','v.nombre')
-            //->where('v.estado','=','1')
-            ->get();
+        $boxes = BoxExportacion::where('activo', 1)->get();
+        $tachos = Tacho::where('destino', 2)->where('estado', 'Ocupado')->whereDoesntHave('exportaciones', function($q){
+            $q->where('estado', '<>', 'Baja');
+        })->get();
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
 
-            $tachos = DB::table('tachos as t')
-            ->select('t.idtacho','t.codigo','t.subcodigo')
-            ->where('t.estado','=','Ocupado')
-            ->get();
-
-            $ubicaciones = DB::table('ubicaciones as u')
-            ->select('u.idubicacion','u.nombreubicacion')
-            ->where('u.expo','=','1')
-            ->where('u.estado','=','1')
-            ->get();
-
-    	return view ("admin.exportaciones.create",["variedades"=>$variedades,"tachos"=>$tachos,"ubicaciones"=>$ubicaciones]);
+    	return view ("admin.exportaciones.create",["tachos"=>$tachos,"boxes"=>$boxes, "campanias"=>$campanias]);
     }
 
     public function store(ExportacionFormRequest $request)
     {
-    	$exportacion=new Exportacion;
-    	$exportacion->idvariedad=$request->get('idvariedad');
-        $exportacion->idtacho=$request->get('idtacho');
-        $exportacion->idubicacion=$request->get('idubicacion');
-        $exportacion->fechaingreso=$request->get('fechaingreso');
-        $exportacion->fechaegreso=$request->get('fechaegreso');
-        $exportacion->observaciones=$request->get('observaciones');
-    	// $exportacion->estado='1'; // continua en la cuarentena
-    	$exportacion->save();
+        $ingresos = json_decode($request->ingresos);
+        $ingresos = (array)$ingresos;
+        
+        foreach(array_keys($ingresos) as $box){
+            foreach($ingresos[$box] as $tacho){
+                $exportacion = new Exportacion();
 
-        $tacho=Tacho::findOrFail($request->get('idtacho'));
-        $tacho->expo=1;
-        $tacho->idubicacion=$request->get('idubicacion');
-        $tacho->update();
+                $exportacion->idtacho = $tacho->id;
+                $exportacion->idbox = $box;
+                $exportacion->idcampania = $request->campania;
+                $exportacion->fechaingreso = $request->fechaingreso;
+                $exportacion->observaciones = $request->observaciones;
+                $exportacion->estado = 1;
+                $exportacion->save();
+            }
+        }
 
-
-
-    	return Redirect::to('admin/exportaciones');
+        return redirect()->route('exportaciones.ingresos.index');
     }
 
     public function show($id)
@@ -139,9 +135,10 @@ class ExportacionController extends Controller
     public function destroy($id)
     {
     	$exportacion=Exportacion::findOrFail($id);
-    	$exportacion->estado='0';//baja
+    	$exportacion->estado = 3;//baja
       	$exportacion->update();
-    	return Redirect::to('admin/exportaciones');
+
+        return redirect()->route('exportaciones.ingresos.index');
     }
 
 
@@ -235,12 +232,64 @@ class ExportacionController extends Controller
        // ->where ('idexportacion','=',$id)
         ->get();
 
-dd($exportacion);
+        dd($exportacion);
 
 
         return view("admin.exportaciones.salidamasiva",compact("exportacion"),["exportacion"=>$exportacion]);
 
     }
 
+    public function bajaTacho($idExportacion){
+        $exportacion = Exportacion::findOrFail($idExportacion);
 
+        $tacho = $exportacion->tacho;
+        $tacho->estado = 'Baja';
+        $tacho->save();
+
+        $exportacion->estado = 2; // No sigue en cuarentena
+        $exportacion->save();
+
+        return redirect()->route('exportaciones.ingresos.index');
+    }
+
+    public function envios(){
+        $envios = EnvioExportacion::where('estado', 1)->paginate(10);
+
+        return view('admin.exportaciones.envios.index', compact('envios'));
+    }
+
+    public function enviosCreate(){
+        $boxes = BoxExportacion::where('activo', 1)->get();
+
+    	return view("admin.exportaciones.envios.create", compact('boxes'));
+    }
+
+    public function enviosStore(Request $request){
+        $envios = json_decode($request->envios);
+        $envios = (array)$envios;
+
+        foreach($envios as $envio){
+            $envioExportacion = new EnvioExportacion();
+            
+            $envioExportacion->idbox = $envio->idbox;
+            $envioExportacion->idtacho = $envio->idtacho;
+            $envioExportacion->cant_yemas = $envio->yemas;
+            $envioExportacion->fecha = $request->fechaenvio;
+            $envioExportacion->programa = $request->programa;
+            $envioExportacion->destino = $request->destino;
+
+            $envioExportacion->save();
+        }
+
+        return redirect()->route('exportaciones.envios.index');
+    }
+
+    public function destroyEnvio($id){
+        $envio = EnvioExportacion::findOrFail($id);
+
+        $envio->estado = 0;
+        $envio->save();
+
+        return redirect()->route('exportaciones.envios.index');
+    }
 }

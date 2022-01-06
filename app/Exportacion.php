@@ -22,4 +22,16 @@ class Exportacion extends Model
     protected $guarded  = [
     	
     ];
+
+    public function tacho(){
+        return $this->belongsTo('App\Tacho', 'idtacho', 'idtacho');
+    }
+
+    public function box(){
+        return $this->belongsTo('App\BoxExportacion', 'idbox', 'id');
+    }
+
+    public function campania(){
+        return $this->belongTo('App\CampaniaCuarentena', 'idcampania', 'id');
+    }
 }
