@@ -336,12 +336,33 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
-                <a href="{{url('admin/importaciones')}}" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>
                     Importación
+                    <i class="right fas fa-angle-left"></i>
                   </p>
                 </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{url('admin/importaciones/ingresos')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Ingresos</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('importaciones.inspecciones.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Inspecciones</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('importaciones.levantamientos.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Levantamiento cuarentena</p>
+                    </a>
+                  </li>
+                </ul>
               </li>
             </ul>
             

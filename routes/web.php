@@ -59,7 +59,6 @@ Route::resource('admin/tareas','TareaController')->parameters(["tareas"=>"tarea"
 Route::resource('admin/evaluaciones','EvaluacionController')->parameters(["evaluaciones"=>"evaluacion"]);
 Route::resource('admin/salidas','SalidaController')->parameters(["salidas"=>"salida"]);
 
-Route::resource('admin/importaciones','ImportacionController')->parameters(["importaciones"=>"importacion"]);
 Route::resource('admin/lotes','LoteController');
 
 Route::resource('admin/tratamientos','TratamientoController');
@@ -102,14 +101,14 @@ Route::get('admin/ubicacionesimpo/create', 'UbicacionimpoController@create');
 Route::resource('admin/ubicacionesexpo','UbicacionexpoController');
 Route::resource('admin/ubicacionesimpo','UbicacionimpoController');
 
-Route::resource('admin/inspecciones','InspeccionController');
+//Route::resource('admin/inspecciones','InspeccionController');
 
 
 //Rutas exportaciones - Ingresos
 Route::get('admin/exportaciones/ingresos', 'ExportacionController@index')->name('exportaciones.ingresos.index');
 Route::get('admin/exportaciones/ingresos/create', 'ExportacionController@create')->name('exportaciones.ingresos.create');
 Route::post('admin/exportaciones/ingresos', 'ExportacionController@store')->name('exportaciones.ingresos.store');
-Route::delete('admin/exportaciones/ingresos/delete/{idexportacion}', 'ExportacionController@destroy');
+Route::delete('admin/exportaciones/ingresos/{idexportacion}', 'ExportacionController@destroy');
 Route::patch('admin/exportaciones/ingresos/bajaTacho/{idexportacion}', 'ExportacionController@bajaTacho')->name('exportaciones.ingresos.bajaTacho');
 
 //Rutas exportaciones - Envios
@@ -118,6 +117,24 @@ Route::get('admin/exportaciones/envios/create', 'ExportacionController@enviosCre
 Route::post('admin/exportaciones/envios', 'ExportacionController@enviosStore')->name('exportaciones.envios.store');
 Route::delete('admin/exportaciones/envios/{id}', 'ExportacionController@destroyEnvio')->name('exportaciones.envios.destroy');
 
+// Rutas importaciones - Ingresos
+Route::get('admin/importaciones/ingresos', 'ImportacionController@index')->name('importaciones.ingresos.index');
+Route::get('admin/importaciones/ingresos/create', 'ImportacionController@create')->name('importaciones.ingresos.create');
+Route::post('admin/importaciones/ingresos', 'ImportacionController@store')->name('importaciones.ingresos.store');
+Route::delete('admin/importaciones/ingresos/delete/{idimportacion}', 'ImportacionController@destroy');
+Route::patch('admin/importaciones/ingresos/bajaTacho/{idimportacion}', 'ImportacionController@bajaTacho')->name('importaciones.ingresos.bajaTacho');
+
+// Rutas importaciones - Inspecciones
+Route::get('admin/importaciones/inspecciones', 'InspeccionController@index')->name('importaciones.inspecciones.index');
+Route::get('admin/importaciones/inspecciones/create', 'InspeccionController@create')->name('importaciones.inspecciones.create');
+Route::post('admin/importaciones/inspecciones', 'InspeccionController@store')->name('importaciones.inspecciones.store');
+Route::delete('admin/importaciones/inspecciones/{id}', 'InspeccionController@destroy')->name('importaciones.inspecciones.destroy');
+
+// Rutas importaciones - Levantamientos cuarentena
+Route::get('admin/importaciones/levantamientos', 'ImportacionController@levantamientoIndex')->name('importaciones.levantamientos.index');
+Route::get('admin/importaciones/levantamientos/create', 'ImportacionController@levantamientoCreate')->name('importaciones.levantamientos.create');
+Route::post('admin/importaciones/levantamientos', 'ImportacionController@levantamientoStore')->name('importaciones.levantamientos.store');
+Route::delete('admin/importaciones/levantamientos/{id}', 'ImportacionController@levantamientoDestroy')->name('importaciones.levantamientos.destroy');
 
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
@@ -172,7 +189,7 @@ Route::get('/admin/importaciones/salidas/{id}','ImportacionController@salidasaso
 
 
 
-Route::get('/admin/importaciones/inspecciones/{id}','ImportacionController@inspeccionesasociadas');
+//Route::get('/admin/importaciones/inspecciones/{id}','ImportacionController@inspeccionesasociadas');
 
 
 //Route::get('/admin/lotes/tareas/{id}','LoteController@tareasasociadas');

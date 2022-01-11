@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\BoxImportacion;
+use App\CampaniaCuarentena;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -12,6 +14,7 @@ use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\ImportacionFormRequest;
 use DB;
 use App\Exports\importacionesExport;
+use App\LevantamientoCuarentena;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ImportacionController extends Controller
@@ -27,14 +30,8 @@ class ImportacionController extends Controller
 
             // estamos mostrando todas, ¡ solo las que estan actualmente?
     		$query=trim($request->get('searchText'));
-    		$importaciones=DB::table('importaciones as e')
-            ->leftjoin('tachos as t','e.idtacho','=','t.idtacho')
-            ->leftjoin('variedades as v','e.idvariedad','=','v.idvariedad')
-            ->select('e.idimportacion','e.idvariedad','t.codigo','t.subcodigo','v.nombre as nombrevariedad','e.idubicacion','e.idlote','e.fechaingreso','e.fechaegreso','e.estado','e.observaciones')
-            ->where ('v.nombre','like','%'.$query.'%') 
-    		//->where ('activo','=',1)
-    		->orderBy('e.idtacho','desc')
-    		->paginate('10');
+
+    		$importaciones = Importacion::where('estado', '<>', 'Baja')->paginate(10);
 
             return view('admin.importaciones.index',["importaciones"=>$importaciones,"searchText"=>$query]);
     	}
@@ -42,49 +39,39 @@ class ImportacionController extends Controller
 
     public function create()
     {
-            $variedades = DB::table('variedades as v')
-            ->select('v.idvariedad','v.nombre')
-            //->where('v.estado','=','1')
-            ->get();
+        $boxes = BoxImportacion::where('activo', 1)->get();
+        $tachos = Tacho::where('destino', 2)->where('estado', 'Ocupado')->whereDoesntHave('importaciones', function($q){
+            $q->where('estado', '<>', 'Baja');
+        })->whereDoesntHave('exportaciones', function($q){
+            $q->where('estado', '<>', 'Baja');
+        })->get();
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
 
-            $tachos = DB::table('tachos as t')
-            ->select('t.idtacho','t.codigo','t.subcodigo')
-            ->where('t.estado','=','Ocupado')
-            ->get();
-
-            $ubicaciones = DB::table('ubicaciones as u')
-            ->select('u.idubicacion','u.nombreubicacion')
-            ->where('u.impo','=','1')
-            ->where('u.estado','=','1')
-            ->get();
-
-            $lotes = DB::table('lotes as l')
-            ->select('l.idlote','l.nombrelote')
-            ->where('l.estado','=','1')
-            ->get();
-
-    	return view ("admin.importaciones.create",["variedades"=>$variedades,"tachos"=>$tachos,"ubicaciones"=>$ubicaciones,"lotes"=>$lotes]);
+    	return view ("admin.importaciones.create",["tachos"=>$tachos,"boxes"=>$boxes,"campanias"=>$campanias]);
     }
 
     public function store(ImportacionFormRequest $request)
     {
-    	$importacion=new Importacion;
-    	$importacion->idvariedad=$request->get('idvariedad');
-        $importacion->idtacho=$request->get('idtacho');
-        $importacion->idubicacion=$request->get('idubicacion');
-        $importacion->idlote=$request->get('idlote');
-        $importacion->fechaingreso=$request->get('fechaingreso');
-        $importacion->fechaegreso=$request->get('fechaegreso');
-        $importacion->observaciones=$request->get('observaciones');
-    	// $exportacion->estado='1'; // continua en la cuarentena
-    	$importacion->save();
+        $ingresos = json_decode($request->ingresos);
+        $ingresos = (array)$ingresos;
+        
+        foreach(array_keys($ingresos) as $box){
+            foreach($ingresos[$box] as $tacho){
+                $importacion = new Importacion();
 
-        $tacho=Tacho::findOrFail($request->get('idtacho'));
-        $tacho->impo=1;
-        $tacho->idubicacion=$request->get('idubicacion');
-        $tacho->update();
+                $importacion->idtacho = $tacho->id;
+                $importacion->idbox = $box;
+                $importacion->idcampania = $request->campania;
+                $importacion->fechaingreso = $request->fechaingreso;
+                $importacion->lote_cuarentenario = $tacho->lote;
+                $importacion->origen = $tacho->origen;
+                $importacion->observaciones = $request->observaciones;
+                $importacion->estado = 1;
+                $importacion->save();
+            }
+        }
 
-    	return Redirect::to('admin/importaciones');
+        return redirect()->route('importaciones.ingresos.index');
     }
 
     public function show($id)
@@ -144,9 +131,10 @@ class ImportacionController extends Controller
     public function destroy($id)
     {
     	$importacion=Importacion::findOrFail($id);
-    	$importacion->estado='0';//baja
+    	$importacion->estado = 3;//baja
       	$importacion->update();
-    	return Redirect::to('admin/importaciones');
+
+    	return Redirect::to('admin/importaciones/ingresos');
     }
 
 
@@ -231,7 +219,83 @@ class ImportacionController extends Controller
 
     }
 
+    public function bajaTacho($idImportacion){
+        $importacion = Importacion::findOrFail($idImportacion);
 
+        $tacho = $importacion->tacho;
+        $tacho->estado = 'Baja';
+        $tacho->save();
 
+        $importacion->estado = 2; // No sigue en cuarentena
+        $importacion->save();
+
+        return redirect()->route('importaciones.ingresos.index');
+    }
+
+    public function levantamientoIndex(){
+        $levantamientos = LevantamientoCuarentena::where('estado', 1)->paginate(10);
+
+        return view('admin.importaciones.levantamientos.index', compact('levantamientos'));  
+    }
+
+    public function levantamientoCreate(){
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
+        $boxes = BoxImportacion::where('activo', 1)->get();
+        
+    	return view('admin.importaciones.levantamientos.create', compact('campanias', 'boxes'));
+    }
+
+    public function levantamientoStore(Request $request){
+        $levantamiento = new LevantamientoCuarentena();
+
+        $levantamiento->fechalevantamiento = $request->fecha;
+        $levantamiento->idbox = $request->box;
+        $levantamiento->idcampania = $request->campania;
+        $levantamiento->observaciones = $request->observaciones;
+        $levantamiento->save();
+
+        $archivo = $request->archivo;
+        $nombre = 'LevantamientoCuarentena_' . $levantamiento->id . '.' . $archivo->extension();
+        $request->archivo->move(public_path('/levantamientos'), $nombre);
+        $levantamiento->archivo = $nombre;
+        $levantamiento->update();
+
+        // Poner las importaciones correspondientes en estado 'No sigue en cuarentena' y dar de baja tachos
+        $importaciones = Importacion::where('idbox', $levantamiento->idbox)->where('idcampania', $levantamiento->idcampania)->get();
+
+        foreach($importaciones as $importacion){
+            $importacion->estado = 2; // No sigue en cuarentena
+            $importacion->fechaegreso = $levantamiento->fechalevantamiento;
+            $tacho = $importacion->tacho;
+
+            $tacho->estado = 'Baja';
+            $importacion->save();
+            $tacho->save();
+        }
+
+        return redirect()->route('importaciones.levantamientos.index');
+    }
+
+    public function levantamientoDestroy($id){
+        $levantamiento = LevantamientoCuarentena::findOrFail($id);
+
+        $levantamiento->estado = 0;
+        $levantamiento->save();
+
+        // Volver atras el estado de la importacion y de los tachos
+        $importaciones = Importacion::where('idbox', $levantamiento->idbox)->where('idcampania', $levantamiento->idcampania)->get();
+
+        foreach($importaciones as $importacion){
+            $importacion->estado = 1; // No sigue en cuarentena
+            $importacion->fechaegreso = null;
+            $tacho = $importacion->tacho;
+
+            $tacho->estado = 'Ocupado';
+            $importacion->save();
+            $tacho->save();
+        }
+
+        return redirect()->route('importaciones.levantamientos.index');
+    }
 
 }

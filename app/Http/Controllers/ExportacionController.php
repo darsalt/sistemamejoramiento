@@ -49,7 +49,9 @@ class ExportacionController extends Controller
     public function create()
     {
         $boxes = BoxExportacion::where('activo', 1)->get();
-        $tachos = Tacho::where('destino', 2)->where('estado', 'Ocupado')->whereDoesntHave('exportaciones', function($q){
+        $tachos = Tacho::where('destino', 2)->where('estado', 'Ocupado')->whereDoesntHave('importaciones', function($q){
+            $q->where('estado', '<>', 'Baja');
+        })->whereDoesntHave('exportaciones', function($q){
             $q->where('estado', '<>', 'Baja');
         })->get();
         $campanias = CampaniaCuarentena::where('estado', 1)->get();

@@ -17,88 +17,88 @@
 		</div>
     </div>
 
-<section class="content">
-    <form action="{{route('exportaciones.ingresos.store')}}" id="formIngresos" method='POST'>
-        @csrf
-        <div class="row">
-            <input type="text" name="ingresos" id="ingresos" hidden>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <label for="fechaingreso">Fecha ingreso</label>
-                    <input type="date" class="form-control" name="fechaingreso" id="fechaingreso" required>
+    <section class="content">
+        <form action="{{route('exportaciones.ingresos.store')}}" id="formIngresos" method='POST'>
+            @csrf
+            <div class="row">
+                <input type="text" name="ingresos" id="ingresos" hidden>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="fechaingreso">Fecha ingreso</label>
+                        <input type="date" class="form-control" name="fechaingreso" id="fechaingreso" required>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="campania">Campaña</label>
+                        <select name="campania" id="campania" class="form-control" required>
+                            <option value="" disabled selected>(Ninguna)</option>
+                            @foreach ($campanias as $campania)
+                                <option value="{{$campania->id}}">{{$campania->nombre}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="boxes">Boxes</label>
+                        <select name="boxes" id="boxes" class="form-control" required>
+                            <option value="0" disabled selected>(Ninguno)</option>
+                            @foreach ($boxes as $box)
+                                <option value="{{$box->id}}">{{$box->nombre}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="tachos">Tachos</label>
+                        <select name="tachos" id="tachos" class="form-control" required>
+                            <option value="0" disabled selected>(Ninguno)</option>
+                            @foreach ($tachos as $tacho)
+                                <option value="{{$tacho->idtacho}}">{{$tacho->codigo . ' ' . $tacho->subcodigo}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <label for="campania">Campaña</label>
-                    <select name="campania" id="campania" class="form-control" required>
-                        <option value="" disabled selected>(Ninguna)</option>
-                        @foreach ($campanias as $campania)
-                            <option value="{{$campania->id}}">{{$campania->nombre}}</option>
-                        @endforeach
-                    </select>
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <button class="btn btn-primary" id="agregarTacho" type="button">Agregar</button>
                 </div>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <label for="boxes">Boxes</label>
-                    <select name="boxes" id="boxes" class="form-control" required>
-                        <option value="0" disabled selected>(Ninguno)</option>
-                        @foreach ($boxes as $box)
-                            <option value="{{$box->id}}">{{$box->nombre}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <label for="tachos">Tachos</label>
-                    <select name="tachos" id="tachos" class="form-control" required>
-                        <option value="0" disabled selected>(Ninguno)</option>
-                        @foreach ($tachos as $tacho)
-                            <option value="{{$tacho->idtacho}}">{{$tacho->codigo . ' ' . $tacho->subcodigo}}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12 mb-3">
-                <button class="btn btn-primary" id="agregarTacho" type="button">Agregar</button>
-            </div>
-            <div class="col-12">
-                <table class="table table-sm" id="tablaIngresos">
-                    <thead>
-                        <th></th>
-                        <th style="display: none;">Id Box</th>
-                        <th>Box</th>
-                        <th>Tacho</th>
-                    </thead>
-                    <tbody>
+                <div class="col-12">
+                    <table class="table table-sm" id="tablaIngresos">
+                        <thead>
+                            <th></th>
+                            <th style="display: none;">Id Box</th>
+                            <th>Box</th>
+                            <th>Tacho</th>
+                        </thead>
+                        <tbody>
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <label for="observaciones">Observaciones</label>
-                    <textarea  maxlength="1000" name="observaciones" class="form-control" placeholder="Ingrese observaciones"></textarea>
-                </div>  
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group">
-                    <button class="btn btn-primary" type="submit" id="submit">Guardar</button>
-                    <button type="button" class="btn btn-danger" onclick="history.go(-1); return false;">Cancelar</button>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
-    </form>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea  maxlength="1000" name="observaciones" class="form-control" placeholder="Ingrese observaciones"></textarea>
+                    </div>  
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit" id="submit">Guardar</button>
+                        <button type="button" class="btn btn-danger" onclick="history.go(-1); return false;">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </section>
 </div>
-</section>
 
 @endsection
 @section('script')

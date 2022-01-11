@@ -26,4 +26,8 @@ class Tacho extends Model
     public function exportaciones(){
         return $this->hasMany('App\Exportacion', 'idtacho', 'idtacho');
     }
+
+    public function importaciones(){
+        return $this->hasMany('App\Importacion', 'idtacho', 'idtacho');
+    }
 }

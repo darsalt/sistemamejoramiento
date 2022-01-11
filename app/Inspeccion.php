@@ -9,7 +9,6 @@ class Inspeccion extends Model
     protected $primaryKey = 'idinspeccion';
 
     protected $filliable = [
-    	'idinspeccion',
         'fechainspeccion',
         'certificado',
         'observaciones'
@@ -18,4 +17,12 @@ class Inspeccion extends Model
     protected $guarded  = [
     	
     ];
+
+    public function campania(){
+        return $this->belongsTo('App\CampaniaCuarentena', 'idcampania', 'id');
+    }
+
+    public function box(){
+        return $this->belongsTo('App\BoxImportacion', 'idbox', 'id');
+    }
 }
