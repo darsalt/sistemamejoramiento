@@ -136,6 +136,15 @@ Route::get('admin/importaciones/levantamientos/create', 'ImportacionController@l
 Route::post('admin/importaciones/levantamientos', 'ImportacionController@levantamientoStore')->name('importaciones.levantamientos.store');
 Route::delete('admin/importaciones/levantamientos/{id}', 'ImportacionController@levantamientoDestroy')->name('importaciones.levantamientos.destroy');
 
+// Cuarentena - Evaluaciones Sanitarias
+Route::get('admin/cuarentena/sanitarias', 'SanitariasCuarentenaController@index')->name('cuarentena.sanitarias.index');
+Route::get('admin/cuarentena/sanitarias/create', 'SanitariasCuarentenaController@create')->name('cuarentena.sanitarias.create');
+Route::post('admin/cuarentena/sanitarias', 'SanitariasCuarentenaController@store')->name('cuarentena.sanitarias.store');
+Route::get('admin/cuarentena/sanitarias/datos/{idevaluacion}', 'SanitariasCuarentenaController@datosasociados')->name('cuarentena.sanitarias.datosasociados');
+Route::get('admin/cuarentena/sanitarias/datosasociados/{idevaluacion}', 'SanitariasCuarentenaController@getDatosAsociados');
+Route::post('admin/cuarentena/sanitarias/datosasociados/store', 'SanitariasCuarentenaController@updateDatosEvaluacion')->name('cuarentena.sanitarias.storeDatosAsociados');
+Route::delete('admin/cuarentena/sanitarias/{id}', 'SanitariasCuarentenaController@destroy');
+
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
 Route::get('exportexportaciones', 'ExportacionController@export');
