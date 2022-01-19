@@ -387,6 +387,44 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
             </ul>
+
+            <ul class="nav nav-treeview">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>
+                    Tareas generales
+                    <i class="right fas fa-angle-left"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{{route('cuarentena.generales.fertilizacion.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Fertilización</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('importaciones.inspecciones.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Limpieza</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('importaciones.levantamientos.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Corte</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="{{route('importaciones.levantamientos.index')}}" class="nav-link">
+                      <i class="far fa-dot-circle nav-icon"></i>
+                      <p>Aplicaciones</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
            </li>
 
 

@@ -145,6 +145,14 @@ Route::get('admin/cuarentena/sanitarias/datosasociados/{idevaluacion}', 'Sanitar
 Route::post('admin/cuarentena/sanitarias/datosasociados/store', 'SanitariasCuarentenaController@updateDatosEvaluacion')->name('cuarentena.sanitarias.storeDatosAsociados');
 Route::delete('admin/cuarentena/sanitarias/{id}', 'SanitariasCuarentenaController@destroy');
 
+// Cuarentena - Tareas generales
+Route::get('admin/cuarentena/generales/fertilizacion', 'TareasGeneralesController@fertilizacion')->name('cuarentena.generales.fertilizacion.index');
+Route::get('admin/cuarentena/generales/fertilizacion/create', 'TareasGeneralesController@fertilizacionCreate')->name('cuarentena.generales.fertilizacion.create');
+Route::post('admin/cuarentena/generales/fertilizacion', 'TareasGeneralesController@fertilizacionStore')->name('cuarentena.generales.fertilizacion.store');
+Route::get('admin/cuarentena/generales/fertilizacion/{id}/edit', 'TareasGeneralesController@fertilizacionEdit')->name('cuarentena.generales.fertilizacion.edit');
+Route::put('admin/cuarentena/generales/fertilizacion/{id}', 'TareasGeneralesController@fertilizacionUpdate')->name('cuarentena.generales.fertilizacion.update');
+Route::delete('admin/cuarentena/generales/fertilizacion/{id}', 'TareasGeneralesController@fertilizacionDestroy')->name('cuarentena.generales.fertilizacion.destroy');
+
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
 Route::get('exportexportaciones', 'ExportacionController@export');
