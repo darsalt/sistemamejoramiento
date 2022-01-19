@@ -146,12 +146,21 @@ Route::post('admin/cuarentena/sanitarias/datosasociados/store', 'SanitariasCuare
 Route::delete('admin/cuarentena/sanitarias/{id}', 'SanitariasCuarentenaController@destroy');
 
 // Cuarentena - Tareas generales
+// Fertilizacion
 Route::get('admin/cuarentena/generales/fertilizacion', 'TareasGeneralesController@fertilizacion')->name('cuarentena.generales.fertilizacion.index');
 Route::get('admin/cuarentena/generales/fertilizacion/create', 'TareasGeneralesController@fertilizacionCreate')->name('cuarentena.generales.fertilizacion.create');
 Route::post('admin/cuarentena/generales/fertilizacion', 'TareasGeneralesController@fertilizacionStore')->name('cuarentena.generales.fertilizacion.store');
 Route::get('admin/cuarentena/generales/fertilizacion/{id}/edit', 'TareasGeneralesController@fertilizacionEdit')->name('cuarentena.generales.fertilizacion.edit');
 Route::put('admin/cuarentena/generales/fertilizacion/{id}', 'TareasGeneralesController@fertilizacionUpdate')->name('cuarentena.generales.fertilizacion.update');
 Route::delete('admin/cuarentena/generales/fertilizacion/{id}', 'TareasGeneralesController@fertilizacionDestroy')->name('cuarentena.generales.fertilizacion.destroy');
+
+// Limpieza
+Route::get('admin/cuarentena/generales/limpieza', 'TareasGeneralesController@limpieza')->name('cuarentena.generales.limpieza.index');
+Route::get('admin/cuarentena/generales/limpieza/create', 'TareasGeneralesController@limpiezaCreate')->name('cuarentena.generales.limpieza.create');
+Route::post('admin/cuarentena/generales/limpieza', 'TareasGeneralesController@limpiezaStore')->name('cuarentena.generales.limpieza.store');
+Route::get('admin/cuarentena/generales/limpieza/{id}/edit', 'TareasGeneralesController@limpiezaEdit')->name('cuarentena.generales.limpieza.edit');
+Route::put('admin/cuarentena/generales/limpieza/{id}', 'TareasGeneralesController@limpiezaUpdate')->name('cuarentena.generales.limpieza.update');
+Route::delete('admin/cuarentena/generales/limpieza/{id}', 'TareasGeneralesController@limpiezaDestroy')->name('cuarentena.generales.limpieza.destroy');
 
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
