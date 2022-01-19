@@ -162,6 +162,14 @@ Route::get('admin/cuarentena/generales/limpieza/{id}/edit', 'TareasGeneralesCont
 Route::put('admin/cuarentena/generales/limpieza/{id}', 'TareasGeneralesController@limpiezaUpdate')->name('cuarentena.generales.limpieza.update');
 Route::delete('admin/cuarentena/generales/limpieza/{id}', 'TareasGeneralesController@limpiezaDestroy')->name('cuarentena.generales.limpieza.destroy');
 
+// Corte
+Route::get('admin/cuarentena/generales/corte', 'TareasGeneralesController@corte')->name('cuarentena.generales.corte.index');
+Route::get('admin/cuarentena/generales/corte/create', 'TareasGeneralesController@corteCreate')->name('cuarentena.generales.corte.create');
+Route::post('admin/cuarentena/generales/corte', 'TareasGeneralesController@corteStore')->name('cuarentena.generales.corte.store');
+Route::get('admin/cuarentena/generales/corte/{id}/edit', 'TareasGeneralesController@corteEdit')->name('cuarentena.generales.corte.edit');
+Route::put('admin/cuarentena/generales/corte/{id}', 'TareasGeneralesController@corteUpdate')->name('cuarentena.generales.corte.update');
+Route::delete('admin/cuarentena/generales/corte/{id}', 'TareasGeneralesController@corteDestroy')->name('cuarentena.generales.corte.destroy');
+
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
 Route::get('exportexportaciones', 'ExportacionController@export');

@@ -119,4 +119,58 @@ class TareasGeneralesController extends Controller
 
         return redirect()->route('cuarentena.generales.limpieza.index');
     }
+
+    public function corte(){
+        $cortes = DB::table('cortes_cuarentena as c')
+        ->select('c.*', 'cc.nombre as nombre_campania')
+        ->join('campaniacuarentena as cc', 'cc.id', '=', 'c.idcampania')
+        ->where('c.estado', 1)->paginate(10);
+
+        return view('admin.cuarentena.generales.corte.index', compact('cortes'));
+    }
+
+    public function corteCreate(){
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
+
+        return view('admin.cuarentena.generales.corte.create', compact('campanias'));
+    }
+
+    public function corteStore(Request $request){
+        DB::table('cortes_cuarentena')->insert([
+            'fecha' => $request->fecha,
+            'idcampania' => $request->campania,
+            'observaciones' => $request->observaciones,
+            'estado' => 1
+        ]);
+
+        return redirect()->route('cuarentena.generales.corte.index');
+    }
+
+    public function corteEdit($id){
+        $corte = DB::table('cortes_cuarentena')->where('id', $id)->first();
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
+
+        return view('admin.cuarentena.generales.corte.edit', compact('campanias', 'corte'));
+
+    }
+
+    public function corteUpdate(Request $request, $id){
+        DB::table('cortes_cuarentena')->where('id', $id)
+        ->update([
+            'fecha' => $request->fecha,
+            'idcampania' => $request->campania,
+            'observaciones' => $request->observaciones
+        ]);
+
+        return redirect()->route('cuarentena.generales.corte.index');
+    }
+
+    public function corteDestroy($id){
+        DB::table('cortes_cuarentena')->where('id', $id)
+        ->update([
+            'estado' => 0
+        ]);
+
+        return redirect()->route('cuarentena.generales.corte.index');
+    }
 }
