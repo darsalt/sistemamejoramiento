@@ -20,20 +20,38 @@ class TareasGeneralesController extends Controller
 
     public function fertilizacionCreate(){
         $campanias = CampaniaCuarentena::where('estado', 1)->get();
+        $boxesImpo = BoxImportacion::where('activo', 1)->get();
+        $boxesExpo = BoxExportacion::where('activo', 1)->get();
 
-        return view('admin.cuarentena.generales.fertilizacion.create', compact('campanias'));
+        return view('admin.cuarentena.generales.fertilizacion.create', compact('campanias', 'boxesImpo', 'boxesExpo'));
     }
 
     public function fertilizacionStore(Request $request){
-        $fertilizacion = new FertilizacionCuarentena();
+        foreach($request->boxesimpo ?? [] as $box){
+            $fertilizacion = new FertilizacionCuarentena();
 
-        $fertilizacion->fecha = $request->fecha;
-        $fertilizacion->idcampania = $request->campania;
-        $fertilizacion->producto = $request->producto;
-        $fertilizacion->dosis = $request->dosis;
-        $fertilizacion->observaciones = $request->observaciones;
-        $fertilizacion->estado = 1;
-        $fertilizacion->save();
+            $fertilizacion->fecha = $request->fecha;
+            $fertilizacion->idcampania = $request->campania;
+            $fertilizacion->idboximpo = $box;
+            $fertilizacion->producto = $request->producto;
+            $fertilizacion->dosis = $request->dosis;
+            $fertilizacion->observaciones = $request->observaciones;
+            $fertilizacion->estado = 1;
+            $fertilizacion->save();
+        }
+
+        foreach($request->boxesexpo ?? [] as $box){
+            $fertilizacion = new FertilizacionCuarentena();
+
+            $fertilizacion->fecha = $request->fecha;
+            $fertilizacion->idcampania = $request->campania;
+            $fertilizacion->idboxexpo = $box;
+            $fertilizacion->producto = $request->producto;
+            $fertilizacion->dosis = $request->dosis;
+            $fertilizacion->observaciones = $request->observaciones;
+            $fertilizacion->estado = 1;
+            $fertilizacion->save();
+        }
 
         return redirect()->route('cuarentena.generales.fertilizacion.index');
     }
@@ -70,7 +88,9 @@ class TareasGeneralesController extends Controller
 
     public function limpieza(){
         $limpiezas = DB::table('limpiezas_cuarentena as l')
-        ->select('l.*', 'c.nombre as nombre_campania')
+        ->select('l.*', 'c.nombre as nombre_campania', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'l.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'l.idboxexpo')
         ->join('campaniacuarentena as c', 'c.id', '=', 'l.idcampania')
         ->where('l.estado', 1)->paginate(10);
 
@@ -79,23 +99,43 @@ class TareasGeneralesController extends Controller
 
     public function limpiezaCreate(){
         $campanias = CampaniaCuarentena::where('estado', 1)->get();
+        $boxesImpo = BoxImportacion::where('activo', 1)->get();
+        $boxesExpo = BoxExportacion::where('activo', 1)->get();
 
-        return view('admin.cuarentena.generales.limpieza.create', compact('campanias'));
+        return view('admin.cuarentena.generales.limpieza.create', compact('campanias', 'boxesImpo', 'boxesExpo'));
     }
 
     public function limpiezaStore(Request $request){
-        DB::table('limpiezas_cuarentena')->insert([
-            'fecha' => $request->fecha,
-            'idcampania' => $request->campania,
-            'observaciones' => $request->observaciones,
-            'estado' => 1
-        ]);
+        foreach($request->boxesimpo ?? [] as $box){
+            DB::table('limpiezas_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'idboximpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
+
+        foreach($request->boxesexpo ?? [] as $box){
+            DB::table('limpiezas_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'idboxexpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
 
         return redirect()->route('cuarentena.generales.limpieza.index');
     }
 
     public function limpiezaEdit($id){
-        $limpieza = DB::table('limpiezas_cuarentena')->where('id', $id)->first();
+        $limpieza = DB::table('limpiezas_cuarentena as l')->where('l.id', $id)
+        ->select('l.*', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'l.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'l.idboxexpo')
+        ->first();
+
         $campanias = CampaniaCuarentena::where('estado', 1)->get();
 
         return view('admin.cuarentena.generales.limpieza.edit', compact('campanias', 'limpieza'));
@@ -124,8 +164,10 @@ class TareasGeneralesController extends Controller
 
     public function corte(){
         $cortes = DB::table('cortes_cuarentena as c')
-        ->select('c.*', 'cc.nombre as nombre_campania')
+        ->select('c.*', 'cc.nombre as nombre_campania', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
         ->join('campaniacuarentena as cc', 'cc.id', '=', 'c.idcampania')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'c.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'c.idboxexpo')
         ->where('c.estado', 1)->paginate(10);
 
         return view('admin.cuarentena.generales.corte.index', compact('cortes'));
@@ -133,23 +175,43 @@ class TareasGeneralesController extends Controller
 
     public function corteCreate(){
         $campanias = CampaniaCuarentena::where('estado', 1)->get();
+        $boxesImpo = BoxImportacion::where('activo', 1)->get();
+        $boxesExpo = BoxExportacion::where('activo', 1)->get();
 
-        return view('admin.cuarentena.generales.corte.create', compact('campanias'));
+        return view('admin.cuarentena.generales.corte.create', compact('campanias', 'boxesImpo', 'boxesExpo'));
     }
 
     public function corteStore(Request $request){
-        DB::table('cortes_cuarentena')->insert([
-            'fecha' => $request->fecha,
-            'idcampania' => $request->campania,
-            'observaciones' => $request->observaciones,
-            'estado' => 1
-        ]);
+        foreach($request->boxesimpo ?? [] as $box){
+            DB::table('cortes_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'idboximpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
+
+        foreach($request->boxesexpo ?? [] as $box){
+            DB::table('cortes_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'idboxexpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
 
         return redirect()->route('cuarentena.generales.corte.index');
     }
 
     public function corteEdit($id){
-        $corte = DB::table('cortes_cuarentena')->where('id', $id)->first();
+        $corte = DB::table('cortes_cuarentena as c')->where('c.id', $id)
+        ->select('c.*', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'c.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'c.idboxexpo')
+        ->first();
+
         $campanias = CampaniaCuarentena::where('estado', 1)->get();
 
         return view('admin.cuarentena.generales.corte.edit', compact('campanias', 'corte'));
@@ -196,7 +258,7 @@ class TareasGeneralesController extends Controller
     }
 
     public function aplicacionStore(Request $request){
-        foreach($request->boxesimpo as $box){
+        foreach($request->boxesimpo ?? [] as $box){
             DB::table('aplicaciones_cuarentena')->insert([
                 'fecha' => $request->fecha,
                 'idcampania' => $request->campania,
@@ -207,7 +269,7 @@ class TareasGeneralesController extends Controller
             ]);
         }
 
-        foreach($request->boxesexpo as $box){
+        foreach($request->boxesexpo ?? [] as $box){
             DB::table('aplicaciones_cuarentena')->insert([
                 'fecha' => $request->fecha,
                 'idcampania' => $request->campania,

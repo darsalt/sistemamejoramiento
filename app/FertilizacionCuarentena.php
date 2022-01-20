@@ -11,4 +11,12 @@ class FertilizacionCuarentena extends Model
     public function campania(){
         return $this->belongsTo('App\CampaniaCuarentena', 'idcampania', 'id');
     }
+
+    public function boximpo(){
+        return $this->belongsTo('App\BoxImportacion', 'idboximpo', 'id');
+    }
+
+    public function boxexpo(){
+        return $this->belongsTo('App\BoxExportacion', 'idboxexpo', 'id');
+    }
 }

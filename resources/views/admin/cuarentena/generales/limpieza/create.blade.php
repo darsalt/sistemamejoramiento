@@ -39,7 +39,31 @@
                     </select>
                 </div>
             </div>
-        </div>  
+        </div> 
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="boxesimpo">Boxes importación</label><br>
+                    <select name="boxesimpo[]" id="boxesimpo" class="form-control select2" multiple>
+                        @foreach ($boxesImpo as $box)
+                            <option value="{{$box->id}}">{{$box->nombre}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="boxesexpo">Boxes exportación</label><br>
+                    <select name="boxesexpo[]" id="boxesexpo" class="form-control select2" multiple>
+                        @foreach ($boxesExpo as $box)
+                            <option value="{{$box->id}}">{{$box->nombre}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div> 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">

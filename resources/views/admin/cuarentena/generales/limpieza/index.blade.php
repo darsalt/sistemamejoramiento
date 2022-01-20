@@ -15,6 +15,7 @@
 				<thead>
 					<th>Campaña</th>
 					<th>Fecha</th>
+					<th>Box</th>
 					<th>Observaciones</th>
  					<th>Operaciones</th>
 				</thead>
@@ -22,6 +23,13 @@
 				<tr>
 					<td>{{$l->nombre_campania}}</td>
 					<td>{{$l->fecha}}</td>
+					<td>
+						@if ($l->idboximpo)
+							Importacion - {{$l->boximpo}}	
+						@else
+							Exportacion - {{$l->boxexpo}}
+						@endif
+					</td>
 					<td>{{$l->observaciones}}</td>
 					<td>
 						<a href="{{route('cuarentena.generales.limpieza.edit', $l->id)}}"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;

@@ -15,6 +15,7 @@
 				<thead>
 					<th>Campaña</th>
 					<th>Fecha</th>
+                    <th>Box</th>
 					<th>Producto</th>
 					<th>Dosis</th>
 					<th>Observaciones</th>
@@ -24,6 +25,13 @@
 				<tr>
 					<td>{{$f->campania->nombre}}</td>
 					<td>{{$f->fecha}}</td>
+                    <td>
+						@if ($f->idboximpo)
+							Importacion - {{$f->boximpo->nombre}}	
+						@else
+							Exportacion - {{$f->boxexpo->nombre}}
+						@endif
+					</td>
 					<td>{{$f->producto}}</td>
 					<td>{{$f->dosis}}</td>
 					<td>{{$f->observaciones}}</td>

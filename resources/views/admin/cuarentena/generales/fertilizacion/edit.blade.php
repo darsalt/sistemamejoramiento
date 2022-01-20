@@ -48,6 +48,22 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">
+                    <label for="boxesimpo">Boxes importación</label><br>
+                    <input type="text" name="boxesimpo" id="boxesimpo" class="form-control" value="{{$fertilizacion->boximpo ? $fertilizacion->boximpo->nombre : ''}}" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="boxesexpo">Boxes exportación</label><br>
+                    <input type="text" name="boxesexpo" id="boxesexpo" class="form-control" value="{{$fertilizacion->boxexpo ? $fertilizacion->boxexpo->nombre : ''}}" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
                     <label for="producto">Producto</label>
                     <input type="text" name="producto" class="form-control" placeholder="Producto..." required="required" value="{{old('producto', $fertilizacion->producto)}}">
                 </div>

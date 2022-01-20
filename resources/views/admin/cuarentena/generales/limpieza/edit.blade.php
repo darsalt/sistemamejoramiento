@@ -44,7 +44,23 @@
                     </select>
                 </div>
             </div>
-        </div>  
+        </div> 
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="boxesimpo">Boxes importación</label><br>
+                    <input type="text" name="boxesimpo" id="boxesimpo" class="form-control" value="{{$limpieza->boximpo}}" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <label for="boxesexpo">Boxes exportación</label><br>
+                    <input type="text" name="boxesexpo" id="boxesexpo" class="form-control" value="{{$limpieza->boxexpo}}" disabled>
+                </div>
+            </div>
+        </div> 
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="form-group">
