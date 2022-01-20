@@ -170,6 +170,14 @@ Route::get('admin/cuarentena/generales/corte/{id}/edit', 'TareasGeneralesControl
 Route::put('admin/cuarentena/generales/corte/{id}', 'TareasGeneralesController@corteUpdate')->name('cuarentena.generales.corte.update');
 Route::delete('admin/cuarentena/generales/corte/{id}', 'TareasGeneralesController@corteDestroy')->name('cuarentena.generales.corte.destroy');
 
+// Aplicación
+Route::get('admin/cuarentena/generales/aplicacion', 'TareasGeneralesController@aplicacion')->name('cuarentena.generales.aplicacion.index');
+Route::get('admin/cuarentena/generales/aplicacion/create', 'TareasGeneralesController@aplicacionCreate')->name('cuarentena.generales.aplicacion.create');
+Route::post('admin/cuarentena/generales/aplicacion', 'TareasGeneralesController@aplicacionStore')->name('cuarentena.generales.aplicacion.store');
+Route::get('admin/cuarentena/generales/aplicacion/{id}/edit', 'TareasGeneralesController@aplicacionEdit')->name('cuarentena.generales.aplicacion.edit');
+Route::put('admin/cuarentena/generales/aplicacion/{id}', 'TareasGeneralesController@aplicacionUpdate')->name('cuarentena.generales.aplicacion.update');
+Route::delete('admin/cuarentena/generales/aplicacion/{id}', 'TareasGeneralesController@aplicacionDestroy')->name('cuarentena.generales.aplicacion.destroy');
+
 Route::get('export', 'TachoController@export');
 Route::get('exportvariedades', 'VariedadController@export');
 Route::get('exportexportaciones', 'ExportacionController@export');

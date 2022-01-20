@@ -417,7 +417,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </a>
                   </li>
                   <li class="nav-item">
-                    <a href="{{route('importaciones.levantamientos.index')}}" class="nav-link">
+                    <a href="{{route('cuarentena.generales.aplicacion.index')}}" class="nav-link">
                       <i class="far fa-dot-circle nav-icon"></i>
                       <p>Aplicaciones</p>
                     </a>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\BoxExportacion;
+use App\BoxImportacion;
 use App\CampaniaCuarentena;
 use App\FertilizacionCuarentena;
 use App\Http\Controllers\Controller;
@@ -172,5 +174,83 @@ class TareasGeneralesController extends Controller
         ]);
 
         return redirect()->route('cuarentena.generales.corte.index');
+    }
+
+    public function aplicacion(){
+        $aplicaciones = DB::table('aplicaciones_cuarentena as a')
+        ->select('a.*', 'cc.nombre as nombre_campania', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
+        ->join('campaniacuarentena as cc', 'cc.id', '=', 'a.idcampania')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'a.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'a.idboxexpo')
+        ->where('a.estado', 1)->paginate(10);
+
+        return view('admin.cuarentena.generales.aplicaciones.index', compact('aplicaciones'));
+    }
+
+    public function aplicacionCreate(){
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
+        $boxesImpo = BoxImportacion::where('activo', 1)->get();
+        $boxesExpo = BoxExportacion::where('activo', 1)->get();
+
+        return view('admin.cuarentena.generales.aplicaciones.create', compact('campanias', 'boxesImpo', 'boxesExpo'));
+    }
+
+    public function aplicacionStore(Request $request){
+        foreach($request->boxesimpo as $box){
+            DB::table('aplicaciones_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'producto' => $request->producto,
+                'idboximpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
+
+        foreach($request->boxesexpo as $box){
+            DB::table('aplicaciones_cuarentena')->insert([
+                'fecha' => $request->fecha,
+                'idcampania' => $request->campania,
+                'producto' => $request->producto,
+                'idboxexpo' => $box,
+                'observaciones' => $request->observaciones,
+                'estado' => 1
+            ]);
+        }
+
+        return redirect()->route('cuarentena.generales.aplicacion.index');
+    }
+
+    public function aplicacionEdit($id){
+        $aplicacion = DB::table('aplicaciones_cuarentena as a')->where('a.id', $id)
+        ->select('a.*', 'bi.nombre as boximpo', 'be.nombre as boxexpo')
+        ->leftjoin('boxesimpo as bi', 'bi.id', '=', 'a.idboximpo')
+        ->leftjoin('boxesexpo as be', 'be.id', '=', 'a.idboxexpo')
+        ->first();
+        $campanias = CampaniaCuarentena::where('estado', 1)->get();
+
+        return view('admin.cuarentena.generales.aplicaciones.edit', compact('aplicacion', 'campanias'));
+
+    }
+
+    public function aplicacionUpdate(Request $request, $id){
+        DB::table('aplicaciones_cuarentena')->where('id', $id)
+        ->update([
+            'fecha' => $request->fecha,
+            'idcampania' => $request->campania,
+            'producto' => $request->producto,
+            'observaciones' => $request->observaciones
+        ]);
+
+        return redirect()->route('cuarentena.generales.aplicacion.index');
+    }
+
+    public function aplicacionDestroy($id){
+        DB::table('aplicaciones_cuarentena')->where('id', $id)
+        ->update([
+            'estado' => 0
+        ]);
+
+        return redirect()->route('cuarentena.generales.aplicacion.index');
     }
 }
