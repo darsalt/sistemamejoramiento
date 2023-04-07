@@ -19,7 +19,7 @@ namespace MyCLabs\Enum;
  * @psalm-immutable
  * @psalm-consistent-constructor
  */
-abstract class Enum implements \JsonSerializable
+abstract class Enum implements \JsonSerializable, \Stringable
 {
     /**
      * Enum value
@@ -95,7 +95,6 @@ abstract class Enum implements \JsonSerializable
     /**
      * @param mixed $value
      * @return static
-     * @psalm-return static<T>
      */
     public static function from($value): self
     {

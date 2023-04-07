@@ -1,9 +1,9 @@
 @extends('admin.layout')
-@section('titulo', 'Editar Variedades')
+@section('titulo', 'Editar Clon')
 @section('content')
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<h3>Editar Variedad: {{ $variedad->idvariedad}}</h3>
+			<h3>Editar Clon: {{ $variedad->idvariedad}}</h3>
 			@if (count($errors)>0)
 			<div class="alert alert-danger">
 				<ul>
@@ -198,12 +198,18 @@
                     </div>
                 </div>
             </div>
-        <!--         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group">
                     	<label for="estado">Estado</label>
-                    	<input type="text" name="estado" class="form-control" value="{{$variedad->estado}}" >
+                        <select name="estado" id="estado" class="select2" style="width: 100%;" class="form-control" required>
+                        <option value="0" {{ 0 == $variedad->estado ? 'selected="selected"' : '' }}>Inactivo</option>
+                        <option value="1" {{ 1 == $variedad->estado ? 'selected="selected"' : '' }}>Activo</option>
+                        </select>
+                    	<!-- <input type="text" name="estado" class="form-control" value="{{$variedad->estado}}" > -->
                     </div>
-                </div> -->
+                    
+            </div>
+            
             <div class="row">
                 <div class="form-group">
                    	<button class="btn btn-primary" type="submit">Guardar</button>

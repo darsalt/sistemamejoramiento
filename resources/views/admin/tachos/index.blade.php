@@ -17,9 +17,9 @@
 					<th>Tacho</th>
 					<th>Subtacho</th>
 					<th>Fecha Alta</th>
-					<th>Variedad</th>
+					<th>Clon</th>
 <!-- 					<th>Observaciones</th>
- -->					<th>Estado</th>
+ -->					<th>Inactivo</th>
 					<th>Operaciones</th>
 				</thead>
                @foreach ($tachos as $t)
@@ -29,7 +29,7 @@
 					<td>{{ $t->fechaalta}}</td>
 					<td>{{ $t->nombrevariedad}}</td>
 <!-- 					<td>{{ $t->observaciones}}</td>
- -->					<td>{{ $t->estado}}</td>
+ -->					<td>{{ $t->inactivo}}</td>
 					<td>
  					    <a href="" data-target="#view" data-toggle="modal"> 
 					   	<i class="fa fa-search fa-lg"></i></a>&nbsp;&nbsp;

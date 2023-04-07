@@ -24,7 +24,7 @@ class VariedadController extends Controller
     	if($request){
     		$query=trim($request->get('searchText'));
     		$variedades=DB::table('variedades')->where ('nombre','like','%'.$query.'%') 
-    		->where ('estado','=',1)
+    		//->where ('estado','=',1)
     		->orderBy('nombre','asc')
     		->paginate('10');
     		return view('admin.variedades.index',["variedades"=>$variedades,"searchText"=>$query]);
@@ -119,7 +119,9 @@ class VariedadController extends Controller
 
         
         $variedad->observaciones=$request->get('observaciones');
-        $variedad->estado=1;//$request->get('estado');
+        //$variedad->estado=1;//$request->get('estado');
+       // dd($request->get('estado'));
+        $variedad->estado=$request->get('estado');
 
         $variedad->update();
         return Redirect::to('admin/variedades');

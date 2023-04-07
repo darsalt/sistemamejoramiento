@@ -28,12 +28,11 @@ class CruzamientoController extends Controller
             ->Where('estado',1)
             ->orderBy('nombre', 'desc')
             ->get();
-
             if($request->has('campania'))
                 $idCampania = $request->campania;
             else
                 $idCampania = $campanias[0]->id;
-
+               
             $query=trim($request->get('searchText'));
             $cruzamientos=DB::table('cruzamientos as c')
             ->leftjoin('tachos','idpadre','=','tachos.idtacho')
@@ -43,8 +42,10 @@ class CruzamientoController extends Controller
             ->where('c.idcampania', $idCampania)
             ->where ('c.estado','=',1)
             ->orderBy('id','asc')
-            ->paginate('10');
-            
+            ->paginate('10')
+            ->appends(request()->query());
+
+           // dd($cruzamientos);
     		return view('admin.cruzamientos.index',["cruzamientos"=>$cruzamientos, "campanias"=>$campanias, "searchText"=>$query, "idCampania" => $idCampania]);
     	}
     }
@@ -56,23 +57,33 @@ class CruzamientoController extends Controller
      */
     public function create($idCampania = 0)
     {
-
         $campanias=DB::table('campanias')->where('estado', 1)->orderBy('nombre', 'desc')->get();
 
         if($idCampania == 0)
             $idCampania = $campanias[0]->id;
+        //$idCampania=7;
+       // dd($idCampania);
+        $tachos=DB::table('tachos_campanias')
+        ->leftjoin('tachos','tachos.idtacho','=','tachos_campanias.idtacho')
+        ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
+        ->join('tallos','tachos.idtacho','=','tallos.idtacho')
+        ->select('tachos.idtacho', 'tachos.codigo' , 'tachos.subcodigo','tachos.idvariedad','variedades.nombre')
+         //   ->select('tachos_campanias.idtacho',)
 
-        $tachos=DB::table('tachos')
-            ->join('tallos','tachos.idtacho','=','tallos.idtacho')
-            ->select('tachos.idtacho', 'tachos.codigo' , 'tachos.subcodigo','tachos.estado','tachos.idvariedad','variedades.nombre')
-        //    ->where ('tachos.estado','=','Ocupado')
-            ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
-            ->where('tallos.fechafloracion', '!=', 'null')
-            ->whereIn('tachos.idtacho', DB::table('tachos_campanias as tc')->where('idcampania', $idCampania)->pluck('tc.idtacho'))
-            ->distinct('tachos.codigo')
+            //    ->where ('tachos.estado','=','Ocupado')
+        //    ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
+            //->where('tachos_campanias.idcampania', '=', '10')
+            //->where('tallos.idcampania', '=', '10')
+            ->where('tachos_campanias.idcampania', '=', $idCampania)
+            ->where('tallos.idcampania', '=', $idCampania)
+            ->where('tallos.fechafloracion', '!=', $idCampania)
+          //  ->whereIn('tachos.idtacho', DB::table('tachos_campanias as tc')->where('tc.idcampania', $idCampania)->pluck('tc.idtacho'))
+          // ->whereIn('tachos.idtacho',function($query){
+          //  $query->select('idtacho')->from('tachos_campanias')->where('idcampania','=',$idCampania);
+          //  })
+           ->distinct('tachos.codigo')
             ->get();
-
-           // dd($tachos);
+            //dd($tachos);
 
 
         return view ("admin.cruzamientos.create", ["tachos"=>$tachos, "campanias"=>$campanias, "idCampania" => $idCampania]);
@@ -86,6 +97,7 @@ class CruzamientoController extends Controller
      */
     public function store(Request $request)
     {
+       // dd($request->get('campania'));
         $arrayMadre = $request->get('arrayMadre');
         $madres = json_decode($arrayMadre);
         $arrayPadre = $request->get('arrayPadre');
@@ -95,7 +107,9 @@ class CruzamientoController extends Controller
         $anio = strval($request->get('campania'));
         $fechainicio = date_create($anio."-01-01");
         $fechafin = date_create($anio."-12-31");
-        $campania = DB::table('campanias')->where('nombre', '=', $request->get('campania'))->value('id');
+        //$campania = DB::table('campanias')->where('nombre', '=', $request->get('campania'))->value('id');
+        $campania = $request->get('campania');
+
         $ultimoCruzamiento = $this->getUltimoCruzamiento($campania) + 1;
       //  $ultimoCruzamiento=DB::table('cruzamientos')->whereBetween('fechacruzamiento', [$fechainicio, $fechafin])->get()->last();
       //  $ultimoCruzamiento = Cruzamiento::where('idcampania', $campania)->orderByDesc('cruza')->first();
@@ -218,18 +232,29 @@ class CruzamientoController extends Controller
         $datosTallosMadre = $request->get('arrayMadreDatos');
         $tallosMadre = json_decode($datosTallosMadre);
         $cantidadTallosMadre = count($tallosMadre);
-
+        //dd($request);
         for($i=0 ; $i<$cantidadTallosMadre; $i++) {
+            if ($tallosMadre[$i]->polen == "") {
+                $polen = null;
+            } else {
+                $polen = $tallosMadre[$i]->polen;
+            }
             $talloUpdate = Tallo::findOrFail($tallosMadre[$i]->talloId)->update([
-                'polen' => $tallosMadre[$i]->polen,
+                'polen' => $polen,
                 'enmasculado' => $tallosMadre[$i]->enmasculado
             ]);
         }
 
-        // Actualizacion Tallos Padre
+         // Actualizacion Tallos Padre
+        // dd($request->get('talloPadre'));
         if ($request->get('tipocruzamiento') == "Biparental") {
+            if ($request->get('polenpadre0') == "") {
+                $polen = null;
+            } else {
+                $polen = $request->get('polenpadre0');
+            }
             $talloUpdate = Tallo::findOrFail($request->get('talloPadre'))->update([
-                'polen' => $request->get('polenpadre0')
+                'polen' => $polen
             ]);
         }else {   
             $datosTallosPadre = $request->get('arrayPadreDatos');
@@ -237,11 +262,16 @@ class CruzamientoController extends Controller
             $cantidadTallosPadre = count($tallosPadre);
 
             for($i=0 ; $i<$cantidadTallosPadre; $i++) {
+                if ($tallosPadre[$i]->polen == "") {
+                    $polen = null;
+                } else {
+                    $polen = $tallosPadre[$i]->polen;
+                }
                 $talloUpdate = Tallo::findOrFail($tallosPadre[$i]->talloId)->update([
-                    'polen' => $tallosPadre[$i]->polen,
+                    'polen' => $polen,
                 ]);
             }
-        } 
+        }  
         return Redirect::to('admin/cruzamientos');
 
     }
@@ -325,7 +355,7 @@ class CruzamientoController extends Controller
             ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
             ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
             ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
-            ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')            
+            ->leftjoin('variedades  as vm','vm.idvariedad','=','tm.idvariedad')            
             ->select('c.*', 'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm')
             ->where ('tipocruzamiento','like','%'.$query.'%') 
             ->where('c.idcampania', $idCampania)
@@ -344,8 +374,6 @@ class CruzamientoController extends Controller
 
     public function podergerminativo()
     {
-
-
         $podergerminativo=DB::table('cruzamientos as c')
         ->select('c.*')
         ->get();
@@ -358,9 +386,28 @@ class CruzamientoController extends Controller
     }
 
     public function tallosTacho($id) {
-        return $tallos=DB::table('tallos')
+        $tallos=DB::table('tallos as t')
+        //->leftjoin('tallocruzamientos as tc','t.idtallo','=','tc.idtallo')
         ->where('idtacho', $id)
-        ->get();
+       // ->where('idcampania', '3')
+        ->whereNotIn('id',function($query){
+            $query
+            ->select('idtallo')
+            ->from('tallocruzamientos as tc')
+            ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
+            ->where('idtallo','>', '0');
+            //->where('idcampania','>', '3');
+            })
+            ->whereNotIn('id',function($query){
+                $query
+                ->select('idtallomadre')
+                ->from('tallocruzamientos as tc')
+                ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
+                ->where('idtallomadre','>', '0');
+                //->where('idcampania','>', '3');
+                })
+                ->get();
+        return $tallos;
     }
 
      public function ubicacionesasociadas(Request $request,$id)

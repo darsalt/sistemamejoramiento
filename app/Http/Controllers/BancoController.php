@@ -144,7 +144,8 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
         $banco->surcos=$request->get('surcos');
         $banco->parcelas=$request->get('tablas') * $request->get('tablitas') * $request->get('surcos');
         $banco->observaciones=$request->get('observaciones');
-        $banco->estado=1;//$request->get('estado');
+        $banco->estado=1;
+        //$request->get('estado');
         $banco->update();
 
         if($request->get('tablas')>$request->get('tablasant')){
@@ -215,29 +216,27 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
         return Excel::download(new bancosExport, 'bancos.xlsx');
     }
 
-    public function ubicacionesasociadas1(Request $request,$id)
+    public function ubicacionesasociadas(Request $request,$id)
     {
         $banco=Banco::findOrFail($id);
         $variedades = DB::table('variedades as v')
         ->select('v.idvariedad','v.nombre')
         ->where('v.estado','=','1')
+  //      ->take(5)
         ->get();
+     //   dd($banco);
         $ubicaciones=DB::table('variedadesbanco as e')
         ->select('e.id','e.idbanco','e.tabla','e.tablita','e.surco','e.parcela','e.testigo','v.idvariedad','v.nombre')
         ->leftjoin('variedades as v','v.idvariedad','=','e.idvariedad')
         ->where ('e.idbanco','=',$id)
         ->orderBy('e.id','asc')
-        ->paginate('10');
+        ->paginate($banco->surcos);
 
-        if ($request->ajax()) {
-            $view = view('data',compact('ubicaciones'))->render();
-            return response()->json(['html'=>$view]);
-        }
       return view("admin.bancos.ubicaciones.ubicaciones",compact("banco"),["banco"=>$banco,"ubicaciones"=>$ubicaciones,"variedades"=>$variedades]);
 
     }
 
-    public function ubicacionesasociadas(Request $request,$id)
+    public function ubicacionesasociadasOK(Request $request,$id)
     {
        // $id = $request->input('idbanco');
         $banco=Banco::findOrFail($id);
@@ -253,6 +252,8 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
         ->where ('e.idbanco','=',$id)
         ->orderBy('e.id','asc')
         ->paginate('100');
+
+
         $data = '';
 
         if ($request->ajax()) {
@@ -272,7 +273,7 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
                 $data.='<td width=15%><label for="tabla">'.$ubicacion->surco.'</label></td>';
                 $data.='<td width=15%><label for="tabla">'.$ubicacion->parcela.'</label></td>';
                 $data.='<td width=25%><div class="form-group">';
-                $data.='<select class="select2" name="'.$ubicacion->id.'" id="'.$ubicacion->id.'" style="width: 100%;"class="form-control" onchange="guardavariedad(this.name,this.value)">';
+                $data.='<select class="select2 form-control" name="'.$ubicacion->id.'" id="'.$ubicacion->id.'" style="width: 100%;"class="form-control" onchange="guardavariedad(this.name,this.value)">';
                 
 
                 $data.='<option value="0">Ninguna</option>';
@@ -297,6 +298,70 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
 
 
     }
+
+    public function ubicacionesasociadasDIN(Request $request,$id)
+    {
+       // $id = $request->input('idbanco');
+        $banco=Banco::findOrFail($id);
+
+        $variedades = DB::table('variedades as v')
+        ->select('v.idvariedad','v.nombre')
+        ->where('v.estado','=','1')
+        ->get();
+
+        $ubicaciones=DB::table('variedadesbanco as e')
+        ->select('e.id','e.idbanco','e.tabla','e.tablita','e.surco','e.parcela','e.testigo','v.idvariedad','v.nombre')
+        ->leftjoin('variedades as v','v.idvariedad','=','e.idvariedad')
+        ->where ('e.idbanco','=',$id)
+        ->orderBy('e.id','asc')
+        ->paginate('100');
+
+
+        $data = '';
+
+        if ($request->ajax()) {
+            $data .= '<div class="table-responsive"><table class="table table-striped table-bordered table-condensed table-hover">';
+            $data .= '<thead><th width="15%">Testigo</th><th width="15%">Tabla</th><th width="15%">Tablita</th>
+                      <th width="15%">Surco</th><th width="15%">Parcela</th><th width="25%">Variedad</th></thead>';
+            foreach ($ubicaciones as $ubicacion) {
+                if ($ubicacion->testigo==1) 
+                    $t='value = 1 checked';
+                else
+                    $t='value = 0';
+                $data.='<tr>';
+
+                $data.='<td width=15%><input type="checkbox" name="t'.$ubicacion->id.'" id="t'.$ubicacion->id.'" onchange="guardatestigo(this.name,this.value)" '.$t.'> </td>';
+                $data.='<td width=15%><label for="tabla">'.$ubicacion->id.'</label></td>';
+                $data.='<td width=15%><label for="tabla">'.$ubicacion->tablita.'</label></td>';
+                $data.='<td width=15%><label for="tabla">'.$ubicacion->surco.'</label></td>';
+                $data.='<td width=15%><label for="tabla">'.$ubicacion->parcela.'</label></td>';
+                $data.='<td width=25%><div class="form-group">';
+                $data.='<select class="select2 form-control" name="'.$ubicacion->id.'" id="'.$ubicacion->id.'" style="width: 100%;"class="form-control" onchange="guardavariedad(this.name,this.value)">';
+                
+
+                $data.='<option value="0">Ninguna</option>';
+                foreach ($variedades as $variedad){
+                    if ($variedad->idvariedad==$ubicacion->idvariedad) 
+                        $s='selected="selected"';
+                    else
+                        $s='';
+                        $data.='<option value="'.$variedad->idvariedad.'" '.$s. '>'.$variedad->nombre.'</option>';
+                }
+                $data.='</select>';
+                $data.='</div></td>';
+                $data.='</tr>';
+            }
+            $data.='</table></div>';
+            return $data;
+        }
+     //   return view('admin.bancos.ubicaciones.ubi');
+        return view("admin.bancos.ubicaciones.data",compact("banco"),["banco"=>$banco,"ubicaciones"=>$ubicaciones,"variedades"=>$variedades]);
+
+
+
+
+    }
+
 
     public function ubicaciones(Request $request)
     {
@@ -396,9 +461,7 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
      */
     public function updateVariedadPost(Request $request)
     {
-
         $input = $request->all();
-        \Log::info($input);
             $variedadesbanco=VariedadesBanco::findOrFail($request->get('id'));
             // $checkboxValue = $request->input('t'.$d->id);
             // if(isset($checkboxValue)){
@@ -409,6 +472,7 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
             $variedadesbanco->idvariedad=$request->get('variedad');
 
           //  dd($request);
+          \Log::info($variedadesbanco->idvariedad);
 
             $variedadesbanco->update();
 
@@ -421,10 +485,11 @@ $array []= array("idbanco" => $banco,"tabla"=> $t,"tablita"=> $ta,"parcela"=> $p
     {
 
         $input = $request->all();
-        \Log::info($input);
             $variedadesbanco=VariedadesBanco::findOrFail($request->get('id'));
              $checkboxValue = $request->input('testigo');
-             if(isset($checkboxValue)){
+             \Log::info($checkboxValue);
+
+             if($checkboxValue==0){
                  $variedadesbanco->testigo=1;
              }else{
                  $variedadesbanco->testigo=0;

@@ -127,7 +127,7 @@
                     document.getElementById('tablePadre').innerHTML = myTable; 
                     document.getElementById("arrayPadre").value = JSON.stringify(tallospadre);   
                     $('#tachoPadre').prop('disabled', true);  
-                    $('#talloPadre').prop('disabled', true);
+  //                  $('#talloPadre').prop('disabled', true);
 
                     agregarInfoPadres();
                 } else {

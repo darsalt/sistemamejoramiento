@@ -1,10 +1,10 @@
 @extends('admin.layout')
-@section('titulo', 'Registrar Variedad')
+@section('titulo', 'Registrar Clon')
 @section('content')
 <div class="container">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h3>Nueva Variedad</h3>
+            <h3>Nuevo Clon</h3>
             @if (count($errors)>0)
             <div class="alert alert-danger">
                 <ul>
@@ -22,8 +22,8 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" name="nombre" class="form-control" placeholder="Nombre..."required>
+                <label for="nombre">Nombre</label> AZ-01-0123
+                <input type="text" name="nombre" pattern="\w{1,10}-\d{2}-\d{4}" title="Tres campos separados por guiones,donde el segundo debe ser un número de 2 cifras y el último debe ser un número de 4 cifras (complete con ceros adelante si es necesario)" class="form-control" placeholder="Nombre..."required>
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
             <div class="form-group">
                 <label for="madre">Madre</label>
-                <input type="text" name="madre" class="form-control" placeholder="Madre...">
+                <input type="text" name="madre" class="form-control" placeholder="Madre..." required>
             </div>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">

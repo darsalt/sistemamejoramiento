@@ -28,20 +28,20 @@
                           <div class="tab-pane fade show active" id="custom-tabs-four-zorra{{$zorra->id}}" role="tabpanel" aria-labelledby="custom-tabs-four-zorra{{$zorra->id}}-tab">
                             <div class="camaras">
                             
-                            <div >17
+                                  <div >17
                                           <div class="form-group">
                                                 <select name="camara{{$camara->id}}zorra{{$zorra->id}}17" id="camara{{$camara->id}}zorra{{$zorra->id}}17" class="select2 selectrefresh"  style="width: 100%;" class="form-control"
                                                 onchange="guardarTacho(this.value,'17',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '17') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }}</option>
-                                                      @endif
-                                                  @endforeach 
+                                                @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='17')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} - {{ $t->idtacho }}</option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
-                                                        {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}                    
-                                                    </option>
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
+                                                        {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
+                                                        </option>
                                                   @endforeach
                                                 </select>
                                             </div>
@@ -50,19 +50,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}16" id="camara{{$camara->id}}zorra{{$zorra->id}}16" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'16',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '16') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
-                                                  <option value="0">Ninguna</option>
-                                                  
                                                   @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='16')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
+                                                  <option value="0">Ninguna</option>
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -70,39 +68,35 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}1" id="camara{{$camara->id}}zorra{{$zorra->id}}1" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'1',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '1') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
-                                                  <option value="0">Ninguna</option>
-                                                  
                                                   @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='1')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
+                                                  <option value="0">Ninguna</option>
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
-                                                </select>
+                                                        </option>
+                                                  @endforeach
+                                            </select>
                                             </div>
                                   </div>
                                   <div >18
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}18" id="camara{{$camara->id}}zorra{{$zorra->id}}18" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'18',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '18') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='18')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -110,19 +104,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}15" id="camara{{$camara->id}}zorra{{$zorra->id}}15" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'15',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '15') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                                @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='15')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -130,19 +122,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}2" id="camara{{$camara->id}}zorra{{$zorra->id}}2" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'2',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '2') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='2')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -150,19 +140,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}19" id="camara{{$camara->id}}zorra{{$zorra->id}}19" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'19',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '19') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='19')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -170,19 +158,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}14" id="camara{{$camara->id}}zorra{{$zorra->id}}14" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'14',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '14') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='14')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -190,19 +176,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}3" id="camara{{$camara->id}}zorra{{$zorra->id}}3" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'3',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '3') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='3')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -210,19 +194,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}20" id="camara{{$camara->id}}zorra{{$zorra->id}}20" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'20',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '20') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='20')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -230,19 +212,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}13" id="camara{{$camara->id}}zorra{{$zorra->id}}13" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'13',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '13') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='13')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -250,19 +230,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}4" id="camara{{$camara->id}}zorra{{$zorra->id}}4" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'4',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '4') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='4')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -270,19 +248,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}21" id="camara{{$camara->id}}zorra{{$zorra->id}}21" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'21',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '21') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='21')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -290,19 +266,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}12" id="camara{{$camara->id}}zorra{{$zorra->id}}12" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'12',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '12') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='12')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -310,19 +284,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}5" id="camara{{$camara->id}}zorra{{$zorra->id}}5" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'5',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '5') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='5')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -330,19 +302,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}22" id="camara{{$camara->id}}zorra{{$zorra->id}}22" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'22',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '22') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='22')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -350,19 +320,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}11" id="camara{{$camara->id}}zorra{{$zorra->id}}11" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'11',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '11') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='11')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -370,19 +338,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}6" id="camara{{$camara->id}}zorra{{$zorra->id}}6" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'6',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '6') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='6')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -390,19 +356,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}23" id="camara{{$camara->id}}zorra{{$zorra->id}}23" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'23',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '23') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='23')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -410,19 +374,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}10" id="camara{{$camara->id}}zorra{{$zorra->id}}10" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '10') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='10')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -430,19 +392,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}7" id="camara{{$camara->id}}zorra{{$zorra->id}}7" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'7',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '7') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='7')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -450,19 +410,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}24" id="camara{{$camara->id}}zorra{{$zorra->id}}24" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'24',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '24') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='24')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -470,19 +428,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}9" id="camara{{$camara->id}}zorra{{$zorra->id}}9" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'9',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '9') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='9')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -490,19 +446,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}8" id="camara{{$camara->id}}zorra{{$zorra->id}}8" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'8',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '8') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='8')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -516,16 +470,16 @@
                                           <div class="form-group">
                                                 <select name="camara{{$camara->id}}zorra{{$zorra->id}}17" id="camara{{$camara->id}}zorra{{$zorra->id}}17" class="select2 selectrefresh"  style="width: 100%;" class="form-control"
                                                 onchange="guardarTacho(this.value,'17',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '17') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }}</option>
-                                                      @endif
-                                                  @endforeach 
+                                                @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='17')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
-                                                        {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}                    
-                                                    </option>
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
+                                                        {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
+                                                        </option>
                                                   @endforeach
                                                 </select>
                                             </div>
@@ -534,39 +488,35 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}16" id="camara{{$camara->id}}zorra{{$zorra->id}}16" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'16',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '16') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='16')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
-                                  <div >1
+                                  <div >1-zorra:{{ $zorra->id}}-camara:{{$camara->id}}
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}1" id="camara{{$camara->id}}zorra{{$zorra->id}}1" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'1',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '1') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='1')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -574,19 +524,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}18" id="camara{{$camara->id}}zorra{{$zorra->id}}18" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'18',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '18') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='18')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -594,19 +542,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}15" id="camara{{$camara->id}}zorra{{$zorra->id}}15" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'15',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '15') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='15')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -614,19 +560,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}2" id="camara{{$camara->id}}zorra{{$zorra->id}}2" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'2',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '2') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='2')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -634,19 +578,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}19" id="camara{{$camara->id}}zorra{{$zorra->id}}19" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'19',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '19') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='19')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -654,19 +596,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}14" id="camara{{$camara->id}}zorra{{$zorra->id}}14" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'14',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '14') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='14')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -674,19 +614,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}3" id="camara{{$camara->id}}zorra{{$zorra->id}}3" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'3',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '3') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='3')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -694,19 +632,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}20" id="camara{{$camara->id}}zorra{{$zorra->id}}20" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'20',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '20') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='20')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -714,19 +650,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}13" id="camara{{$camara->id}}zorra{{$zorra->id}}13" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'13',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '13') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='13')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -734,19 +668,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}4" id="camara{{$camara->id}}zorra{{$zorra->id}}4" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'4',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '4') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='4')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -754,19 +686,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}21" id="camara{{$camara->id}}zorra{{$zorra->id}}21" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'21',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '21') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='21')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -774,19 +704,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}12" id="camara{{$camara->id}}zorra{{$zorra->id}}12" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'12',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '12') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='12')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -794,19 +722,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}5" id="camara{{$camara->id}}zorra{{$zorra->id}}5" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'5',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '5') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='5')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -814,19 +740,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}22" id="camara{{$camara->id}}zorra{{$zorra->id}}22" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'22',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '22') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='22')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -834,19 +758,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}11" id="camara{{$camara->id}}zorra{{$zorra->id}}11" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'11',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '11') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='11')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -854,19 +776,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}6" id="camara{{$camara->id}}zorra{{$zorra->id}}6" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'6',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '6') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='6')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -874,19 +794,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}23" id="camara{{$camara->id}}zorra{{$zorra->id}}23" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'23',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '23') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='23')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -894,19 +812,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}10" id="camara{{$camara->id}}zorra{{$zorra->id}}10" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '10') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='10')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -914,19 +830,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}7" id="camara{{$camara->id}}zorra{{$zorra->id}}7" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'7',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '7') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='7')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -934,19 +848,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}24" id="camara{{$camara->id}}zorra{{$zorra->id}}24" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'24',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '24') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='24')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -954,19 +866,17 @@
                                             <div class="form-group">
                                             <select name="camara{{$camara->id}}zorra{{$zorra->id}}9" id="camara{{$camara->id}}zorra{{$zorra->id}}9" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                             onchange="guardarTacho(this.value,'9',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '9') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                            @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='9')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>
@@ -974,19 +884,17 @@
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}8" id="camara{{$camara->id}}zorra{{$zorra->id}}8" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
                                               onchange="guardarTacho(this.value,'8',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
-                                                  @foreach($ubicaciontacho as $ubi)
-                                                      @if(($ubi->ubicacion === '8') && ($ubi->idzorra == $zorra->id) && ($ubi->idcamara === $camara->id) && ($ubi->idtacho !== null))
-                                                        <option value="{{ $ubi->idtacho }}"> {{ $ubi->codigo }} - {{ $ubi->subcodigo }} - {{ $ubi->variedad }} </option>
-                                                      @endif
-                                                  @endforeach 
-                                                  
+                                              @foreach ($tachos as $t)
+                                                    @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='8')&& ($t->idtacho !== null))
+                                                        <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
+                                                    @endif
+                                                  @endforeach
                                                   <option value="0">Ninguna</option>
-                                                  
-                                                  @foreach ($tachos as $t)
-                                                    <option value="{{ $t->idtacho }}">
+                                                  @foreach ($piletones as $t)
+                                                        <option value="{{ $t->idtacho }}">
                                                         {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}}
-                                                    </option>
-                                                    @endforeach
+                                                        </option>
+                                                  @endforeach
                                                 </select>
                                             </div>
                                   </div>

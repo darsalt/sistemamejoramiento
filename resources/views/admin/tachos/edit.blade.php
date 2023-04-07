@@ -31,9 +31,9 @@
             </div>
         </div>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <label for="variedad">Variedad</label>
+                  <label for="variedad">Clones</label>
                     <select name="idvariedad" id="idvariedad" class="select2" style="width: 100%;" class="form-control" required>
-                        <option value="0">Ninguna</option>
+                        <option value="0">Ninguno</option>
                         @foreach ($variedades as $variedad)
                             <option value="{{$variedad->idvariedad}}" {{ $variedad->idvariedad == $tacho->idvariedad ? 'selected="selected"' : '' }}>{{$variedad->nombre}}</option>
 
@@ -50,12 +50,11 @@
         </div>        
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
-                <label for="estado">Estado</label>
-<!--                 <input type="text" name="estado" class="form-control" value="{{$tacho->estado}}" >
- -->                    <select name="estado" id="estado" class="select2" style="width: 100%;" class="form-control" required>
-                    <option>Seleccione una opción</option>
-                    @foreach ($estados as $estado)
-                    <option value="{{$estado}}" {{ $estado == $tacho->estado ? 'selected="selected"' : '' }}>{{$estado}}</option>                        @endforeach
+            <label for="estado">Estado</label>
+                    <select name="inactivo" id="inactivo" class="select2" style="width: 100%;" class="form-control" required>
+                        <option value="0" {{ 0 == $tacho->inactivo ? 'selected="selected"' : '' }}>Activo</option>
+                        <option value="1" {{ 1 == $tacho->inactivo ? 'selected="selected"' : '' }}>Inactivo</option>
+
                     </select>
             </div>
         </div>

@@ -19,11 +19,8 @@
             @endif
         @endforeach
        </select>
-       
-   
-       
-
-       </form>
+    
+    </form>
       </div>
 	</div>
 </div>
@@ -45,7 +42,7 @@
                     @if($camara->id == $idcamara)
                     <a class="nav-link active" id="camara-{{$camara->id}}-tab"  href="{{url('admin/camaras/'.$camara->id.'/'.$idcampania)}}" role="tab"  aria-selected="true">{{ $camara->nombre }} </a>
                     @else
-                    <a class="nav-link" id="camara-{{$camara->id}}-tab"  href="{{url('admin/camaras/'.$camara->id.'/'.$idcampania)}}" role="tab"  aria-selected="false">{{ $camara->nombre }}</a>
+                           <a class="nav-link" id="camara-{{$camara->id}}-tab"  href="{{url('admin/camaras/'.$camara->id.'/'.$idcampania)}}" role="tab"  aria-selected="false">{{ $camara->nombre }}</a>
                     @endif
                   </li>
                 @endforeach
@@ -93,15 +90,15 @@
                                   <th>Subtacho</th>
                                   <th>Variedad</th>
                                   <th>Fecha Alta</th>
-                                  <th>Estado</th>
+                                   <!-- <th>Camara</th> -->
                                </thead>
-                                      @foreach ($tachos as $t)
+                                @foreach ($piletones as $t)
                                 <tr>
                                   <td>{{ $t->codigo}}</td>
                                   <td>{{ $t->subcodigo}}</td>
                                   <td>{{ $t->variedad}}</td>
                                   <td>{{ $t->fechaalta}}</td>
-                                  <td>{{ $t->estado}}</td>
+                                  <!-- <td>{{ $t->idcamara}}</td> -->
                                 </tr>
                                 @include('admin.tachos.modal')
                                 @endforeach

@@ -1,10 +1,10 @@
 @extends('admin.layout')
-@section('titulo', 'Variedades')
+@section('titulo', 'Clones')
 @section('content')
 
 <div class="row">
 	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-		<h3>Listado de Variedades <a href="variedades/create">&nbsp;<button class="btn btn-success">Nuevo</button></a></h3>
+		<h3>Listado de Clones <a href="variedades/create">&nbsp;<button class="btn btn-success">Nuevo</button></a></h3>
 		@include('admin.variedades.search')
 	</div>
 </div>
@@ -19,8 +19,8 @@
 					<th>Padre</th>
 					<th>Fecha Alta</th>
 <!-- 					<th>Tacho</th>
-					<th>Estado</th>
- -->					<th>Operaciones</th>
+ -->					<th>Estado</th>
+					<th>Operaciones</th>
 				</thead>
                @foreach ($variedades as $t)
 				<tr>
@@ -29,8 +29,13 @@
 					<td>{{ $t->padre}}</td>
 					<td>{{ $t->fechaalta}}</td>
 <!--					<td>{{ $t->idtacho}}</td>
- 					<td>{{ $t->estado}}</td>
- -->					<td>
+ --> 					
+ 					@if($t->estado == 0)
+					 <td>Inactivo</td>
+					@else
+					<td>Activo</td>
+					 @endif 
+					<td>
  					    <a href="" data-target="#view" data-toggle="modal"> 
 					   	<i class="fa fa-search fa-lg"></i></a>&nbsp;&nbsp;
 

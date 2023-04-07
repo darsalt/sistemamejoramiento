@@ -5,22 +5,12 @@
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 		<h3>Marcotado</h3>
-    <div class="form-group" style="text-align:center;">
-      <label for="campaña">Campaña</label>
-      <form action="{{url('admin/marcotado/campania', [$idcampania])}}" method="GET">
-        <select name="campanias" id="campanias" class="select2" style="width: 100%; " class="form-control" required onchange="this.form.submit()">
-          
-          <option value="{{ $idcampania }}">{{ $nombrecampania }}</option>
-          
-        @foreach($campanias as $c)
-            @if($c->id != $idcampania)      
-                <option value="{{ $c->id }}" >{{ $c->nombre }}</option>
-            @endif
-        @endforeach
-       </select>
-       
-       </form>
-      </div>
+
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+		@include('admin.marcotado.search')
 	</div>
 </div>
 
@@ -36,18 +26,14 @@
 					<th> Zorra  </th>
           <th>Ubicacion</th>
           <th>Tacho</th>
-          <th>Variedad</th>
+          <th>Clon</th>
           <th>Tallos iniciales</th>
           <th>tallo 1</th>
           <th>tallo 2</th>
           <th>tallo 3</th>
           <th>tallo 4</th>
           <th>tallo 5</th>
-          <th>tallo 6</th>
-          <th>tallo 7</th>
-          <th>tallo 8</th>
-          <th>tallo 9</th>
-          <th>tallo 10</th>
+
         </tr></thead>
         <tbody>
           @foreach($ubicaciones as $ubicacion )
@@ -55,7 +41,7 @@
 					<td>{{ $ubicacion->nombrecamara }}</td>
 					<td>{{ $ubicacion->zorranombre }}</td>
 					<td>{{ $ubicacion->nombre }}</td>
-          <td>{{ $ubicacion->codigo }}-{{ $ubicacion->subcodigo }}</td>
+          <td>{{ $ubicacion->tacho }}</td>
           <td>{{ $ubicacion->variedad }}</td>
           <td>
           <form action="{{ url('admin/marcotado') }}" method="post" enctype="multipart/form-data">
@@ -85,18 +71,18 @@
                 @if($tallo->idtacho === $ubicacion->idtacho)
                   @if($tallo->numero === $posicion)
                   <input class="form-control" name="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" id="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" type="date" 
-                      value="{{ $tallo->fechafloracion }}" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}});">
+                      value="{{ $tallo->fechafloracion }}" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}},{{$idcampania}});">
                   @else
                   <input class="form-control" name="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" id="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" type="date" 
-                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}});">
+                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}},{{$idcampania}});">
                   @endif                        
                 @else
                   <input class="form-control" name="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" id="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" type="date" 
-                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}});">
+                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}},{{$idcampania}});">
                 @endif
             @else
             <input class="form-control" name="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" id="tacho{{$ubicacion->idtacho}}fechageneracion{{$posicion}}" type="date" 
-                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}});">
+                    value="" onchange="guardarFecha(this.value,'{{ $ubicacion->idtacho }}',{{$posicion}},{{$idcampania}});">
             @endif
             </td>    
           @endforeach
@@ -123,16 +109,21 @@
 
 @section('script')
 <script type="text/javascript">
-function guardarFecha(fecha,idtacho,posicion){
+function guardarFecha(fecha,idtacho,posicion,campania){
       var id_tacho = idtacho;
       var posicion = posicion;
       var fecha = fecha;
+      var campania = campania;
+
       var token = $("input[name='_token']").val();
       $.ajax({
           url: "<?php echo route('guardar-fecha') ?>",
           method: 'POST',
-          data: {id_tacho:id_tacho, _token:token, posicion:posicion, fecha:fecha},
+          data: {id_tacho:id_tacho, _token:token, posicion:posicion, fecha:fecha, campania:campania},
           success: function(data) {
+            //console.log(data);
+          },
+          error: function(data){
             console.log(data);
           }
       });
@@ -147,7 +138,8 @@ function guardarFecha(fecha,idtacho,posicion){
           method: 'POST',
           data: {id_tacho:id_tacho, _token:token, cantidad:cantidad},
           success: function(data) {
-            
+                        console.log(data);
+
           }
       });
   }

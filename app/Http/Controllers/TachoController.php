@@ -28,7 +28,7 @@ class TachoController extends Controller
             ->leftjoin('variedades as v','t.idvariedad','=','v.idvariedad')
             ->select('t.*', 'v.nombre as nombrevariedad')
             ->where ('codigo','like','%'.$query.'%') 
-    		->where ('t.estado','!=',3)//3=baja
+    		//->where ('t.estado','!=',3)//3=baja
     		->orderBy('codigo','asc')
             ->orderBy('subcodigo','asc')
     		->paginate('10');
@@ -64,7 +64,7 @@ class TachoController extends Controller
             else{
                 $tacho->estado='ocupado';
             }
-
+            $tacho->inactivo=0;
             $tacho->save();
             $cont = $cont+1;
         }
@@ -84,12 +84,15 @@ class TachoController extends Controller
         ->select('v.idvariedad','v.nombre')
             //->where('v.estado','=','0')
         ->get();
+
         $estados = array(
             1 => 'Libre',
             2 => 'Ocupado',
             3 => 'Baja',
         );
-        //dd($estados);
+
+
+       // dd($variedades);
         return view('admin.tachos.edit',compact('tacho'),["variedades"=>$variedades,"estados"=>$estados]);
     }
 
@@ -105,7 +108,7 @@ class TachoController extends Controller
         $tacho->observaciones=$request->get('observaciones');
 
         $tacho->estado=$request->get('estado');
-
+        $tacho->inactivo=$request->get('inactivo');
         $tacho->update();
         return Redirect::to('admin/tachos');
     }
@@ -114,6 +117,8 @@ class TachoController extends Controller
     {
     	$tacho=Tacho::findOrFail($id);
     	$tacho->estado='3';//baja
+        $tacho->inactivo='1';//baja
+
       	$tacho->update();
     	return Redirect::to('admin/tachos');
     }

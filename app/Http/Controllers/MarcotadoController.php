@@ -22,30 +22,49 @@ class MarcotadoController extends Controller
         $this->middleware('auth');
     }
     
-    public function index()
+    public function index(Request $request)
     {	
-        $idcampania = DB::table('campanias')
-                    ->where('estado', 1)
-                    ->OrderBy('nombre','DESC')
-                    ->take(1)
-                    ->select('id')
-                    ->get();
+        if($request->get('campanias')){
+            $idcampania=$request->get('campanias');
+            $var="si";
+        }
+        else{
+            $idultima = DB::table('campanias')
+            ->where('estado', 1)
+            ->OrderBy('nombre','DESC')
+            ->take(1)
+            ->select('id')
+            ->get();
+            $var="no";
+            $idcampania = $idultima[0]->id;
 
-        $ubicaciones=DB::table('ubicaciontachoxcampania as u')
+        }
+//print($idcampania);
+
+
+            $query=trim($request->get('searchText'));
+            $ubicaciones=DB::table('ubicaciontachoxcampania as u')
             ->join('tachos','u.idtacho','=','tachos.idtacho')
             ->join('variedades','tachos.idvariedad','=','variedades.idvariedad')
             ->join('ubicacionestachos as ubi','ubi.id','=','u.idubicacion')
-            ->join('zorras','ubi.idzorra','=','zorras.id')
+            ->leftjoin('zorras','ubi.idzorra','=','zorras.id')
             ->join('camaras','zorras.idcamara','=','camaras.id')
             ->join('campaniacamaratratamientoubicacion as cc','cc.id','=','u.idcctu')
-            ->Where('cc.idcampania',$idcampania[0]->id)
-            ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
+            ->Where('cc.idcampania',$idcampania)
+            ->where ('variedades.nombre','like','%'.$query.'%')
+            ->take(500)
+ //           ->select(DB::raw("CONCAT(tachos.codigo,'-',tachos.subcodigo) AS tacho"),'ubi.nombre','tachos.idtacho','cantidadtallos')
+            ->select('tachos.idtacho','ubi.id','ubi.nombre','tachos.idtacho',DB::raw("CONCAT(tachos.codigo,'-',tachos.subcodigo) AS tacho"),'variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
+            //  ->OrderBy('ubi.idzorra','asc')
+            ->OrderBy('tachos.idtacho','asc')
             ->get();
-        
+       // dd($ubicaciones);
         $tallos=DB::table('tallos')
-            ->select('*')
+            ->select('idtacho','numero','fechafloracion')
+            ->Where('tallos.idcampania',$idcampania)
             ->get();
-        $posiciones = [1,2,3,4,5,6,7,8,9,10];
+       // dd($tallos);
+        $posiciones = [1,2,3,4,5];
         $campanias = DB::table('campanias')
                     ->select('*')
                     ->where('estado', 1)
@@ -53,15 +72,14 @@ class MarcotadoController extends Controller
                     ->get();
 
         $nombrecampania = DB::table('campanias')
-                    ->Where('id',$idcampania[0]->id)
+                    ->Where('id',$idcampania)
                     ->select('nombre')
                     ->get();
-        return view('admin.marcotado.index',["ubicaciones"=>$ubicaciones,"tallos"=>$tallos,"posiciones"=>$posiciones,"idcampania"=>$idcampania[0]->id,"nombrecampania"=>$nombrecampania[0]->nombre,"campanias"=>$campanias]);
+        return view('admin.marcotado.index',["ubicaciones"=>$ubicaciones,"tallos"=>$tallos,"posiciones"=>$posiciones,"idcampania"=>$idcampania,"nombrecampania"=>$nombrecampania[0]->nombre,"campanias"=>$campanias]);
         
     }
 
     public function cambiarCampania(Request $request){
-
         $ubicaciones=DB::table('ubicaciontachoxcampania as u')
                         ->join('tachos','u.idtacho','=','tachos.idtacho')
                         ->join('variedades','tachos.idvariedad','=','variedades.idvariedad')
@@ -71,12 +89,13 @@ class MarcotadoController extends Controller
                         ->join('campaniacamaratratamientoubicacion as cc','cc.id','=','u.idcctu')
                         ->Where('cc.idcampania',$request['campanias'])
                         ->select('ubi.id','ubi.nombre','tachos.idtacho','tachos.codigo','tachos.subcodigo','variedades.nombre as variedad','zorras.id as idzorra','zorras.nombre as zorranombre','camaras.nombre as nombrecamara','cantidadtallos')
+                        ->take(600)
                         ->get();
 
         $tallos=DB::table('tallos')
                     ->select('*')
                     ->get();
-        $posiciones = [1,2,3,4,5,6,7,8,9,10];
+        $posiciones = [1,2,3,4,5];
         $campanias = DB::table('campanias')
                     ->select('*')
                     ->where('estado', 1)
@@ -87,7 +106,8 @@ class MarcotadoController extends Controller
                             ->Where('id',$request['campanias'])
                             ->select('nombre')
                             ->get();
-        return view('admin.marcotado.index',["ubicaciones"=>$ubicaciones,"tallos"=>$tallos,"posiciones"=>$posiciones,"idcampania"=>$request['campanias'],"nombrecampania"=>$nombrecampania[0]->nombre,"campanias"=>$campanias]);        
+        $query=trim($request->get('searchText'));
+        return view('admin.marcotado.index',["ubicaciones"=>$ubicaciones,"tallos"=>$tallos,"posiciones"=>$posiciones,"idcampania"=>$request['campanias'],"nombrecampania"=>$nombrecampania[0]->nombre,"campanias"=>$campanias,"searchText"=>$query]);        
        
     }
 
@@ -127,12 +147,15 @@ class MarcotadoController extends Controller
 
     public function guardarfecha(Request $request)
     {
-        
+        $input = $request->all();
+        \Log::info($input);
+
     	if($request->ajax()){
                
                 $existeTallo = DB::table('tallos')
                 ->Where('numero',$request->posicion)
                 ->Where('idtacho',$request->id_tacho)
+                ->Where('idcampania',$request->campania)
                 ->select('id')->get();
                
                 if(Count($existeTallo) === 0 ){
@@ -143,6 +166,7 @@ class MarcotadoController extends Controller
                     $tallo->idtacho = $request->id_tacho;
                     $tallo->polen = 0;
                     $tallo->enmasculado = 0;
+                    $tallo->idcampania = $request->campania;
                     $tallo->save(); 
                 }else{
                     // Modificar tallo

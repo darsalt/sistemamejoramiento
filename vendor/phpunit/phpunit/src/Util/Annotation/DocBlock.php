@@ -480,7 +480,7 @@ final class DocBlock
             } catch (ReflectionException $e) {
                 throw new Exception(
                     $e->getMessage(),
-                    (int) $e->getCode(),
+                    $e->getCode(),
                     $e
                 );
                 // @codeCoverageIgnoreEnd
@@ -604,7 +604,8 @@ final class DocBlock
             $annotations = array_merge(
                 $annotations,
                 ...array_map(
-                    static function (ReflectionClass $trait): array {
+                    static function (ReflectionClass $trait): array
+                    {
                         return self::parseDocBlock((string) $trait->getDocComment());
                     },
                     array_values($reflector->getTraits())

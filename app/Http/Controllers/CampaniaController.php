@@ -53,11 +53,41 @@ class CampaniaController extends Controller
 
             $campania->save();
 
-            // Asociar a los tachos activos y con destino 'tachos de progenitores' la campaña recien creada
-            $tachos = DB::table('tachos')->where('estado', 2)->where('destino', 1)->get();
+            // Asociar un tratamiento (ninguno) a las cámaras para esa campaña
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '1','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '2','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '3','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '4','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '5','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            DB::table('campaniacamaratratamientoubicacion')->insert(['idcamara' => '6','idtratamiento' => '1', 'idcampania' => $campania->id]);
+            // //Camara 1
+            // for($i=3; $i < 99; $i++) {
+            //     DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => $i,'idtacho' => null, 'idcctu' => '1']);
+            // }
+            // //Camara 2
+            // for($i=99; $i < 195; $i++) {
+            //     DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => $i,'idtacho' => null, 'idcctu' => '2']);
+            // }
+            // //Camara 3
+            // for($i=195; $i < 291; $i++) {
+            //     DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => $i,'idtacho' => null, 'idcctu' => '3']);
+            // }
+            // for($i=291; $i < 386; $i++) {
+            //     DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => $i,'idtacho' => null, 'idcctu' => '5']);
+            // }
+            // for($i=387; $i < 530; $i++) {
+            //     DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => $i,'idtacho' => null, 'idcctu' => '5']);
+            // }
+
+            $tachos = DB::table('tachos')->where('inactivo', 0)->where('destino', 1)->get();
             foreach($tachos as $tacho){
+                // Asociar a los tachos activos y con destino 'tachos de progenitores' la campaña recien creada
                 DB::table('tachos_campanias')->insert(['idtacho' => $tacho->idtacho, 'idcampania' => $campania->id]);
+                // Asociar los tachos de la campaña a la ubicacion piletones (despues pasan a las zorras)
+                DB::table('ubicaciontachoxcampania')->insert(['idubicacion' => '531','idtacho' => $tacho->idtacho, 'idcctu' => $campania->id*6]);
             }
+
+
     	return Redirect::to('admin/campanias');
     }
 

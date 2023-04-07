@@ -4,14 +4,14 @@ role="dialog" tabindex="-1" id="modal-delete-{{$t->idvariedad}}">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-                <h4 class="modal-title">Baja de la variedad</h4>
+                <h4 class="modal-title">Baja del Clon</h4>
 				<button type="button" class="close" data-dismiss="modal" 
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
 			</div>
 			<div class="modal-body">
-				<p>Confirme que desea dar de baja la variedad</p>
+				<p>Confirme que desea dar de baja el Clon</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>

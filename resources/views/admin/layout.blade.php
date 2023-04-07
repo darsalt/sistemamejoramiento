@@ -156,7 +156,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a href="{{url('admin/variedades')}}" class="nav-link">
               <i class="nav-icon fab fa-pagelines"></i>
               <p>
-              Variedades
+              Clones
               </p>
             </a>
           </li>
@@ -324,7 +324,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </ul>
               </li>
             </ul>
-            <ul class="nav nav-treeview">
+<!--             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
                 <a href="{{url('admin/ubicacionesexpo')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -333,7 +333,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-            </ul>
+            </ul> -->
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
                 <a href="#" class="nav-link">
@@ -366,7 +366,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>
             
-            <ul class="nav nav-treeview">
+<!--             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">
                 <a href="{{url('admin/ubicacionesimpo')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -375,7 +375,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-            </ul>
+            </ul> -->
 
             <ul class="nav nav-treeview">
               <li class="nav-item has-treeview">

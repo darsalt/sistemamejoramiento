@@ -37,10 +37,8 @@ class GoogleController extends Controller
             if($finduser){
      
                 Auth::login($finduser);
-    
-                return redirect('/admin');
-     
-            }else{
+                    return redirect('/admin');
+                }else{
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,

@@ -72,9 +72,9 @@
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-group">
-                  <label for="variedad">Variedad</label>
+                  <label for="variedad">Clones</label>
                     <select name="idvariedad" id="idvariedad" class="select2" style="width: 100%;" class="form-control" required>
-                        <option value="0">Ninguna</option>
+                        <option value="0">Ninguno</option>
                         @foreach ($variedades as $variedad)
                             <option value="{{$variedad->idvariedad}}">
                                 {{$variedad->nombre }}
