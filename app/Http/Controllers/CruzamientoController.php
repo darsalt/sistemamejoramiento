@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use DB;
+use Illuminate\Support\Facades\Log;
 
 class CruzamientoController extends Controller
 {
@@ -41,7 +42,7 @@ class CruzamientoController extends Controller
             ->where ('tipocruzamiento','like','%'.$query.'%') 
             ->where('c.idcampania', $idCampania)
             ->where ('c.estado','=',1)
-            ->orderBy('id','asc')
+            ->orderBy('fechacruzamiento','asc')->orderBy('cubiculo', 'asc')->orderBy('cruza', 'asc')
             ->paginate('10')
             ->appends(request()->query());
 
@@ -97,7 +98,6 @@ class CruzamientoController extends Controller
      */
     public function store(Request $request)
     {
-       // dd($request->get('campania'));
         $arrayMadre = $request->get('arrayMadre');
         $madres = json_decode($arrayMadre);
         $arrayPadre = $request->get('arrayPadre');
@@ -107,12 +107,8 @@ class CruzamientoController extends Controller
         $anio = strval($request->get('campania'));
         $fechainicio = date_create($anio."-01-01");
         $fechafin = date_create($anio."-12-31");
-        //$campania = DB::table('campanias')->where('nombre', '=', $request->get('campania'))->value('id');
         $campania = $request->get('campania');
 
-        $ultimoCruzamiento = $this->getUltimoCruzamiento($campania) + 1;
-      //  $ultimoCruzamiento=DB::table('cruzamientos')->whereBetween('fechacruzamiento', [$fechainicio, $fechafin])->get()->last();
-      //  $ultimoCruzamiento = Cruzamiento::where('idcampania', $campania)->orderByDesc('cruza')->first();
         $ultimoCruzamiento=DB::table('cruzamientos')->where('idcampania', $campania)->orderByDesc('cruza')->first();
 
 
@@ -125,153 +121,10 @@ class CruzamientoController extends Controller
         }
 
         $cruza = $ultimoCruza;
-        
-        if ($request->get('tipocruzamiento') == "Policruzamiento") {
-            $j = $ultimoCruza + $padresCantidad;
 
-            $k=0;
-
-            // Cabecera
-            $cruzamiento = new Cruzamiento;
-            $cruzamiento->tipocruzamiento = $request->get('tipocruzamiento');
-            $cruzamiento->cruza = $cruza;
-            $cruzamiento->cubiculo = $ultimoCubiculo;
-            $cruzamiento->fechacruzamiento = $request->get('fechacruzamiento');
-            $cruzamiento->idpadre = null;
-            $cruzamiento->idmadre = null;
-            $cruzamiento->estado = 1;
-            $cruzamiento->idcampania = $campania;
-
-            $cruzamiento->save(); 
-            
-            $cruza += 1;
-
-            // Detalle
-            for($i=$ultimoCruza; $i<$j; $i++) {
-                if ($cruzamiento->id != null) {
-                    
-                    $talloCruzamiento = new TalloCruzamiento;
-                    $talloCruzamiento->idtallo = $padres[$k]->id;
-                    $talloCruzamiento->idcruzamiento = $cruzamiento->id;
-                    $talloCruzamiento->save();
-                }    
-
-                $k += 1; 
-
-            } 
-
-        } else {  
-
-            $cruzamiento = new Cruzamiento;
-            $cruzamiento->tipocruzamiento = $request->get('tipocruzamiento');
-            $cruzamiento->cruza = $ultimoCruza;
-            $cruzamiento->cubiculo = $ultimoCubiculo;
-            $cruzamiento->fechacruzamiento = $request->get('fechacruzamiento');
-            $cruzamiento->idpadre = $padres[0]->idTacho;
-            $cruzamiento->idmadre = $padres[0]->idTacho;
-            $cruzamiento->estado = 1;
-            $cruzamiento->idcampania = $campania;
-
-            $cruzamiento->save();
-            $cruza += 1; 
-
-            for ($l=0; $l<$padresCantidad; $l++) {
-                $talloCruzamiento = new TalloCruzamiento;
-                $talloCruzamiento->idtallo = $padres[$l]->id;
-                $talloCruzamiento->idcruzamiento = $cruzamiento->id;
-                $talloCruzamiento->save();
-            }
-
-        }
-
-        $k=0;
-        $tachoId = 0;
-        $j = $ultimoCruza + $madresCantidad; 
-
-        for($i=$ultimoCruza; $i<$j; $i++) {
-
-            $tachomadre = $madres[$k]->idTacho;
-
-            if ($tachoId != $tachomadre) {
-                
-                // Cabecera
-                $cruzamiento = new Cruzamiento;
-                $cruzamiento->tipocruzamiento = $request->get('tipocruzamiento');
-                $cruzamiento->cruza = $cruza;
-                $cruzamiento->cubiculo = $ultimoCubiculo;
-                $cruzamiento->fechacruzamiento = $request->get('fechacruzamiento');
-                if ($request->get('tipocruzamiento') == "Biparental") {
-                    $cruzamiento->idpadre = $padres[0]->idTacho;
-                } else {
-                    $cruzamiento->idpadre = null;
-                }    
-                $cruzamiento->idmadre = $tachomadre;
-                $cruzamiento->estado = 1;
-                $cruzamiento->idcampania = $campania;
-
-                $cruzamiento->save(); 
-                $tachoId = ($cruzamiento->idmadre);
-                $cruza += 1; 
-
-            }
-            
-            // Detalle
-            if ($cruzamiento->id != null) {
-            
-                $talloCruzamiento = new TalloCruzamiento;
-                $talloCruzamiento->idtallomadre = $madres[$k]->id;
-                $talloCruzamiento->idcruzamiento = $cruzamiento->id;
-                $talloCruzamiento->save();
-            }    
-
-            $k += 1;
-            
-        } 
-
-        // Actualizacion Tallos Madre
-        $datosTallosMadre = $request->get('arrayMadreDatos');
-        $tallosMadre = json_decode($datosTallosMadre);
-        $cantidadTallosMadre = count($tallosMadre);
-        //dd($request);
-        for($i=0 ; $i<$cantidadTallosMadre; $i++) {
-            if ($tallosMadre[$i]->polen == "") {
-                $polen = null;
-            } else {
-                $polen = $tallosMadre[$i]->polen;
-            }
-            $talloUpdate = Tallo::findOrFail($tallosMadre[$i]->talloId)->update([
-                'polen' => $polen,
-                'enmasculado' => $tallosMadre[$i]->enmasculado
-            ]);
-        }
-
-         // Actualizacion Tallos Padre
-        // dd($request->get('talloPadre'));
-        if ($request->get('tipocruzamiento') == "Biparental") {
-            if ($request->get('polenpadre0') == "") {
-                $polen = null;
-            } else {
-                $polen = $request->get('polenpadre0');
-            }
-            $talloUpdate = Tallo::findOrFail($request->get('talloPadre'))->update([
-                'polen' => $polen
-            ]);
-        }else {   
-            $datosTallosPadre = $request->get('arrayPadreDatos');
-            $tallosPadre = json_decode($datosTallosPadre);
-            $cantidadTallosPadre = count($tallosPadre);
-
-            for($i=0 ; $i<$cantidadTallosPadre; $i++) {
-                if ($tallosPadre[$i]->polen == "") {
-                    $polen = null;
-                } else {
-                    $polen = $tallosPadre[$i]->polen;
-                }
-                $talloUpdate = Tallo::findOrFail($tallosPadre[$i]->talloId)->update([
-                    'polen' => $polen,
-                ]);
-            }
-        }  
+        $this->crearEncabezadoYDetalleCruzamiento($request->get('tipocruzamiento'), $cruza, $ultimoCubiculo, $request->get('fechacruzamiento'), $campania, $padres, $madres);
+        $this->actualizarTallosMadreYPadre($request->get('tipocruzamiento'), $request->get('arrayMadreDatos'), $request->get('arrayPadreDatos'), $request->get('polenpadre0'), $request->get('talloPadre'));
+ 
         return Redirect::to('admin/cruzamientos');
 
     }
@@ -302,7 +155,35 @@ class CruzamientoController extends Controller
      */
     public function edit(Cruzamiento $cruzamiento)
     {
-        //
+        $tachos=DB::table('tachos_campanias')
+                ->leftjoin('tachos','tachos.idtacho','=','tachos_campanias.idtacho')
+                ->leftjoin('variedades','tachos.idvariedad','=','variedades.idvariedad')
+                ->join('tallos','tachos.idtacho','=','tallos.idtacho')
+                ->select('tachos.idtacho', 'tachos.codigo' , 'tachos.subcodigo','tachos.idvariedad','variedades.nombre')
+                ->where('tachos_campanias.idcampania', '=', $cruzamiento->campaniaCruzamiento->id)
+                ->where('tallos.idcampania', '=', $cruzamiento->campaniaCruzamiento->id)
+                ->where('tallos.fechafloracion', '!=', $cruzamiento->campaniaCruzamiento->id)
+                ->distinct('tachos.codigo')
+                ->get();
+
+        $tallosPadre = DB::table('tallocruzamientos')
+                        ->where('idcruzamiento', $cruzamiento->id)
+                        ->get();
+
+        $cubiculo = $cruzamiento->cubiculo;
+        $cruzamientosRelacionados = DB::table('cruzamientos as c')->where('c.idcampania', $cruzamiento->idcampania)
+                                    ->where('c.cubiculo', $cubiculo)
+                                    ->join('tallocruzamientos as tc', 'tc.idcruzamiento', '=', 'c.id')
+                                    ->join('tallos as t', function($join) {
+                                        $join->on('tc.idtallo', '=', 't.id')
+                                             ->orOn('tc.idtallomadre', '=', 't.id');
+                                    })
+                                    ->join('tachos', 't.idtacho', '=', 'tachos.idtacho')
+                                    ->select('c.*', 'tc.idtallo as idtallopadre', 'tc.idtallomadre', 't.polen', 'tachos.idtacho as idtacho_poli', 't.enmasculado')
+                                    ->orderBy('c.cruza', 'asc')->get();
+        
+        //dd($cruzamientosRelacionados);
+        return view('admin.cruzamientos.edit', compact('cruzamiento', 'tachos', 'tallosPadre', 'cruzamientosRelacionados'), ['prueba' => json_encode($cruzamientosRelacionados)]);
     }
 
     /**
@@ -314,7 +195,30 @@ class CruzamientoController extends Controller
      */
     public function update(Request $request, Cruzamiento $cruzamiento)
     {
-        //
+        $arrayMadre = $request->get('arrayMadre');
+        $madres = json_decode($arrayMadre);
+        $arrayPadre = $request->get('arrayPadre');
+        $padres = json_decode($arrayPadre);
+
+        $menorCruza = DB::table('cruzamientos')->where('idcampania', $cruzamiento->idcampania)
+                        ->where('cubiculo', $cruzamiento->cubiculo)->orderBy('cruza', 'asc')->value('cruza');
+
+        $cubiculo = $cruzamiento->cubiculo;
+        $cruzamientosRelacionados = DB::table('cruzamientos')->where('idcampania', $cruzamiento->idcampania)
+                                    ->where('cubiculo', $cruzamiento->cubiculo)->orderBy('cruza', 'asc')->get();
+
+        foreach($cruzamientosRelacionados as $auxCruzamiento){
+            // Borrar los datos de talloscruzamiento
+            TalloCruzamiento::where('idcruzamiento', $auxCruzamiento->id)->delete();
+            // Borrar encabezado de cruzamiento
+            Cruzamiento::where('id', $auxCruzamiento->id)->delete();
+        }
+
+        $this->crearEncabezadoYDetalleCruzamiento($request->get('tipocruzamiento'), $menorCruza, $cubiculo, $request->get('fechacruzamiento'), $cruzamiento->idcampania, $padres, $madres, true, $cruzamiento->created_at);
+        $this->actualizarTallosMadreYPadre($request->get('tipocruzamiento'), $request->get('arrayMadreDatos'), $request->get('arrayPadreDatos'), $request->get('polenpadre0'), $request->get('talloPadre'));
+
+        session()->flash('mensajeSuccess', 'Cruzamiento actualizado con éxito.');
+        return Redirect::to('admin/cruzamientos');
     }
 
     /**
@@ -387,27 +291,28 @@ class CruzamientoController extends Controller
 
     public function tallosTacho($id) {
         $tallos=DB::table('tallos as t')
-        //->leftjoin('tallocruzamientos as tc','t.idtallo','=','tc.idtallo')
-        ->where('idtacho', $id)
-       // ->where('idcampania', '3')
-        ->whereNotIn('id',function($query){
-            $query
-            ->select('idtallo')
-            ->from('tallocruzamientos as tc')
-            ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
-            ->where('idtallo','>', '0');
-            //->where('idcampania','>', '3');
-            })
-            ->whereNotIn('id',function($query){
-                $query
-                ->select('idtallomadre')
-                ->from('tallocruzamientos as tc')
-                ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
-                ->where('idtallomadre','>', '0');
-                //->where('idcampania','>', '3');
+                ->where('idtacho', $id)
+                ->whereNotIn('id',function($query){
+                    $query->select('idtallo')
+                        ->from('tallocruzamientos as tc')
+                        ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
+                        ->where('idtallo','>', '0');
+                })
+                ->whereNotIn('id',function($query){
+                    $query->select('idtallomadre')
+                        ->from('tallocruzamientos as tc')
+                        ->leftjoin('cruzamientos as c','tc.idcruzamiento','=','c.id')    
+                        ->where('idtallomadre','>', '0');
                 })
                 ->get();
+
         return $tallos;
+    }
+
+    public function getTalloById($idTallo){
+        $tallo = DB::table('tallos')->where('id', $idTallo)->get();
+
+        return $tallo;
     }
 
      public function ubicacionesasociadas(Request $request,$id)
@@ -543,4 +448,134 @@ class CruzamientoController extends Controller
         return $ultimoCruzamiento ? $ultimoCruzamiento->cruza : 0;
     }
 
+    private function crearEncabezadoYDetalleCruzamiento($tipoCruzamiento, $cruza, $cubiculo, $fechaCruzamiento, $campania, $padres, $madres, $edicion = false, $created_at = null){
+        $madresCantidad = count($madres);
+        $padresCantidad = count($padres);
+
+        ///// Creacion de la cabecera del cruzamiento y detalle - PADRE /////
+        // Cabecera
+        $cruzamiento = new Cruzamiento;
+        $cruzamiento->tipocruzamiento = $tipoCruzamiento;
+        $cruzamiento->cruza = $cruza;
+        $cruzamiento->cubiculo = $cubiculo;
+        $cruzamiento->fechacruzamiento = $fechaCruzamiento;
+        if ($tipoCruzamiento == "Policruzamiento") {
+            $cruzamiento->idpadre = null;
+            $cruzamiento->idmadre = null;
+        }
+        else {
+            $cruzamiento->idpadre = $padres[0]->idTacho;
+            $cruzamiento->idmadre = $padres[0]->idTacho;
+        }
+        $cruzamiento->estado = 1;
+        $cruzamiento->idcampania = $campania;
+        if($edicion)
+            $cruzamiento->created_at = $created_at;
+        $cruzamiento->save(); 
+        
+        $cruza += 1;
+
+        // Chequear si el numero de cruza ya existe. Se debe hacer este chequeo ya que cuando se edita puede ser que se agreguen
+        // mas registros de los que originalmente tenia el cruzamiento, por lo tanto si me quede sin lugar en el "hueco" que se elimino
+        // del cruzamiento original, entonces continuo con el proximo nro de cruza disponible
+        if (Cruzamiento::where('cruza', $cruza)->where('idcampania', $campania)->exists())
+            $cruza = DB::table('cruzamientos')->where('idcampania', $campania)->orderByDesc('cruza')->value('cruza');
+
+        // Detalle
+        for ($i=0; $i<$padresCantidad; $i++) {
+            $talloCruzamiento = new TalloCruzamiento;
+            $talloCruzamiento->idtallo = $padres[$i]->id;
+            $talloCruzamiento->idcruzamiento = $cruzamiento->id;
+            $talloCruzamiento->save();
+        }
+        ////////////////////////////////////////////////////////////////////
+
+
+        ///// Creacion de la cabecera del cruzamiento y detalle - MADRE /////
+        $tachoId = 0;
+
+        for($i=0; $i<$madresCantidad; $i++) {
+            $tachomadre = $madres[$i]->idTacho;
+
+            if ($tachoId != $tachomadre) { 
+                // Cabecera
+                $cruzamiento = new Cruzamiento;
+                $cruzamiento->tipocruzamiento = $tipoCruzamiento;
+                $cruzamiento->cruza = $cruza;
+                $cruzamiento->cubiculo = $cubiculo;
+                $cruzamiento->fechacruzamiento = $fechaCruzamiento;
+
+                if ($tipoCruzamiento == "Biparental")
+                    $cruzamiento->idpadre = $padres[0]->idTacho;
+                else
+                    $cruzamiento->idpadre = null;
+
+                $cruzamiento->idmadre = $tachomadre;
+                $cruzamiento->estado = 1;
+                $cruzamiento->idcampania = $campania;
+                if($edicion)
+                    $cruzamiento->created_at = $created_at;
+                $cruzamiento->save(); 
+                $tachoId = ($cruzamiento->idmadre);
+                $cruza += 1; 
+
+                // Se hace el mismo control sobre cruza que en el padre. La explicacion del por que esta arriba
+                if (Cruzamiento::where('cruza', $cruza)->where('idcampania', $campania)->exists())
+                    $cruza = DB::table('cruzamientos')->where('idcampania', $campania)->orderByDesc('cruza')->value('cruza');
+            }
+            
+            // Detalle
+            if ($cruzamiento->id != null) {
+                $talloCruzamiento = new TalloCruzamiento;
+                $talloCruzamiento->idtallomadre = $madres[$i]->id;
+                $talloCruzamiento->idcruzamiento = $cruzamiento->id;
+                $talloCruzamiento->save();
+            }          
+        } 
+        ////////////////////////////////////////////////////////////////////
+    }
+
+    private function actualizarTallosMadreYPadre($tipoCruzamiento, $datosTallosMadre, $datosTallosPadre, $polenpadre0, $talloPadre){
+        // Actualizacion Tallos Madre
+        $tallosMadre = json_decode($datosTallosMadre);
+        $cantidadTallosMadre = $tallosMadre ? count($tallosMadre) : 0;
+
+        for($i=0 ; $i<$cantidadTallosMadre; $i++) {
+            if ($tallosMadre[$i]->polen == "") {
+                $polen = null;
+            } else {
+                $polen = $tallosMadre[$i]->polen;
+            }
+            $talloUpdate = Tallo::findOrFail($tallosMadre[$i]->talloId)->update([
+                'polen' => $polen,
+                'enmasculado' => $tallosMadre[$i]->enmasculado
+            ]);
+        }
+
+         // Actualizacion Tallos Padre
+        if ($tipoCruzamiento == "Biparental") {
+            if ($polenpadre0 == "") {
+                $polen = null;
+            } else {
+                $polen = $polenpadre0;
+            }
+            $talloUpdate = Tallo::findOrFail($talloPadre)->update([
+                'polen' => $polen
+            ]);
+        }else {   
+            $tallosPadre = json_decode($datosTallosPadre);
+            $cantidadTallosPadre = $tallosPadre ? count($tallosPadre) : 0;
+
+            for($i=0 ; $i<$cantidadTallosPadre; $i++) {
+                if ($tallosPadre[$i]->polen == "") {
+                    $polen = null;
+                } else {
+                    $polen = $tallosPadre[$i]->polen;
+                }
+                $talloUpdate = Tallo::findOrFail($tallosPadre[$i]->talloId)->update([
+                    'polen' => $polen,
+                ]);
+            }
+        }  
+    }
 }

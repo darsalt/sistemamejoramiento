@@ -78,5 +78,23 @@
 		{{$cruzamientos->render()}}
 	</div>
 </div>
+@endsection
 
+@section('script')
+<script>
+	$(document).ready(function(){
+		// Verificar si existe un mensaje en la sesión de Laravel
+		let mensaje = "{{ session('mensajeSuccess') }}";
+
+		if (mensaje !== "") {
+			// Mostrar modal de SweetAlert2 con el mensaje
+			Swal.fire({
+				icon: 'success',
+				title: 'Éxito',
+				text: mensaje,
+				confirmButtonText: 'Aceptar'
+			});
+		}
+	});
+</script>
 @endsection

@@ -33,6 +33,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="{{asset('css/camaras.css')}}">
   <link rel="stylesheet" href="{{asset('css/styles.css')}}">
 
+  <!--Sweetalert-->
+  <link rel="stylesheet" href="{{asset('sweetalert/sweetalert2.min.css')}}">
+
   @yield('otros-estilos')
 
 <style>
@@ -1060,7 +1063,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script src="{{asset('js/paging.js')}}"></script>
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{asset('sweetalert/sweetalert2.all.min.js')}}"></script>
 
 <!--Scripts propios-->
 <script src="{{asset('js/scripts.js')}}"></script>

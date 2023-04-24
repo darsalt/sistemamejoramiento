@@ -64,8 +64,9 @@ Route::resource('admin/lotes','LoteController');
 Route::resource('admin/tratamientos','TratamientoController');
 
 Route::get('admin/cruzamientos/create/{idCampania?}', 'CruzamientoController@create');
-Route::resource('admin/cruzamientos', 'CruzamientoController', ['except' => ['create']]);
+Route::resource('admin/cruzamientos', 'CruzamientoController', ['except' => ['create'], 'names' => 'admin.cruzamientos']);
 Route::get('tallosTacho/{id}', 'CruzamientoController@tallosTacho');
+Route::get('getTalloById/{idTallo}', 'CruzamientoController@getTalloById');
 
 // Camaras Zorras tachos.
 //Route::resource('admin/camaras','CamaraController');
