@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -317,7 +318,7 @@ Route::resource('admin/sanitariasp','ProgenitoresSanitariaController');
 
 
 Route::get('admin/podergerminativo','CruzamientoController@poder');
-Route::get('/admin/podergerminativo/datos','CruzamientoController@podergerminativo');
+Route::get('/admin/podergerminativo/datos/{campania}','CruzamientoController@podergerminativo');
 Route::post('podergerminativo/datos','CruzamientoController@editarpodergerminativo');
 
 
@@ -462,3 +463,9 @@ Route::group(['prefix' => '/ajax/met', 'as' => 'ajax.met.'], function () {
 Route::get('/ajax/tachos/getSubtachosDeTacho', 'TachoController@getSubtachosDeTacho')->name('ajax.tachos.getSubtachosDeTacho');
 Route::get('/ajax/tachos/getTachosBoxExportacion', 'TachoController@getTachosBoxExportacion')->name('ajax.tachos.getTachosBoxExportacion');
 
+Route::get('/clear-cache', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+ 
+    return "Cache cleared successfully";
+ });
