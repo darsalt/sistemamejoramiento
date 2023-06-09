@@ -152,7 +152,7 @@ public function repicadas(Request $request,$id)
         // ->where ('tc.idcruzamiento','=',$cruzamiento->id)
         // ->get();
         $semillados = Semillado::where('idcampaniasemillado', $campActiva)->with(['campaniasemillado','campaniasemillado', 'cruzamiento.semilla', 'cruzamiento.campaniaCruzamiento'])->paginate(10);
-       // dd($semillados);
+        dd($semillados);
         $campaniasSemillado = CampaniaSemillado::where('estado', 1)->get();
         $campaniasCruzamiento = Campania::where('estado', 1)->get();
 

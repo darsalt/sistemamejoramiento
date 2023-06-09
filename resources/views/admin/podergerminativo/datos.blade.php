@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		<h3>Poder Germinativo de los cruzamientos de la campaña <b>{{$podergerminativo[0]->fechacruzamiento}}</b></h3>
+		<h3>Poder Germinativo de los cruzamientos de la campaña <b>{{$podergerminativo[0]->idcampania}}</b></h3>
 	</div>
 </div>
 
@@ -68,7 +68,7 @@
     var SITEURL = "{{ url('/') }}";
     var page = 1; //track user scroll as page number, right now page number is 1
 //    var idevaluacion = $("#idevaluacion").val();
-    var campania = 3;//$("#idevaluacion").val();
+    var campania = 5;//$("#idevaluacion").val();
     console.log(campania);
 
     load_more(page); //initial content load

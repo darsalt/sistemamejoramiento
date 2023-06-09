@@ -241,20 +241,20 @@ class CruzamientoController extends Controller
 
     public function poder(Request $request)
     {
-        
+
         if($request){
             $query=trim($request->get('searchText'));
 
             $campanias=DB::table('campanias')
             ->Where('estado',1)
-            ->orderBy('nombre', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
             if($request->has('campania'))
                 $idCampania = $request->campania;
             else
                 $idCampania = $campanias[0]->id;
-
+//dd($idCampania);
             $cruzamientos=DB::table('cruzamientos as c')
             ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
             ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
@@ -265,7 +265,9 @@ class CruzamientoController extends Controller
             ->where('c.idcampania', $idCampania)
             ->where ('c.estado','=',1)
             ->orderBy('id','asc')
-            ->paginate('10');
+            ->paginate('10')
+            ->appends(request()->query());
+
           //  if ($campania<>0) {
           //      $cruzamientos = $cruzamientos->where('c.idcampania','=',$request->get('campania'));
           //  }
@@ -276,16 +278,23 @@ class CruzamientoController extends Controller
         }
     }
 
-    public function podergerminativo()
+    public function podergerminativo($id)
     {
-        $podergerminativo=DB::table('cruzamientos as c')
-        ->select('c.*')
-        ->get();
-        //dd($podergerminativo);
+        if($id){
+
+            $podergerminativo=DB::table('cruzamientos as c')
+            ->select('c.*')
+            ->where('c.idcampania', $id)
+            ->where ('c.estado','=',1)
+            ->orderBy('fechacruzamiento','asc')->orderBy('cubiculo', 'asc')->orderBy('cruza', 'asc')
+           ->get();
+            // ->paginate('10')
+            //->appends(request()->query());
+           // dd($podergerminativo);
 
 
-        return view("admin.podergerminativo.datos",compact("podergerminativo"),["podergerminativo"=>$podergerminativo]);
-
+            return view("admin.podergerminativo.datos",compact("podergerminativo"),["podergerminativo"=>$podergerminativo]);
+        }
 
     }
 
@@ -324,6 +333,8 @@ class CruzamientoController extends Controller
         ->leftjoin('variedades as vp','vp.idvariedad','=','tp.idvariedad')     
         ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad')
         ->select('c.*', 'tp.codigo as cp' ,'tp.subcodigo as sp', 'tm.codigo as cm' ,'tm.subcodigo as sm','vp.nombre as vp','vm.nombre as vm')
+        ->where('c.idcampania', $id)
+        ->where ('c.estado','=',1)
         ->orderBy('c.cruza','asc')
         ->paginate('100');
 
@@ -385,7 +396,7 @@ class CruzamientoController extends Controller
           //  $semilla = Semilla::where('idcruzamiento', $request->get('id'))->get();
          //   $semilla = Semilla::where('idcruzamiento', '=', $request->get('id'))->firstOrFail();
          //   $semilla = Semilla::where('idcruzamiento', $request->get('id'))->first();
-            $semilla=DB::table('semillas as s')
+             $semilla=DB::table('semillas as s')
             ->leftjoin('cruzamientos as c','c.id','=','s.idcruzamiento')
             ->leftjoin('tachos as tp','c.idpadre','=','tp.idtacho')
             ->leftjoin('tachos as tm','c.idmadre','=','tm.idtacho') 
@@ -393,7 +404,19 @@ class CruzamientoController extends Controller
             ->leftjoin('variedades as vm','vm.idvariedad','=','tm.idvariedad') 
             ->where('idcruzamiento', $request->get('id'))
             ->first();
+            \Log::info($semilla);
 
+            if (Semilla::where('idcruzamiento', $request->get('id'))->exists()){
+
+            }else{
+                $semilla = new Semilla;
+              //  $semilla->idcruzamiento = $request->get('id');
+                
+             //   $semilla->save();
+
+            }
+
+/*
             if($semilla){
                 $semilla->idcruzamiento = $request->get('id');
                 $semilla->stockinicial = $request->get('gramos');;
@@ -420,8 +443,8 @@ class CruzamientoController extends Controller
 
                 
             }
-            
-        return response()->json();
+*/            
+         return response()->json();
     }
 
     public function importForm(){
