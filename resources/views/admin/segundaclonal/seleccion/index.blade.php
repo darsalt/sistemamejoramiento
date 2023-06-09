@@ -118,17 +118,26 @@
                                 <input type="number" class="form-control input-parcela" name="parcelas[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->parcela : 'disabled'}}>
                             </td>
                             <td>{{$parcela->primera->testigo ? $parcela->parcela : (int)$parcela->parcela}}</td>
-                            <td>{{$parcela->primera->testigo ? '-' : $parcela->nombre_clon}}</td>
+                            <td>
+                                @if ($parcela->parcela = 9999)
+                                    <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
+                                @endif
+                                {{$parcela->primera->testigo ? '-' : $parcela->nombre_clon}}
+                            </td>
                             <td>
                                 @if (!$parcela->primera->testigo)
-                                    @if ($parcela->primera->seedling->origen == 'cruzamiento')
-                                        {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}    
-                                    @else
-                                        @if ($parcela->primera->seedling->origen == 'testigo')
-                                            {{$parcela->primera->seedling->variedad->nombre}}  
+                                    @if ($parcela->primera->seedling)
+                                        @if ($parcela->primera->seedling->origen == 'cruzamiento')
+                                            {{$parcela->primera->seedling->semillado->cruzamiento->madre->nombre . ' - ' . $parcela->primera->seedling->semillado->cruzamiento->padre->nombre}}    
                                         @else
-                                            {{$parcela->primera->seedling->observaciones}}  
-                                        @endif 
+                                            @if ($parcela->primera->seedling->origen == 'testigo')
+                                                {{$parcela->primera->seedling->variedad->nombre}}  
+                                            @else
+                                                {{$parcela->primera->seedling->observaciones}}  
+                                            @endif 
+                                        @endif
+                                    @else
+                                        {{$parcela->nombre_clon}}
                                     @endif
                                 @else
                                     {{$parcela->primera->variedad->nombre}}

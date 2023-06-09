@@ -271,8 +271,6 @@ class SegundaClonalController extends Controller
 
         $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
             $q->where('idsector', $idSector)->where('idserie', $idSerie);
-        })->whereHas('parcelaPC', function($q){
-            $q->where('laboratorio', 0);
         })->where('idserie', $idSerie)->get();
 
         $evaluacion = EvaluacionSegundaClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
@@ -359,8 +357,6 @@ class SegundaClonalController extends Controller
 
         $seedlings = SegundaClonalDetalle::whereHas('segunda', function($q) use($anio, $idSerie, $idSector){
             $q->where('idsector', $idSector)->where('idserie', $idSerie);
-        })->whereHas('parcelaPC', function($q){
-            $q->where('laboratorio', 1);
         })->where('idserie', $idSerie)->get();
 
         $evaluacion = EvaluacionSegundaClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)

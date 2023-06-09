@@ -155,6 +155,10 @@
                                     {{$seedling->nombre_clon}}
                                 @else
                                     @if ($origen == 'sc')
+                                        @if ($seedling->parcelaPC->primera->idseedling == NULL)
+                                            <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
+                                        @endif
+
                                         {{$seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon}}
                                     @else
                                         {{$seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre}}
