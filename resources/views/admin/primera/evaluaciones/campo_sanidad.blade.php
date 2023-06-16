@@ -46,7 +46,7 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>Año</th>
+                            <th style="display: none;">Año</th>
                             <th>Serie</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
@@ -54,11 +54,12 @@
                             <th>Fecha</th>
                             <th>Mes</th>
                             <th>Edad</th>
+                            <th></th>
                         </tr> 
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
+                            <td style="display: none;">
                                 <select name="anio" id="anio" class="form-control">
                                     <option value="{{date('Y')}}">{{date('Y')}}</option>
                                     @for ($i = date('Y')-1; $i >= 2000; $i--)
@@ -111,6 +112,9 @@
                                     @endforeach
                                 </select>
                             </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success" id="buscar"><i class="fas fa-search"></i></button>
+                            </td> 
                         </tr>
                     </tbody>
                 </table>
@@ -157,9 +161,9 @@
                                     {{$seedling->nombre_clon}}
                                 @else
                                     @if ($origen == 'sc')
-                                        @if ($seedling->parcelaPC->primera->idseedling == NULL)
+                                        {{-- @if ($seedling->parcelaPC->primera->idseedling == NULL)
                                             <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
-                                        @endif
+                                        @endif --}}
                                         
                                         {{$seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon}}
                                     @else
@@ -167,31 +171,31 @@
                                     @endif
                                 @endif  
                             </td>
-                            <td><input type="number" class="form-control" id="{{'tipo-' . $seedling->id}}" 
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'tipo-' . $seedling->id}}" 
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tipo : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'tallos-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'tallos-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tallos : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'altura-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'altura-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->altura : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'grosor-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'grosor-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->grosor : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'vuelco-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'vuelco-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->vuelco : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'flor-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'flor-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->flor : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'brix-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'brix-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'escaldad-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'escaldad-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->escaldad : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'carbon-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'carbon-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->carbon : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'roya-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'roya-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->roya : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'mosaico-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'mosaico-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->mosaico : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'estaria-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'estaria-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->estaria : ''}}"></td>
-                            <td><input type="number" class="form-control ultimoCampo" id="{{'amarilla-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control ultimoCampo sinPaddingCentrado" id="{{'amarilla-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->amarilla : ''}}"></td>
                         </tr>
                     @endforeach

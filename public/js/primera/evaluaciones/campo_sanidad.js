@@ -78,7 +78,7 @@ $(document).ready(function(){
             window.location.href = config.routes.met + "/" + $('#anio').val() + "/" + $('#sector').val();*/
     });
 
-    $('#anio, #serie, #sector, #mes, #edad').change(function(){
+    $('#buscar').on('click', function(){
         var ruta = '';
         if($('#anio').val() > 0 && $('#serie').val() > 0 && $('#sector').val() > 0 && $('#mes').val() > 0 && $('#edad').val() > 0){
             if(config.data.origen == 'pc')

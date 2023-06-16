@@ -170,9 +170,9 @@
                             <tr>
                                 <td>{{!$parcela->primera->testigo ? (int)$parcela->parcela : $parcela->parcela}}</td>
                                 <td>
-                                    @if ($parcela->parcela = 9999)
+                                    {{-- @if ($parcela->parcela = 9999)
                                         <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
-                                    @endif
+                                    @endif --}}
                                     {{!$parcela->primera->testigo ? $parcela->nombre_clon : '-'}}
                                 </td>
                                 <td>{{!$parcela->primera->testigo && $parcela->primera->seedling ? $parcela->primera->seedling->parcela : '-'}}</td>

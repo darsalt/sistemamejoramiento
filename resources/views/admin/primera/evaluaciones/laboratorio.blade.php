@@ -46,7 +46,7 @@
                 <table class="table table-striped table-bordered table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>Año</th>
+                            <th style="display: none;">Año</th>
                             <th>Serie</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
@@ -54,11 +54,12 @@
                             <th>Fecha</th>
                             <th>Mes</th>
                             <th>Edad</th>
+                            <th></th>
                         </tr> 
                     </thead>
                     <tbody>
                         <tr>
-                            <td>
+                            <td style="display: none;">
                                 <select name="anio" id="anio" class="form-control">
                                     <option value="{{date('Y')}}">{{date('Y')}}</option>
                                     @for ($i = date('Y')-1; $i >= 2000; $i--)
@@ -111,6 +112,9 @@
                                     @endforeach
                                 </select>
                             </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-success" id="buscar"><i class="fas fa-search"></i></button>
+                            </td> 
                         </tr>
                     </tbody>
                 </table>
@@ -155,27 +159,27 @@
                                     {{$seedling->nombre_clon}}
                                 @else
                                     @if ($origen == 'sc')
-                                        @if ($seedling->parcelaPC->primera->idseedling == NULL)
+                                        {{-- @if ($seedling->parcelaPC->primera->idseedling == NULL)
                                             <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
                                         @endif
-
+ --}}
                                         {{$seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon}}
                                     @else
                                         {{$seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre}}
                                     @endif
                                 @endif  
                             </td>
-                            <td><input type="number" class="form-control" id="{{'pesomuestra-' . $seedling->id}}" 
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'pesomuestra-' . $seedling->id}}" 
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'pesojugo-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'pesojugo-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_jugo : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'brix-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'brix-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'polarizacion-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'polarizacion-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->polarizacion : ''}}"></td>
-                            <td><input type="number" class="form-control" id="{{'temperatura-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'temperatura-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->temperatura : ''}}"></td>
-                            <td><input type="number" class="form-control ultimoCampo" id="{{'conductividad-' . $seedling->id}}"
+                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{'conductividad-' . $seedling->id}}"
                                 value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->conductividad : ''}}"></td>
                             <td><p id={{'brixcorregido-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix_corregido : ''}}</p></td>
                             <td><p id={{'polenjugo-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_jugo : ''}}</p></td>
