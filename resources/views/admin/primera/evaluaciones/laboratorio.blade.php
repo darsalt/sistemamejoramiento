@@ -170,17 +170,23 @@
                                 @endif  
                             </td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'pesomuestra-' . $seedling->id}}" 
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'pesojugo-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_jugo : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_jugo : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'brix-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'polarizacion-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->polarizacion : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->polarizacion : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'temperatura-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->temperatura : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->temperatura : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{'conductividad-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->conductividad : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->conductividad : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td><p id={{'brixcorregido-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix_corregido : ''}}</p></td>
                             <td><p id={{'polenjugo-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_jugo : ''}}</p></td>
                             <td><p id={{'pureza-' . $seedling->id}}>{{($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pureza : ''}}</p></td>
@@ -225,6 +231,8 @@
                 error: "{{session()->pull('error')}}"
             }
         };
+        console.log("{{$idAmbiente}}"),
+        console.log("{{auth()->user()->name}}")
     </script>
 
     <script src="{{asset('js/primera/evaluaciones/laboratorio.js')}}"></script>

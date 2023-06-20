@@ -172,31 +172,44 @@
                                 @endif  
                             </td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'tipo-' . $seedling->id}}" 
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tipo : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tipo : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'tallos-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tallos : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->tallos : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'altura-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->altura : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->altura : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'grosor-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->grosor : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->grosor : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'vuelco-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->vuelco : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->vuelco : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'flor-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->flor : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->flor : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'brix-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'escaldad-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->escaldad : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->escaldad : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'carbon-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->carbon : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->carbon : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'roya-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->roya : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->roya : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'mosaico-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->mosaico : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->mosaico : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{'estaria-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->estaria : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->estaria : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                             <td class="sinPaddingCentrado"><input type="number" class="form-control ultimoCampo sinPaddingCentrado" id="{{'amarilla-' . $seedling->id}}"
-                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->amarilla : ''}}"></td>
+                                value="{{($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->amarilla : ''}}"
+                                {{auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : ''}}></td>
                         </tr>
                     @endforeach
                 </tbody>
