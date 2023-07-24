@@ -208,10 +208,6 @@ class METController extends Controller
 
         $seedlings = METDetalle::whereHas('met', function($q) use($idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('idsector', $idSector);
-        })->whereHas('parcelaSC', function($q){
-            $q->whereHas('parcelaPC', function($q2){
-                $q2->where('laboratorio', 0);
-            });
         })->get();
 
         $evaluacion = EvaluacionMET::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
