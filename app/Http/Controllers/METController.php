@@ -174,6 +174,7 @@ class METController extends Controller
                     }
                     $met_detalle->parcela = $request->nroParcela;
                     $met_detalle->bloque = $request->nroBloque;
+                    $met_detalle->repeticion = $request->nro_repeticion;
                     $met_detalle->save();
 
                     return METDetalle::with(['parcelaSC.parcelaPC', 'variedad', 'parcelaSC.variedad', 'parcelaSC.segunda.serie'])->find($met_detalle->id);
@@ -185,7 +186,7 @@ class METController extends Controller
         }
         catch(Exception $e){
             return response()->json(false);
-        }
+        } 
     } 
 
     function evCampoSanidad($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){

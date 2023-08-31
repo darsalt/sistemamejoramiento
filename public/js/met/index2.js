@@ -102,7 +102,8 @@ $(document).ready(function(){
                 url: config.routes.saveDetalleMET,
                 method: 'POST',
                 dataType: 'json',
-                data: $(form).serialize() + '&serie=' + $('#serie').val() + '&sector=' + config.data.sectorActivo + '&nroParcela=' + $('#nroParcela').val() + '&nroBloque=' + $('#nroBloque').val(),
+                data: $(form).serialize() + '&serie=' + $('#serie').val() + '&sector=' + config.data.sectorActivo + '&nroParcela=' + $('#nroParcela').val() + '&nroBloque=' + $('#nroBloque').val() 
+                        + '&nroRepeticion=' + $('#nro_repeticion').val(),
                 success: function(response){
                     $('#tablaParcelasCargadas tbody').append(agregarFila(response)); // Agrego fila a la tabla
                     $('#nroParcela').val(parseInt($('#nroParcela').val()) + 1);
@@ -332,6 +333,7 @@ function agregarFila(element){
 
     fila += "<td>" + element.parcela + "</td>";
     fila += "<td>" + element.bloque + "</td>";
+    fila += "<td>" + element.repeticion + "</td>";
     if(element.parcela_s_c && element.parcela_s_c.parcela_p_c){
         fila += "<td>" + element.parcela_s_c.parcela_p_c.parcela + "</td>";
     }

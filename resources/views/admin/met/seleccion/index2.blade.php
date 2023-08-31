@@ -111,6 +111,7 @@
                         <thead>
                             <th width="10%">Parcela</th>
                             <th width="10%">Bloque</th>
+                            <th width="10%">Repetición</th>
                             <th>Origen</th>
                             <th class='col-serieSC'>Serie</th>
                             <th class="col-seedlingsSC">Seedlings Segunda clonal</th>
@@ -122,6 +123,7 @@
                             <tr>
                                 <td><input type="number" id="nroParcela" name="nroParcela" class="form-control" disabled readonly></td>
                                 <td><input type="number" id="nroBloque" name="nroBloque" class="form-control" disabled readonly></p></td>
+                                <td><input type="number" id="nro_repeticion" name="nro_repeticion" class="form-control" required></td>
                                 <td>
                                     <select name="origenSeedling" id="origenSeedling" class="form-control">
                                         <option value="sc" selected>Segunda clonal</option>
@@ -171,6 +173,7 @@
                 <th>Serie</th>
                 <th>Parcela</th>
                 <th>Bloque</th>
+                <th>Repetición</th>
                 <th>Parcela PC</th>
                 <th>Clon</th>
             </thead>
@@ -186,6 +189,7 @@
                         </td>
                         <td>{{$parcela->parcela}}</td>
                         <td>{{$parcela->bloque}}</td>
+                        <td>{{$parcela->repeticion}}</td>
                         <td>{{$parcela->parcelaSC && $parcela->parcelaSC->parcelaPC ? (int)$parcela->parcelaSC->parcelaPC->parcela : '-'}}</td>
                         <td>
                             @if ($parcela->parcelaSC && $parcela->parcelaSC->parcelaPC)
