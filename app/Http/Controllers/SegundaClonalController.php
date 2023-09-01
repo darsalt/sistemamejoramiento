@@ -121,7 +121,7 @@ class SegundaClonalController extends Controller
                     $parcela->idprimeraclonal_detalle = $request->seedlingsPC[$i];
                     $parcela->idserie = $request->serie;
                     $parcela->parcela = $request->parcelas[$i];
-                    $parcela->repeticion = $request->repeticiones[$i];
+                    $parcela->bloque = $request->bloques[$i];
                     $parcela->save();  
                 }
             });
