@@ -261,16 +261,20 @@ $(document).ready(function(){
     $('.check-seleccionado').click(function(){
         let row = $(this).closest("tr");
         let inputParcela = row.find("input[name='parcelas[]']")
+        let inputRepeticion = row.find("input[name='repeticiones[]']")
         let cont = $('.check-seleccionado:checked').length;
 
         if($(this).prop('checked')){
 
             inputParcela.val(parseInt(ultimaParcela) + cont - yaSeleccionados);
             inputParcela.removeAttr('disabled');
+            inputRepeticion.removeAttr('disabled');
         }
         else{
             inputParcela.attr('disabled', 'disabled');
             inputParcela.val('');
+            inputRepeticion.attr('disabled', 'disabled');
+            inputRepeticion.val('');
         }
     });
 });
@@ -332,13 +336,17 @@ function habilitarDeshabilitarSeedlings(idSerie, idSector){
         var option = $(this);
         var row = $(this).closest("tr");
         var inputParcela = row.find("input[name='parcelas[]']")
+        let inputRepeticion = row.find("input[name='repeticiones[]']")
         
         if(segundas){
+            console.log(segundas);
             segundas.forEach(function(valor, i){
                 if(valor.segunda.idserie == idSerie && valor.segunda.idsector == idSector){
                     option.attr("checked", "checked");
                     inputParcela.removeAttr('disabled');
                     inputParcela.val(parseInt(valor.parcela));
+                    inputRepeticion.removeAttr('disabled');
+                    inputRepeticion.val(parseInt(valor.repeticion));
                     yaSeleccionados++;
                 }
             });

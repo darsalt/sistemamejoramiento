@@ -103,6 +103,7 @@
                     <thead>
                         <th>Seleccionado</th>
                         <th width="5%">Parcela</th>
+                        <th width="5%">Repetición</th>
                         <th>Parcela PC</th>
                         <th>Nombre clon</th>
                         <th>Madre x Padre</th>
@@ -116,6 +117,9 @@
                             </td>
                             <td class="text-center">
                                 <input type="number" class="form-control input-parcela" name="parcelas[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->parcela : 'disabled'}}>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control input-repeticion" name="repeticiones[]" {{$parcela->segunda ? "value=" . (int)$parcela->segunda->repeticion : 'disabled'}}>
                             </td>
                             <td>{{$parcela->primera->testigo ? $parcela->parcela : (int)$parcela->parcela}}</td>
                             <td>

@@ -17,6 +17,7 @@ use App\SegundaClonalDetalle;
 use App\Variedad;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class SegundaClonalController extends Controller
 {
@@ -120,6 +121,7 @@ class SegundaClonalController extends Controller
                     $parcela->idprimeraclonal_detalle = $request->seedlingsPC[$i];
                     $parcela->idserie = $request->serie;
                     $parcela->parcela = $request->parcelas[$i];
+                    $parcela->repeticion = $request->repeticiones[$i];
                     $parcela->save();  
                 }
             });
