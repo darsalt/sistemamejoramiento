@@ -86,6 +86,15 @@ $(document).ready(function(){
                     dataType: 'json',
                     data: $(form).serialize(),
                     success: function(response){
+                        Swal.fire({
+                            title: 'Se estan grabando los datos. Espere...',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            willOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+                
                         window.location.href = config.routes.met + "/" + $('#serie').val()  + "/" + $('#sector').val();
                     },
                     error: function( jqXHR, textStatus, errorThrown ){
@@ -119,6 +128,15 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona una serie
     $('#serie').change(function(){
+        Swal.fire({
+            title: 'Cargando datos. Espere...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         window.location.href = config.routes.met + "/" + $('#serie').val();
     });
 
@@ -150,8 +168,18 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona un sector
     $('#sector').change(function(){
-        if($('#serie').val() > 0)
+        if($('#serie').val() > 0){
+            Swal.fire({
+                title: 'Cargando datos. Espere...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+    
             window.location.href = config.routes.met + "/" + $('#serie').val() + "/" + $('#sector').val();
+        }
     });
 
     // Evento para cuando se selecciona un ambiente

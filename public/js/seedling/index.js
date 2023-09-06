@@ -187,8 +187,18 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona una campaña de seedling
     $('#campSeedling').change(function(){
-        if($('#sector').val() > 0)
+        if($('#sector').val() > 0){
+            Swal.fire({
+                title: 'Cargando datos. Espere...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             window.location.href = config.routes.seedlings + "/" + $('#campSeedling').val()  + "/" + $('#sector').val();
+        }
     });
 
     // Evento para cuando se selecciona un ambiente
@@ -250,8 +260,18 @@ $(document).ready(function(){
 
     // Evento cuando se selecciona un sector
     $('#sector').change(function(){
-        if($('#campSeedling').val() > 0)
+        if($('#campSeedling').val() > 0){
+            Swal.fire({
+                title: 'Cargando datos. Espere...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+    
             window.location.href = config.routes.seedlings + "/" + $('#campSeedling').val()  + "/" + $('#sector').val();
+        }
     });
 
     // Evento para cuando se selecciona el origen
