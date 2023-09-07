@@ -50,7 +50,7 @@
 					<td>{{$linea->nombre_sector}}</td>
                     <td>{{$linea->cant_seedlings}}</td>
                     <td>
-						<a href="{{$origen == 'pc' ? route('primeraclonal.index', [$linea->idserie, $linea->idsector]) : ($origen == 'sc' ? route('segundaclonal.index', [$linea->anio, $linea->idserie, $linea->idsector]) : 
+						<a href="{{$origen == 'pc' ? route('primeraclonal.index', [$linea->idserie, $linea->idsector]) : ($origen == 'sc' ? route('segundaclonal.index', [$linea->idserie, $linea->idsector]) : 
 						route('met.index', [$linea->anio, $linea->idsector]))}}"><i class="fas fa-search"></i></a>
 					</td>
 				</tr>
