@@ -31,8 +31,13 @@ class CruzamientoController extends Controller
             ->get();
             if($request->has('campania'))
                 $idCampania = $request->campania;
-            else
-                $idCampania = $campanias[0]->id;
+            else{
+                if (!$campanias->isEmpty()){
+                    $idCampania = $campanias[0]->id;
+                }else{
+                    dd("No existen campañas de cruzamiento");
+                }
+            }
                
             $query=trim($request->get('searchText'));
             $cruzamientos=DB::table('cruzamientos as c')

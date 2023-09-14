@@ -36,7 +36,12 @@ class MarcotadoController extends Controller
             ->select('id')
             ->get();
             $var="no";
-            $idcampania = $idultima[0]->id;
+            if (!$idultima->isEmpty()){
+                $idcampania = $idultima[0]->id;
+             }else{
+                dd("No existen campañas de cruzamiento");
+                dd($idultima);            
+             }
 
         }
 //print($idcampania);
