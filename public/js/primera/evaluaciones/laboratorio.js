@@ -89,6 +89,15 @@ $(document).ready(function(){
                 else
                     ruta = config.routes.evaluacionesMET;
             }
+            
+            Swal.fire({
+                title: 'Cargando datos. Espere...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
             window.location.href = ruta + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val() + "/" + $('#mes').val() + "/" + $('#edad').val();
         }
