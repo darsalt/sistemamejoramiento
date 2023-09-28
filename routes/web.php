@@ -43,6 +43,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/change-password', 'ChangePasswordController@index')->name('auth.password.change.index');
+Route::patch('/change-password', 'ChangePasswordController@update')->name('auth.password.change.update');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('auth/google', 'Auth\GoogleController@redirectToGoogle');
