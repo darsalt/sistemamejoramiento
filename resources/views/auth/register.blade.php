@@ -8,7 +8,7 @@
                     <div class="card-header">Registrar usuario</div>
 
                     <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
+                        <form method="POST" action="{{ route('auth.register.register') }}">
                             @csrf
 
                             <div class="form-group row">
@@ -66,6 +66,28 @@
                                 <div class="col-md-6">
                                     <input id="password-confirm" type="password" class="form-control"
                                         name="password_confirmation" required autocomplete="new-password">
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="ambiente" class="col-md-4 col-form-label text-md-right">Ambiente</label>
+
+                                <div class="col-md-6">
+                                    <select id="ambiente" class="form-control" name="ambiente" required>
+                                        <option value="">Seleccione ambiente</option>
+                                        @foreach ($ambientes as $ambiente)
+                                            <option value="{{ $ambiente->id }}" {{ old('ambiente') == $ambiente->id ? 'selected="selected"' : ''}}>{{ $ambiente->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="administrador" class="col-md-4 col-form-label text-md-right">Es
+                                    administrador</label>
+
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <input id="administrador" name="administrador" class="" type="checkbox" {{ old('administrador') ? 'checked' : ''}}>
                                 </div>
                             </div>
 

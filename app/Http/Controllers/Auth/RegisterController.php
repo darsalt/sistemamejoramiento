@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Ambiente;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
@@ -54,11 +55,14 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'ambiente' => ['required'],
         ]);
     }
 
-    public function create(){
-        return view('auth.register');
+    public function index(){
+        $ambientes = Ambiente::all();
+
+        return view('auth.register', ['ambientes' => $ambientes]);
     }
 
     public function register(Request $request){
@@ -69,10 +73,14 @@ class RegisterController extends Controller
                 ->withInput();
         }
 
+        $esAdmin = $request->has('administrador') ? 1 : 0;
+
         User::create([
             'name' => $request['name'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
+            'idambiente' => $request['ambiente'],
+            'esAdmin' => $esAdmin
         ]);
 
         return redirect('/admin');
