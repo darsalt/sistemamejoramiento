@@ -43,8 +43,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/register', 'Auth\RegisterController@index')->name('auth.register.index');
-Route::post('/register', 'Auth\RegisterController@register')->name('auth.register.register');
+// Rutas usuarios
+Route::resource('admin/users', 'UserController', ['except' => ['delete']])->names('admin.users');
 
 Route::get('/change-password', 'ChangePasswordController@index')->name('auth.password.change.index');
 Route::patch('/change-password', 'ChangePasswordController@update')->name('auth.password.change.update');
