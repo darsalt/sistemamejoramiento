@@ -34,11 +34,18 @@ class SegundaClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie){
-            $query->where('idserie', $idSerie);
+        $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie, $idSector){
+            $query->where('idserie', $idSerie)->where('idsector', $idSector);
         });
         
-        $parcelasPC = $parcelasPC->orderBy('parcela')->get();
+        $parcelasPC = $parcelasPC
+                    ->leftjoin('segundasclonal_detalle as scd', 'scd.idprimeraclonal_detalle', '=', 'primerasclonal_detalle.id')
+                    ->orderBy('scd.parcela')
+                    ->distinct('primerasclonal_detalle.id')
+                    ->get();
+        
+        //$parcelasPC = $parcelasPC->orderBy('parcela')->get();
+
         $variedades = Variedad::where('estado', 1)->get();
         $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('idsector', $idSector);
