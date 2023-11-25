@@ -123,11 +123,11 @@
                                         </td>
                                         <td class="text-center">
                                             <input type="number" class="form-control input-parcela" name="parcelas[]"
-                                                {{ $parcela->segundas ? 'value=' . (int) $parcela->segundas->first()->parcela : 'disabled' }}>
+                                                {{ $parcela->segundas->first() ? 'value=' . (int) $parcela->segundas->first()->parcela : 'disabled' }}>
                                         </td>
                                         <td>
                                             <input type="number" class="form-control input-bloque" name="bloques[]"
-                                                {{ $parcela->segundas ? 'value=' . (int) $parcela->segundas->first()->bloque : 'disabled' }}>
+                                                {{ $parcela->segundas->first() ? 'value=' . (int) $parcela->segundas->first()->bloque : 'disabled' }}>
                                         </td>
                                         <td>{{ $parcela->primera->testigo ? $parcela->parcela : (int) $parcela->parcela }}
                                         </td>
