@@ -111,9 +111,14 @@
                             <th>Madre x Padre</th>
                         </thead>
                         <tbody>
+                            @php
+                                $ultimaParcelaSC = 0;    
+                            @endphp
+
                             @foreach ($parcelasPC as $auxParcela)
                                 @php
                                     $parcela = App\PrimeraClonalDetalle::find($auxParcela->id);
+                                    $segundaClonalDetalle = $parcela->segundas()->orderBy('parcela', 'asc')->first();
                                 @endphp
 
                                 @if (!$parcela->testigo)
@@ -127,11 +132,15 @@
                                         </td>
                                         <td class="text-center">
                                             <input type="number" class="form-control input-parcela" name="parcelas[]"
-                                                {{ $parcela->segundas->first() ? 'value=' . (int) $parcela->segundas->first()->parcela : 'disabled' }}>
+                                                {{ $segundaClonalDetalle ? 'value=' . (int) $segundaClonalDetalle->parcela : 'disabled' }}>
+                                            
+                                            {{-- Se utiliza input hidden para guardar la parcela real y que desde JS no le cambie el valor al input de arriba
+                                                ya que un clon de PC puede tener asociados varios de SC  --}}
+                                            <input type="number" name="parcelas_real[]" hidden value="{{ $segundaClonalDetalle->parcela }}">
                                         </td>
                                         <td>
                                             <input type="number" class="form-control input-bloque" name="bloques[]"
-                                                {{ $parcela->segundas->first() ? 'value=' . (int) $parcela->segundas->first()->bloque : 'disabled' }}>
+                                                {{ $segundaClonalDetalle ? 'value=' . (int) $segundaClonalDetalle->bloque : 'disabled' }}>
                                         </td>
                                         <td>{{ $parcela->primera->testigo ? $parcela->parcela : (int) $parcela->parcela }}</td>
                                         <td>

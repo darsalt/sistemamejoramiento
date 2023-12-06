@@ -359,17 +359,18 @@ function editarSeedling(id){
 
 function habilitarDeshabilitarSeedlings(idSerie, idSector){
     $("input[name='seedlingsPC[]']:checked").removeAttr("checked");
-
+    
     $("input[name='seedlingsPC[]'").each(function(){
         var segundas = $(this).data('segundas');
         var option = $(this);
         var row = $(this).closest("tr");
         var inputParcela = row.find("input[name='parcelas[]']")
         let inputBloque = row.find("input[name='bloques[]']")
+        const inputParcelaReal = row.find("input[name='parcelas_real[]']")
         
         if(segundas){
             segundas.forEach(function(valor, i){
-                if(valor.segunda.idserie == idSerie && valor.segunda.idsector == idSector){
+                if(valor.segunda.idserie == idSerie && valor.segunda.idsector == idSector && valor.parcela === inputParcelaReal[0].value){
                     option.attr("checked", "checked");
                     inputParcela.removeAttr('disabled');
                     inputParcela.val(parseInt(valor.parcela));

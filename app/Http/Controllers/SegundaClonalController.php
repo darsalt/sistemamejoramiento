@@ -39,7 +39,7 @@ class SegundaClonalController extends Controller
                         ->leftJoin('segundasclonal_detalle as scd', 'scd.idprimeraclonal_detalle', '=', 'pcd.id')
                         ->where('p.idserie', $idSerie)
                         ->where('p.idsector', $idSector)
-                        ->select('pcd.id')
+                        ->select('pcd.id', 'scd.parcela')
                         ->orderBy('scd.parcela')
                         ->distinct('pcd.id')
                         ->get();
