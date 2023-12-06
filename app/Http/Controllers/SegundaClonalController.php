@@ -34,17 +34,15 @@ class SegundaClonalController extends Controller
             $idSubambiente = $idAmbiente = 0;
         }
 
-        $parcelasPC = PrimeraClonalDetalle::whereHas('primera', function($query) use($idSerie, $idSector){
-            $query->where('idserie', $idSerie)->where('idsector', $idSector);
-        });
-        
-        $parcelasPC = $parcelasPC
-                    ->leftjoin('segundasclonal_detalle as scd', 'scd.idprimeraclonal_detalle', '=', 'primerasclonal_detalle.id')
-                    ->orderBy('scd.parcela')
-                    ->distinct('primerasclonal_detalle.id')
-                    ->get();
-        
-        //$parcelasPC = $parcelasPC->orderBy('parcela')->get();
+        $parcelasPC = DB::table('primerasclonal_detalle as pcd')
+                        ->join('primerasclonal as p', 'pcd.idprimeraclonal', '=', 'p.id')
+                        ->leftJoin('segundasclonal_detalle as scd', 'scd.idprimeraclonal_detalle', '=', 'pcd.id')
+                        ->where('p.idserie', $idSerie)
+                        ->where('p.idsector', $idSector)
+                        ->select('pcd.id')
+                        ->orderBy('scd.parcela')
+                        ->distinct('pcd.id')
+                        ->get();
 
         $variedades = Variedad::where('estado', 1)->get();
         $testigos = SegundaClonalDetalle::whereHas('segunda', function($q) use($idSerie, $idSector){

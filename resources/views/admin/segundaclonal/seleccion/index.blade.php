@@ -111,7 +111,11 @@
                             <th>Madre x Padre</th>
                         </thead>
                         <tbody>
-                            @foreach ($parcelasPC as $parcela)
+                            @foreach ($parcelasPC as $auxParcela)
+                                @php
+                                    $parcela = App\PrimeraClonalDetalle::find($auxParcela->id);
+                                @endphp
+
                                 @if (!$parcela->testigo)
                                     <tr>
                                         <td class="text-center">
@@ -129,8 +133,7 @@
                                             <input type="number" class="form-control input-bloque" name="bloques[]"
                                                 {{ $parcela->segundas->first() ? 'value=' . (int) $parcela->segundas->first()->bloque : 'disabled' }}>
                                         </td>
-                                        <td>{{ $parcela->primera->testigo ? $parcela->parcela : (int) $parcela->parcela }}
-                                        </td>
+                                        <td>{{ $parcela->primera->testigo ? $parcela->parcela : (int) $parcela->parcela }}</td>
                                         <td>
                                             {{--  @if ($parcela->parcela = 9999)
                                     <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
