@@ -112,13 +112,14 @@
                         </thead>
                         <tbody>
                             @php
-                                $ultimaParcelaSC = 0;    
+                                $ultimaParcelaSC = 0;
                             @endphp
 
                             @foreach ($parcelasPC as $auxParcela)
                                 @php
                                     $parcela = App\PrimeraClonalDetalle::find($auxParcela->id);
-                                    $segundaClonalDetalle = $parcela->segundas()->orderBy('parcela', 'asc')->first();
+                                    $segundaClonalDetalle = $parcela->segundas()->where('parcela', '>', $ultimaParcelaSC)->orderBy('parcela', 'asc')->first();
+                                    $ultimaParcelaSC = $segundaClonalDetalle->parcela;
                                 @endphp
 
                                 @if (!$parcela->testigo)
