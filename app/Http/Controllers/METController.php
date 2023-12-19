@@ -371,7 +371,7 @@ class METController extends Controller
 
     public function inventario(){
         $inventarioFinal = [];
-        $inventario = DB::select("SELECT s.anio, met.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM met_detalle as metd INNER JOIN met as met ON metd.idmet = met.id INNER JOIN sectores AS sec ON sec.id = met.idsector INNER JOIN series AS s ON met.idserie = s.id INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY s.anio, met.idsector, nombre_sector, nombre_subambiente, nombre_ambiente");
+        $inventario = DB::select("SELECT s.id as idserie, s.nombre as nombre_serie, met.anio as anio, met.idsector, sec.nombre AS nombre_sector, sa.nombre AS nombre_subambiente, a.nombre AS nombre_ambiente, COUNT(*) as cant_seedlings FROM met_detalle as metd INNER JOIN met as met ON metd.idmet = met.id INNER JOIN sectores AS sec ON sec.id = met.idsector INNER JOIN series AS s ON met.idserie = s.id INNER JOIN subambientes AS sa ON sa.id = sec.idsubambiente INNER JOIN ambientes AS a ON a.id = sa.idambiente GROUP BY s.id, s.nombre, met.anio, met.idsector, nombre_sector, nombre_subambiente, nombre_ambiente");
         $origen = 'met';
         
         foreach($inventario as $linea){

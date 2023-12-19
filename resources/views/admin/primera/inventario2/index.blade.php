@@ -30,9 +30,7 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
 					<th>Año</th>
-					@if ($origen != 'met')
-						<th>Serie</th>
-					@endif
+					<th>Serie</th>
 					<th>Ambiente</th>
 					<th>Subambiente</th>
 					<th>Sector</th>
@@ -42,16 +40,14 @@
                @foreach ($inventarioFinal as $linea)
 				<tr>
 					<td>{{$linea->anio}}</td>
-					@if ($origen != 'met')
-						<td>{{$linea->nombre_serie}}</td>
-					@endif
+					<td>{{$linea->nombre_serie}}</td>
                     <td>{{$linea->nombre_ambiente}}</td>
 					<td>{{$linea->nombre_subambiente}}</td>
 					<td>{{$linea->nombre_sector}}</td>
                     <td>{{$linea->cant_seedlings}}</td>
                     <td>
 						<a href="{{$origen == 'pc' ? route('primeraclonal.index', [$linea->idserie, $linea->idsector]) : ($origen == 'sc' ? route('segundaclonal.index', [$linea->idserie, $linea->idsector]) : 
-						route('met.index', [$linea->anio, $linea->idsector]))}}"><i class="fas fa-search"></i></a>
+						route('met.index', [$linea->idserie, $linea->idsector]))}}"><i class="fas fa-search"></i></a>
 					</td>
 				</tr>
 				@if (count($linea->evaluacionesCS) > 0 || count($linea->evaluacionesLab) > 0)
