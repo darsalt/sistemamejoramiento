@@ -47,7 +47,7 @@
                     <thead>
                         <tr>
                             <th>Serie</th>
-                            <th>Año</th>
+                            <th>MET</th>
                             <th>Ambiente</th>
                             <th>Subambiente</th>
                             <th>Sector</th>
@@ -235,8 +235,9 @@
                 ambienteActivo: "{{$idAmbiente}}",
                 subambienteActivo: "{{$idSubambiente}}",
                 sectorActivo: "{{$idSector}}",
-                serieActiva: "{{$idSerie}}"
-            },
+                serieActiva: "{{$idSerie}}",
+                met: @if (isset($met)) {!! $met !!} @else null @endif,
+            },  
             session: {
                 exito: "{{session()->pull('exito')}}",
                 error: "{{session()->pull('error')}}"

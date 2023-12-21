@@ -387,15 +387,20 @@ function agregarFila(element){
 }
 
 function loadAnioSerie(idSerie){
-    $.ajax({
-        url: config.routes.getAnioSerie,
-        method: 'GET',
-        dataType: 'json',
-        data: {
-            'serie': idSerie
-        },
-        success: function(response){
-            $('#anio').text(response);
-        }
-    });
+    if(config.data.met){
+        $('#anio').text(config.data.met.anio);
+    }
+    else{
+        $.ajax({
+            url: config.routes.getAnioSerie,
+            method: 'GET',
+            dataType: 'json',
+            data: {
+                'serie': idSerie
+            },
+            success: function(response){
+                $('#anio').text(response);
+            }
+        });
+    }
 }

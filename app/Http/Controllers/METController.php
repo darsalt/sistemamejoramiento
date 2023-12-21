@@ -43,11 +43,13 @@ class METController extends Controller
         })->orderBy('parcela')->get();*/
         $variedades = Variedad::where('estado', 1)->get();
 
+        $met = MET::where('idserie', $idSerie)->where('idsector', $idSector)->first();
+
         $parcelasCargadas = METDetalle::whereHas('met', function($query) use($idSerie, $idSector){
             $query->where('idserie', $idSerie)->where('idsector', $idSector);
         })->orderBy('parcela')->get();
 
-        return view('admin.met.seleccion.index2')->with(compact('series', 'ambientes', 'idSector', 'idSerie', 'idSubambiente', 'idAmbiente', 'parcelasCargadas', 'variedades'));
+        return view('admin.met.seleccion.index2')->with(compact('series', 'ambientes', 'idSector', 'idSerie', 'idSubambiente', 'idAmbiente', 'parcelasCargadas', 'variedades', 'met'));
     }
 
     public function saveMET(Request $request){
