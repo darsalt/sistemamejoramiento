@@ -99,7 +99,8 @@ $(document).ready(function(){
                 }
             });
             
-            window.location.href = ruta + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val() + "/" + $('#mes').val() + "/" + $('#edad').val();
+            window.location.href = ruta + "/" + $('#anio').val() + "/" + $('#serie').val() + "/" + $('#sector').val() + "/" + $('#mes').val() + "/" + $('#edad').val()
+                                    + `?cant_registros=${$('#cant_registros').val()}`;
         }
     });
 

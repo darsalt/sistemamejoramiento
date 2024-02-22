@@ -191,7 +191,7 @@ class METController extends Controller
         } 
     } 
 
-    function evCampoSanidad($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
+    function evCampoSanidad(Request $request, $anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
         if($anio == 0)
             $anio = date('Y');
         
@@ -209,9 +209,11 @@ class METController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
+        $cantRegistros = $request->input('cant_registros', 30);
+
         $seedlings = METDetalle::whereHas('met', function($q) use($idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('idsector', $idSector);
-        })->get();
+        })->paginate($cantRegistros);
 
         $evaluacion = EvaluacionMET::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
         ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'C')->first();
@@ -225,7 +227,8 @@ class METController extends Controller
         }
 
         return view('admin.primera.evaluaciones.campo_sanidad', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen',
+                                                                        'cantRegistros'));
     }
 
     function saveEvCampoSanidad(Request $request){
@@ -277,7 +280,7 @@ class METController extends Controller
         }
     }
 
-    function evLaboratorio($anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
+    function evLaboratorio(Request $request, $anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
         if($anio == 0)
             $anio = date('Y');
         
@@ -295,13 +298,15 @@ class METController extends Controller
             $idSubambiente = $idAmbiente = 0;    
         }
 
+        $cantRegistros = $request->input('cant_registros', 30);
+
         $seedlings = METDetalle::whereHas('met', function($q) use($idSerie, $idSector){
             $q->where('idserie', $idSerie)->where('idsector', $idSector);
         })->whereHas('parcelaSC', function($q){
             $q->whereHas('parcelaPC', function($q2){
                 $q2->where('laboratorio', 1);
             });
-        })->get();
+        })->paginate($cantRegistros);
 
         $evaluacion = EvaluacionMET::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
         ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'L')->first();
@@ -315,7 +320,8 @@ class METController extends Controller
         }
 
         return view('admin.primera.evaluaciones.laboratorio', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen'));
+                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen',
+                                                                        'cantRegistros'));
     }
 
     function saveEvLaboratorio(Request $request){
