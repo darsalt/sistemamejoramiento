@@ -29,7 +29,7 @@
 		<div class="table-responsive">
 			<table class="table table-striped table-bordered table-condensed table-hover">
 				<thead>
-					<th>Año</th>
+					<!-- <th>Año</th> -->
 					<th>Serie</th>
 					<th>Ambiente</th>
 					<th>Subambiente</th>
@@ -39,7 +39,7 @@
 				</thead>
                @foreach ($inventarioFinal as $linea)
 				<tr>
-					<td>{{$linea->anio}}</td>
+					<!-- <td>{{$linea->anio}}</td> -->
 					<td>{{$linea->nombre_serie}}</td>
                     <td>{{$linea->nombre_ambiente}}</td>
 					<td>{{$linea->nombre_subambiente}}</td>

@@ -64,6 +64,13 @@
                                     <input id="administrador" name="administrador" class="" type="checkbox" {{ old('administrador', $user->esAdmin) ? 'checked' : ''}}>
                                 </div>
                             </div>
+                            <div class="form-group row">
+                                <label for="estado" class="col-md-4 col-form-label text-md-right">Habilitado</label>
+
+                                <div class="col-md-6 d-flex align-items-center">
+                                    <input id="estado" name="estado" class="" type="checkbox" {{ old('estado', $user->estado) ? 'checked' : ''}}>
+                                </div>
+                            </div>
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 text-left">
