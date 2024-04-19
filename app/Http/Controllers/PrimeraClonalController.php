@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Ambiente;
 use App\CampaniaSeedling;
 use App\Edad;
+use App\Evaluacion;
 use App\EvaluacionDetalleCampoSanidadPC;
 use App\EvaluacionDetalleLaboratorioPC;
 use App\EvaluacionPrimeraClonal;
@@ -269,44 +270,15 @@ class PrimeraClonalController extends Controller
         }
     }
 
-    function evCampoSanidad(Request $request, $anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
-        if($anio == 0)
-            $anio = date('Y');
-        
-        $ambientes = Ambiente::where('estado', 1)->get();
-        $edades = Edad::all();
-        $series = Serie::where('estado', 1)->get();
-        $sector = Sector::find($idSector);
+    function viewEvCampoSanidad(Request $request, EvaluacionPrimeraClonal $evaluacion){
         $origen = 'pc';
-
-        if($sector){
-            $idSubambiente = $sector->subambiente->id;
-            $idAmbiente = $sector->subambiente->ambiente->id;
-        }
-        else{
-            $idSubambiente = $idAmbiente = 0;    
-        }
-
         $cantRegistros = $request->input('cant_registros', 30);
 
-        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($idSerie, $idSector){
-            $q->where('idserie', $idSerie)->where('idsector', $idSector);
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($evaluacion){
+            $q->where('idserie', $evaluacion->serie->id)->where('idsector', $evaluacion->sector->id);
         })->where('laboratorio', 0)->paginate($cantRegistros);
 
-        $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
-        ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'C')->first();
-        if($evaluacion){
-            $fecha_calendario = $evaluacion->fecha;
-            $idEvaluacion = $evaluacion->id;
-        }
-        else{
-            $fecha_calendario = now();
-            $idEvaluacion = 0;
-        }
-
-        return view('admin.primera.evaluaciones.campo_sanidad', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen',
-                                                                        'cantRegistros'));
+        return view('admin.primera.evaluaciones.campo_sanidad', compact('evaluacion', 'cantRegistros', 'seedlings', 'origen'));
     }
 
     function saveEvCampoSanidad(Request $request){
@@ -358,44 +330,15 @@ class PrimeraClonalController extends Controller
         }
     }
 
-    function evLaboratorio(Request $request, $anio = 0, $idSerie = 0, $idSector = 0, $mes = 0, $edad2 = 0){
-        if($anio == 0)
-            $anio = date('Y');
-        
-        $ambientes = Ambiente::where('estado', 1)->get();
-        $edades = Edad::all();
-        $series = Serie::where('estado', 1)->get();
-        $sector = Sector::find($idSector);
+    function viewEvLaboratorio(Request $request, EvaluacionPrimeraClonal $evaluacion){
         $origen = 'pc';
-
-        if($sector){
-            $idSubambiente = $sector->subambiente->id;
-            $idAmbiente = $sector->subambiente->ambiente->id;
-        }
-        else{
-            $idSubambiente = $idAmbiente = 0;    
-        }
-
         $cantRegistros = $request->input('cant_registros', 30);
 
-        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($idSerie, $idSector){
-            $q->where('idserie', $idSerie)->where('idsector', $idSector);
+        $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($evaluacion){
+            $q->where('idserie', $evaluacion->serie->id)->where('idsector', $evaluacion->sector->id);
         })->where('laboratorio', 1)->paginate($cantRegistros);
 
-        $evaluacion = EvaluacionPrimeraClonal::where('anio', $anio)->where('idserie', $idSerie)->where('idsector', $idSector)
-        ->where('mes', $mes)->where('idedad', $edad2)->where('tipo', 'L')->first();
-        if($evaluacion){
-            $fecha_calendario = $evaluacion->fecha;
-            $idEvaluacion = $evaluacion->id;
-        }
-        else{
-            $fecha_calendario = now();
-            $idEvaluacion = 0;
-        }
-
-        return view('admin.primera.evaluaciones.laboratorio', compact('ambientes', 'edades', 'series', 'anio', 'idSerie', 'idSector', 'idSubambiente', 
-                                                                        'idAmbiente', 'mes', 'edad2', 'seedlings', 'fecha_calendario', 'idEvaluacion', 'origen',
-                                                                        'cantRegistros'));
+        return view('admin.primera.evaluaciones.laboratorio', compact('evaluacion', 'cantRegistros', 'seedlings', 'origen'));
     }
 
     function saveEvLaboratorio(Request $request){

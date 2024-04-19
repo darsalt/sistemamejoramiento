@@ -404,8 +404,10 @@ Route::get('ajax/primera/serie/getAnioSerie', 'SerieController@getAnioSerie')->n
 Route::get('admin/primera/seleccion/{serie?}/{sector?}', 'PrimeraClonalController@index')->name('primeraclonal.index');
 Route::delete('admin/primera/{serie?}', 'PrimeraClonalController@delete')->name('primeraclonal.delete');
 Route::get('admin/primera/inventario', 'PrimeraClonalController@inventario')->name('primeraclonal.inventario.index');
-Route::get('/admin/primera/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evCampoSanidad')->name('primeraclonal.evaluaciones.camposanidad');
-Route::get('/admin/primera/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evLaboratorio')->name('primeraclonal.evaluaciones.laboratorio');
+//Route::get('/admin/primera/evaluaciones/camposanidad', 'PrimeraClonalController@evCampoSanidad')->name('primeraclonal.evaluaciones.camposanidad');
+Route::get('/admin/primera/evaluaciones/camposanidad/view/{evaluacion}', 'PrimeraClonalController@viewEvCampoSanidad')->name('primeraclonal.evaluaciones.camposanidad.view');
+//Route::get('/admin/primera/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'PrimeraClonalController@evLaboratorio')->name('primeraclonal.evaluaciones.laboratorio');
+Route::get('/admin/primera/evaluaciones/laboratorio/view/{evaluacion}', 'PrimeraClonalController@viewEvLaboratorio')->name('primeraclonal.evaluaciones.laboratorio.view');
 
 // Laboratorio
 Route::get('/admin/primera/laboratorio/{serie?}/{sector?}', 'PrimeraClonalController@laboratorio')->name('primeraclonal.laboratorio.index');
@@ -431,8 +433,8 @@ Route::group(['prefix' => '/admin/segunda', 'as' => 'segundaclonal.'], function 
     Route::delete('/{segunda?}', 'SegundaClonalController@delete')->name('delete');
     Route::delete('/testigo/{testigo?}', 'SegundaClonalController@deleteTestigo')->name('deleteTestigo');
     Route::get('/inventario', 'SegundaClonalController@inventario')->name('inventario.index');
-    Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evCampoSanidad')->name('evaluaciones.camposanidad');
-    Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'SegundaClonalController@evLaboratorio')->name('evaluaciones.laboratorio');
+    Route::get('/evaluaciones/camposanidad/view/{evaluacion}', 'SegundaClonalController@viewEvCampoSanidad')->name('evaluaciones.camposanidad.view');
+    Route::get('/evaluaciones/laboratorio/view/{evaluacion}', 'SegundaClonalController@viewEvLaboratorio')->name('evaluaciones.laboratorio.view');
 });
 
 // Rutas Ajax Segunda Clonal
@@ -451,8 +453,8 @@ Route::group(['prefix' => '/ajax/segunda', 'as' => 'ajax.segundaclonal.'], funct
 Route::group(['prefix' => '/admin/met', 'as' => 'met.'], function () {
     Route::get('/seleccion/{anio?}/{sector?}', 'METController@index')->name('index');
     Route::get('/inventario', 'METController@inventario')->name('inventario.index');
-    Route::get('/evaluaciones/camposanidad/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evCampoSanidad')->name('evaluaciones.camposanidad');
-    Route::get('/evaluaciones/laboratorio/{anio?}/{serie?}/{sector?}/{mes?}/{edad?}', 'METController@evLaboratorio')->name('evaluaciones.laboratorio');
+    Route::get('/evaluaciones/camposanidad/view/{evaluacion}', 'METController@viewEvCampoSanidad')->name('evaluaciones.camposanidad.view');
+    Route::get('/evaluaciones/laboratorio/view/{evaluacion}', 'METController@viewEvLaboratorio')->name('evaluaciones.laboratorio.view');
 });
 
 // Rutas Ajax MET
@@ -474,4 +476,13 @@ Route::get('/clear-cache', function () {
     Artisan::call('route:clear');
  
     return "Cache cleared successfully";
+ });
+
+ // Evaluaciones campo-sanidad y laboratorio
+ Route::middleware('auth')->group(function () {
+    Route::group(['prefix' => '/admin/evaluaciones'], function () {
+        Route::get('/index/{tipo}/{origen}', 'EvaluacionController@new_index')->name('admin.evaluaciones.index');
+        Route::get('/create/{tipo}/{origen}', 'EvaluacionController@new_create')->name('admin.evaluaciones.create');
+        Route::post('/store/{tipo}/{origen}', 'EvaluacionController@new_store')->name('admin.evaluaciones.store');
+    });  
  });

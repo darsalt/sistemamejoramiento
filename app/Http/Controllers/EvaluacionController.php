@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Ambiente;
+use App\Edad;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Evaluacion;
+use App\EvaluacionMET;
+use App\EvaluacionPrimeraClonal;
+use App\EvaluacionSegundaClonal;
 use App\Tacho;
 
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\EvaluacionFormRequest;
 use DB;
 use App\Exports\EvaluacionsExport;
+use App\Rules\EvaluacionUnica;
+use App\Serie;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class EvaluacionController extends Controller
@@ -168,5 +177,156 @@ class EvaluacionController extends Controller
     public function export() 
     {
         return Excel::download(new evaluacionesExport, 'evaluaciones.xlsx');
+    }
+
+    /******************* FUNCIONES NUEVAS PARA LAS EVALUACIONES DE CAMPO-SANIDAD Y LABORATORIO *****************/
+    public function new_index(Request $request, $tipo, $origen){    
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $edades = Edad::all();
+        $series = Serie::where('estado', 1)->get();
+
+        switch ($origen) {
+            case 'pc':
+                $evaluaciones = EvaluacionPrimeraClonal::query();
+                break;
+            case 'sc':
+                $evaluaciones = EvaluacionSegundaClonal::query();
+                break;
+            case 'met':
+                $evaluaciones = EvaluacionMET::query();
+                break;
+        }
+
+        $filtros = array_filter($request->all(), function($valor){
+            return $valor != 0 && $valor != null;
+        });
+
+        if(array_key_exists('anio', $filtros))
+            $evaluaciones->where('anio', $filtros['anio']);
+
+        if(array_key_exists('serie', $filtros))
+            $evaluaciones->where('idserie', $filtros['serie']);
+
+        if(array_key_exists('sector', $filtros))
+            $evaluaciones->where('idsector', $filtros['sector']);
+
+        if(array_key_exists('subambiente', $filtros))
+            $evaluaciones->whereHas('sector', function ($query) use ($filtros) {
+                $query->where('idsubambiente', $filtros['subambiente']);
+            });
+
+        if(array_key_exists('ambiente', $filtros))
+            $evaluaciones->whereHas('sector.subambiente', function ($query) use ($filtros) {
+                $query->where('idambiente', $filtros['ambiente']);
+            });
+
+        if(array_key_exists('fecha', $filtros))
+            $evaluaciones->where('fecha', $filtros['fecha']);
+
+        if(array_key_exists('mes', $filtros))
+            $evaluaciones->where('mes', $filtros['mes']);
+
+        if(array_key_exists('edad', $filtros))
+            $evaluaciones->where('idedad', $filtros['edad']);
+
+        $evaluaciones = $evaluaciones->where('tipo', $tipo)->get();
+
+        // Obtener la cantidad de clones registrados para cada evaluacion
+        if($origen == 'pc')
+            if($tipo == 'C')
+                $tablaDetalle = 'evaluacionesdetalle_camposanidad_pc';
+            else
+                $tablaDetalle = 'evaluacionesdetalle_laboratorio_pc';
+
+        if($origen == 'sc')
+            if($tipo == 'C')
+                $tablaDetalle = 'evaluacionesdetalle_camposanidad_sc';
+            else
+                $tablaDetalle = 'evaluacionesdetalle_laboratorio_sc';
+
+        if($origen == 'met')
+            if($tipo == 'C')
+                $tablaDetalle = 'evaluacionesdetalle_camposanidad_met';
+            else
+                $tablaDetalle = 'evaluacionesdetalle_laboratorio_met';
+
+        $evaluaciones->map(function ($evaluacion) use ($tablaDetalle) {
+            $conteo = DB::table($tablaDetalle)
+                ->where('idevaluacion', $evaluacion->id)
+                ->count();
+        
+            $evaluacion->cant_clones_evaluados = $conteo;
+            return $evaluacion;
+        });
+
+        return view('admin.evaluaciones2.index', compact('tipo',  'origen', 'evaluaciones', 'ambientes', 'edades', 'series'));
+    }
+
+    public function new_create($tipo, $origen){
+        $ambientes = Ambiente::where('estado', 1)->get();
+        $edades = Edad::all();
+        $series = Serie::where('estado', 1)->orderBy('nombre')->get();
+
+        return view('admin.evaluaciones2.create', compact('ambientes', 'edades', 'series', 'tipo', 'origen'));
+    }
+
+    public function new_store(Request $request, $tipo, $origen){
+        switch($origen){
+            case 'pc':
+                $modelo = EvaluacionPrimeraClonal::class;
+                break;
+            case 'sc':
+                $modelo = EvaluacionSegundaClonal::class;
+                break;
+            case 'met':
+                $modelo = EvaluacionMET::class;
+                break;
+        }
+
+        $rules = [
+            'anio' => ['required', new EvaluacionUnica($modelo, $tipo, $request->all())],
+            'serie' => 'required',
+            'ambiente' => 'required',
+            'subambiente' => 'required',
+            'sector' => 'required',
+            'fecha' => 'required',
+            'mes' => 'required',
+            'edad' => 'required',
+        ];
+
+        $messages = [
+            'required' => 'El campo :attribute es obligatorio.',
+        ];
+
+        $validator = Validator::make($request->all(), $rules, $messages);
+
+        // Comprobar si la validación falla
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Pase las validaciones
+        switch ($origen) {
+            case 'pc':
+                $evaluacion = new EvaluacionPrimeraClonal();
+                break;
+            case 'sc':
+                $evaluacion = new EvaluacionSegundaClonal();
+                break;
+            case 'met':
+                $evaluacion = new EvaluacionMET();
+                break;
+        }
+
+        $evaluacion->idserie = $request->serie;
+        $evaluacion->idsector = $request->sector;
+        $evaluacion->anio = $request->anio;
+        $evaluacion->mes = $request->mes;
+        $evaluacion->idedad = $request->edad;
+        $evaluacion->fecha = $request->fecha;
+        $evaluacion->tipo = $tipo;
+        $evaluacion->save();
+
+        return redirect()->route('admin.evaluaciones.index', [$tipo, $origen])->with('success', 'Se creó la evaluación exitosamente.');
     }
 }

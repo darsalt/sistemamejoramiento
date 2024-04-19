@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('titulo', 'Evaluaciones Laboratorio PC')
+@section('titulo', 'Evaluaciones laboratorio')
 
 @section('metadatos')
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -12,120 +12,28 @@
 
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <h3>Evaluaciones Laboratorio</h3>
+            <h3>
+                Evaluaciones laboratorio
+                @if ($origen == 'pc')
+                    - Primera Clonal
+                @else
+                    @if ($origen == 'sc')
+                        - Segunda Clonal
+                    @else
+                        - MET
+                    @endif
+                @endif
+            </h3>
+            <h4>
+                <strong>Año:</strong> {{ $evaluacion->anio }}, <strong>Serie:</strong> {{ $evaluacion->serie->nombre }}, <strong>Ambiente:</strong>
+                {{ $evaluacion->sector->subambiente->ambiente->nombre }}, <strong>Subambiente:</strong> {{ $evaluacion->sector->subambiente->nombre }}, <strong>Sector:</strong>
+                {{ $evaluacion->sector->nombre }},
+                <strong>Mes:</strong> {{ $meses[$evaluacion->mes] }}, <strong>Edad:</strong> {{ $evaluacion->edad->nombre }}
+            </h4>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            <!--Muestra de errrores-->
-            @if (count($errors) > 0)
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
-            <!--Mensajes que se muestran con jQuery-->
-            <div class="text-center" id="messages">
-                <p class='text-success' id='msgExito' style='display: none;'>Operación exitosa &nbsp;<i
-                        class='fas fa-sm fa-check-circle'></i></p>
-                <p class='text-danger' id='msgError' style='display: none;'>Error en la operación &nbsp;<i
-                        class='fas fa-sm fa-times-circle'></i></p>
-            </div>
-        </div>
-    </div>
-
-    <form action="" class="form" id="formSeedling" operation="insert">
-        <div class="row">
-            <div class="col-12">
-                <div class="table-responsive">
-                    <!--Tabla con el formulario para el registro de la etapa individual-->
-                    <input type="number" hidden value=0 id="idSeedling" name="idSeedling">
-                    <table class="table table-striped table-bordered table-condensed table-hover">
-                        <thead>
-                            <tr>
-                                <th style="display: none;">Año</th>
-                                <th>Serie</th>
-                                <th>Ambiente</th>
-                                <th>Subambiente</th>
-                                <th>Sector</th>
-                                <th>Fecha</th>
-                                <th>Mes</th>
-                                <th>Edad</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="display: none;">
-                                    <select name="anio" id="anio" class="form-control">
-                                        <option value="{{ date('Y') }}">{{ date('Y') }}</option>
-                                        @for ($i = date('Y') - 1; $i >= 2000; $i--)
-                                            <option value="{{ $i }}">{{ $i }}</option>
-                                        @endfor
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="serie" id="serie" class="form-control">
-                                        <option value="0" disabled selected>(Ninguna)</option>
-                                        @foreach ($series as $serie)
-                                            <option value="{{ $serie->id }}">{{ $serie->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="ambiente" id="ambiente" class="form-control">
-                                        <option value="0" disabled selected>(Ninguno)</option>
-                                        @foreach ($ambientes as $ambiente)
-                                            <option value="{{ $ambiente->id }}">{{ $ambiente->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="subambiente" id="subambiente" class="form-control">
-                                        <option value="0" disabled selected>(Ninguno)</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="sector" id="sector" class="form-control">
-                                        <option value="0" disabled selected>(Ninguno)</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="date" id="fecha" name="fecha" class="form-control"
-                                        value={{ $fecha_calendario }}>
-                                </td>
-                                <td>
-                                    <select name="mes" id="mes" class="form-control">
-                                        <option value="0" selected disabled>(Ninguno)</option>
-                                        @for ($i = 1; $i <= 12; $i++)
-                                            <option value="{{ $i }}">{{ $meses[$i] }}</option>
-                                        @endfor
-                                    </select>
-                                </td>
-                                <td>
-                                    <select name="edad" id="edad" class="form-control">
-                                        <option value="0" selected disabled>(Ninguna)</option>
-                                        @foreach ($edades as $edad)
-                                            <option value="{{ $edad->id }}">{{ $edad->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </td>
-                                <td class="text-center">
-                                    <button type="button" class="btn btn-success" id="buscar"><i
-                                            class="fas fa-search"></i></button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
+    <form action="{{ url()->current() }}" class="form" id="formSearch" method="GET">
         <div class="row justify-content-end py-2">
             <div class="col-auto">
                 <label for="cant_registros">Cantidad de registros</label>
@@ -164,89 +72,88 @@
                         <th width="7%">Pol en caña</th>
                     </tr>
                 <tbody>
-                    @foreach ($seedlings as $seedling)
+                    @if ($seedlings->count() == 0)
                         <tr>
-                            <td>
-                                <input type="number" disabled hidden value="{{ $seedling->id }}" class="idSeedling">
-                                @if ($origen == 'pc')
-                                    {{ $seedling->primera->testigo ? $seedling->parcela : (int) $seedling->parcela }}
-                                @else
-                                    {{ (int) $seedling->parcela }}
-                                @endif
-                            </td>
-                            <td>
-                                @if ($origen == 'pc')
-                                    {{ $seedling->nombre_clon }}
-                                @else
-                                    @if ($origen == 'sc')
-                                        {{-- @if ($seedling->parcelaPC->primera->idseedling == null)
+                            <td colspan="15" class="text-center"><i>No hay clones para evaluar</i></td>
+                        </tr>
+                    @else
+                        @foreach ($seedlings as $seedling)
+                            <tr>
+                                <td>
+                                    <input type="number" disabled hidden value="{{ $seedling->id }}" class="idSeedling">
+                                    @if ($origen == 'pc')
+                                        {{ $seedling->primera->testigo ? $seedling->parcela : (int) $seedling->parcela }}
+                                    @else
+                                        {{ (int) $seedling->parcela }}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($origen == 'pc')
+                                        {{ $seedling->nombre_clon }}
+                                    @else
+                                        @if ($origen == 'sc')
+                                            {{-- @if ($seedling->parcelaPC->primera->idseedling == null)
                                             <span class="text-warning"><i class="fas fa-exclamation-triangle" title="Este clon proviene de una importación"></i></span>
                                         @endif
  --}}
-                                        {{ $seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon }}
-                                    @else
-                                        {{ $seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre }}
+                                            {{ $seedling->testigo ? $seedling->variedad->nombre : $seedling->parcelaPC->nombre_clon }}
+                                        @else
+                                            {{ $seedling->idsegundaclonal_detalle ? (!$seedling->parcelaSC->testigo ? $seedling->parcelaSC->parcelaPC->nombre_clon : $seedling->parcelaSC->variedad->nombre) : $seedling->variedad->nombre }}
+                                        @endif
                                     @endif
-                                @endif
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado"
-                                    id="{{ 'pesomuestra-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_muestra : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado"
-                                    id="{{ 'pesojugo-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->peso_jugo : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado"
-                                    id="{{ 'brix-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado"
-                                    id="{{ 'polarizacion-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->polarizacion : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado"
-                                    id="{{ 'temperatura-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->temperatura : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td class="sinPaddingCentrado"><input type="number"
-                                    class="form-control sinPaddingCentrado ultimoCampo"
-                                    id="{{ 'conductividad-' . $seedling->id }}"
-                                    value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->conductividad : '' }}"
-                                    {{ auth()->user()->idambiente != $idAmbiente && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
-                            </td>
-                            <td>
-                                <p id={{ 'brixcorregido-' . $seedling->id }}>
-                                    {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->brix_corregido : '' }}
-                                </p>
-                            </td>
-                            <td>
-                                <p id={{ 'polenjugo-' . $seedling->id }}>
-                                    {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_jugo : '' }}
-                                </p>
-                            </td>
-                            <td>
-                                <p id={{ 'pureza-' . $seedling->id }}>
-                                    {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pureza : '' }}
-                                </p>
-                            </td>
-                            <td>
-                                <p id={{ 'rendimiento-' . $seedling->id }}>
-                                    {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->rend_prob : '' }}
-                                </p>
-                            </td>
-                            <td>
-                                <p id={{ 'polencania-' . $seedling->id }}>
-                                    {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $idEvaluacion)->first()) ? $ev->pol_cania : '' }}
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'pesomuestra-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->peso_muestra: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'pesojugo-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->peso_jugo: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->brix: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'polarizacion-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->polarizacion: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'temperatura-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->temperatura: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{ 'conductividad-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->conductividad: '' }}"
+                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                </td>
+                                <td>
+                                    <p id={{ 'brixcorregido-' . $seedling->id }}>
+                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->brix_corregido: '' }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p id={{ 'polenjugo-' . $seedling->id }}>
+                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pol_jugo: '' }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p id={{ 'pureza-' . $seedling->id }}>
+                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pureza: '' }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p id={{ 'rendimiento-' . $seedling->id }}>
+                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->rend_prob: '' }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p id={{ 'polencania-' . $seedling->id }}>
+                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pol_cania: '' }}
+                                    </p>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -265,9 +172,6 @@
     <script>
         var config = {
             routes: {
-                evaluacionesPC: "{{ route('primeraclonal.evaluaciones.laboratorio') }}",
-                evaluacionesSC: "{{ route('segundaclonal.evaluaciones.laboratorio') }}",
-                evaluacionesMET: "{{ route('met.evaluaciones.laboratorio') }}",
                 getSubambientes: "{{ route('ajax.subambientes.getSubambientesDadoAmbiente') }}",
                 getSectores: "{{ route('ajax.sectores.getSectoresDadoSubambiente') }}",
                 saveEvaluacionPC: "{{ route('ajax.primeraclonal.evaluaciones.saveEvLaboratorio') }}",
@@ -275,13 +179,7 @@
                 saveEvaluacionMET: "{{ route('ajax.met.evaluaciones.saveEvLaboratorio') }}",
             },
             data: {
-                anioActivo: "{{ $anio }}",
-                ambienteActivo: "{{ $idAmbiente }}",
-                subambienteActivo: "{{ $idSubambiente }}",
-                sectorActivo: "{{ $idSector }}",
-                serieActiva: "{{ $idSerie }}",
-                mesActivo: "{{ $mes }}",
-                edadActiva: "{{ $edad2 }}",
+                evaluacion: {!! json_encode($evaluacion) !!},
                 origen: "{{ $origen }}"
             },
             session: {
@@ -289,8 +187,6 @@
                 error: "{{ session()->pull('error') }}"
             }
         };
-        console.log("{{ $idAmbiente }}"),
-            console.log("{{ auth()->user()->name }}")
     </script>
 
     <script src="{{ asset('js/primera/evaluaciones/laboratorio.js') }}"></script>
