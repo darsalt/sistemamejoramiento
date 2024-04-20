@@ -39,7 +39,7 @@ $(document).ready(function(){
                 brix: $('#brix-'+idSeedling).val(),
                 polarizacion: $('#polarizacion-'+idSeedling).val(),
                 temperatura: $('#temperatura-'+idSeedling).val(),
-                conductividad: $('#conductividad-'+idSeedling).val(),
+                fibra: $('#fibra-'+idSeedling).val(),
             },
             success: function(response){
                 $('#brixcorregido-'+idSeedling).text(response.brix_corregido.toFixed(2));

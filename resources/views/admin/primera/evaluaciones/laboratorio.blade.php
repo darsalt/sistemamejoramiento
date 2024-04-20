@@ -64,7 +64,7 @@
                         <th width="7%">Brix</th>
                         <th width="7%">Polarización</th>
                         <th width="7%">Temperatura</th>
-                        <th width="7%">Conductvidad</th>
+                        <th width="7%">Fibra</th>
                         <th width="7%">Brix corregido</th>
                         <th width="7%">Pol en jugo</th>
                         <th width="7%">Pureza</th>
@@ -122,8 +122,8 @@
                                         value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->temperatura: '' }}"
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{ 'conductividad-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->conductividad: '' }}"
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{ 'fibra-' . $seedling->id }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->fibra: '' }}"
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td>

@@ -358,7 +358,7 @@ class SegundaClonalController extends Controller
                 $evaluacionDetalle->brix = $request->brix;
                 $evaluacionDetalle->polarizacion = $request->polarizacion;
                 $evaluacionDetalle->temperatura = $request->temperatura;
-                $evaluacionDetalle->conductividad = $request->conductividad;
+                $evaluacionDetalle->fibra = $request->fibra;
                 
                 if($request->temperatura < 20)
                     $brix_corregido = +$request->brix-(((20-$request->polarizacion)*((0.00082*$request->temperatura)+0.042))-(((20-$request->temperatura)/50)*(20-$request->temperatura)/50));
