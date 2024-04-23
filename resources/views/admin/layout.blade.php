@@ -869,7 +869,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>         
           </li>
-          <?php } ?>
 
           <!--MET-->
           <li class="nav-item">
@@ -922,6 +921,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>        
           </li>
 
+          <?php } ?>
 
           <!-- <li class="nav-item has-treeview">
             <a href="#" class="nav-link">

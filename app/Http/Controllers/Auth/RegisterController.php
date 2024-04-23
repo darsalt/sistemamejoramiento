@@ -49,12 +49,40 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'ambiente' => ['required'],
+        ]);
+    }
 
     public function index(){
+        $ambientes = Ambiente::all();
 
+        return view('auth.register', ['ambientes' => $ambientes]);
     }
 
     public function register(Request $request){
+        $validator = $this->validator($request->all());
+        if($validator->fails()){
+            return redirect('register')
+                ->withErrors($validator)
+                ->withInput();
+        }
 
+        $esAdmin = $request->has('administrador') ? 1 : 0;
+
+        User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
+            'idambiente' => $request['ambiente'],
+            'esAdmin' => $esAdmin
+        ]);
+
+        return redirect('/admin');
     }
 }
