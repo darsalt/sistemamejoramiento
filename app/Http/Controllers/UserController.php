@@ -20,8 +20,8 @@ class UserController extends Controller
         $searchText = trim($request->get('searchText'));
         $usuarios = User::where('name','like','%'.$searchText.'%');
         $usuarios = $usuarios->OrWhere('email','like','%'.$searchText.'%');
+       //s $usuarios = $usuarios->Where('estado','=','1');
         $usuarios = $usuarios->paginate(10);
-
         return view('admin.users.index', compact('usuarios', 'searchText'));
     }
 
@@ -52,7 +52,9 @@ class UserController extends Controller
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
             'idambiente' => $request['ambiente'],
-            'esAdmin' => $esAdmin
+            'esAdmin' => $esAdmin,
+            'estado' => 1
+
         ]);
 
         return redirect()->route('admin.users.index')->withSuccess('Usuario creado con éxito.');
@@ -78,14 +80,27 @@ class UserController extends Controller
         }
 
         $esAdmin = $request->has('administrador') ? 1 : 0;
-
+        $estado = $request->has('estado') ? 1 : 0;
         $user->update([
             'name' => $request['name'],
             'email' => $request['email'],
             'idambiente' => $request['ambiente'],
-            'esAdmin' => $esAdmin
+            'esAdmin' => $esAdmin,
+            'estado' => $estado,
         ]);
 
         return redirect()->route('admin.users.index')->withSuccess('Usuario actualizado con éxito.');
     }
+
+    
+    public function destroy($id)
+    {
+    	$user=User::findOrFail($id);
+    	$user->estado='0';//baja
+      	$user->update();
+          return redirect()->route('admin.users.index')->withSuccess('Usuario deshabilitado con éxito.');
+
+        }
+
+
 }

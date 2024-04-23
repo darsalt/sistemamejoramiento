@@ -44,7 +44,7 @@ Route::get('/', function () {
 Auth::routes();
 
 // Rutas usuarios
-Route::resource('admin/users', 'UserController', ['except' => ['delete']])->names('admin.users');
+Route::resource('admin/users', 'UserController')->names('admin.users');
 
 Route::get('/change-password', 'ChangePasswordController@index')->name('auth.password.change.index');
 Route::patch('/change-password', 'ChangePasswordController@update')->name('auth.password.change.update');

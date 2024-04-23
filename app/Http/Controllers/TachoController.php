@@ -31,7 +31,9 @@ class TachoController extends Controller
     		//->where ('t.estado','!=',3)//3=baja
     		->orderBy('codigo','asc')
             ->orderBy('subcodigo','asc')
-    		->paginate('10');
+    		->paginate('10')
+            ->appends(request()->query());
+
     		return view('admin.tachos.index',["tachos"=>$tachos,"searchText"=>$query]);
     	}
     }

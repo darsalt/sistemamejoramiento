@@ -818,6 +818,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>         
           </li>
+          <?php } ?>
 
           <!--Segunda Clonal-->
           <li class="nav-item">
@@ -869,7 +870,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
             </ul>         
           </li>
-          <?php } ?>
 
           <!--MET-->
           <li class="nav-item">

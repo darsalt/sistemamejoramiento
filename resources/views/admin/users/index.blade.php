@@ -19,6 +19,7 @@
                         <th>E-mail</th>
                         <th>Ambiente</th>
                         <th>Administrador</th>
+                        <th>Habilitado</th>
                         <th>Operaciones</th>
                     </thead>
                     @foreach ($usuarios as $usuario)
@@ -27,10 +28,13 @@
                             <td>{{ $usuario->email }}</td>
                             <td>{{ $usuario->ambiente ? $usuario->ambiente->nombre : 'Sin Ambiente' }}</td>
                             <td>{{ $usuario->esAdmin ? 'Si' : 'No' }}</td>
+                            <td>{{ $usuario->estado ? 'Si' : 'No' }}</td>
                             <td>
                                 <a href="{{ route('admin.users.edit', $usuario) }}"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;
+                                <a href="" data-target="#modal-delete-{{$usuario->id}}" data-toggle="modal">  <i class="fa fa-trash fa-lg"></i></a>
                             </td>
                         </tr>
+                       @include('admin.users.modal')
                     @endforeach
                 </table>
             </div>
