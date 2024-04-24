@@ -111,7 +111,7 @@
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->brix: '' }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->brix, 1): '' }}"
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'polarizacion-' . $seedling->id }}"
@@ -119,11 +119,11 @@
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'temperatura-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->temperatura: '' }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->temperatura, 1): '' }}"
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{ 'fibra-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->fibra: '' }}"
+                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->fibra, 1): '' }}"
                                         {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
                                 </td>
                                 <td>

@@ -226,7 +226,7 @@ class METController extends Controller
                     $evaluacionDetalle->idevaluacion = $evaluacion->id;
                     $evaluacionDetalle->idseedling = $request->idSeedling;
                 }
-                $evaluacionDetalle->tipo = $request->tipo;
+                //$evaluacionDetalle->tipo = $request->tipo;
                 $evaluacionDetalle->tallos = $request->tallos;
                 $evaluacionDetalle->altura = $request->altura;
                 $evaluacionDetalle->grosor = $request->grosor;
