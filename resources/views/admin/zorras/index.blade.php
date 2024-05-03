@@ -373,7 +373,7 @@
                                   <div >10
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}10" id="camara{{$camara->id}}zorra{{$zorra->id}}10" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
-                                              onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}});">
+                                              onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
                                               @foreach ($tachos as $t)
                                                     @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='10')&& ($t->idtacho !== null))
                                                         <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
@@ -811,7 +811,7 @@
                                   <div >10
                                               <div class="form-group">
                                               <select name="camara{{$camara->id}}zorra{{$zorra->id}}10" id="camara{{$camara->id}}zorra{{$zorra->id}}10" class="select2 selectrefresh"  style="width: 100%;" class="form-control" 
-                                              onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}});">
+                                              onchange="guardarTacho(this.value,'10',{{$zorra->id}},{{$camara->id}},{{$idcampania}});">
                                               @foreach ($tachos as $t)
                                                     @if(($t->idcampania==$idcampania)&&($t->idcamara===$camara->id)&&($t->idzorra==$zorra->id)&&($t->nombre=='10')&& ($t->idtacho !== null))
                                                         <option value="{{ $t->idtacho }}" selected> {{ $t->codigo}} - {{ $t->subcodigo}} - {{ $t->variedad}} </option>
