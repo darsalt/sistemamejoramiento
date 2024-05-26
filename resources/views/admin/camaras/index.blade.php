@@ -137,7 +137,6 @@
           method: 'POST',
           data: {idtratamiento:idtratamiento, _token:token, idcamara:idcamara, idcampania:idcampania},
           success: function(data) {
-            console.log(data);
           }
       });
   }
@@ -167,8 +166,7 @@
               }else{
                 var finZorra = (idcamara * 4);
               }
-              console.log('Inicio de la zorra : ' + zorra);
-              console.log('Fin de la zorra : ' + finZorra);
+
               //zorras
               while(zorra <= finZorra){
 
@@ -183,7 +181,7 @@
                     }
                     
                   }
-                console.log('Actualizacion de la zorra : ' + zorra);
+
                 zorra = zorra + 1; 
               }
 

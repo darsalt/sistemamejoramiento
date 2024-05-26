@@ -197,7 +197,6 @@
       data : {"_token":"{{ csrf_token() }}"},
       dataType: "json",
       success:function(data) {
-      console.log(data);
       var idtipo = data[0][0].idtipoinspeccion;
       if(idtipo==1){ 
             div1 = div1 + '<div class="row">';

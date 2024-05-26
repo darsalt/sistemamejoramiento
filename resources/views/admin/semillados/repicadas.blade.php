@@ -69,7 +69,6 @@
     var page = 1; //track user scroll as page number, right now page number is 1
 //    var idevaluacion = $("#idevaluacion").val();
     var campania = 3;//$("#idevaluacion").val();
-    console.log(campania);
 
     load_more(page); //initial content load
     $(window).scroll(function() { //detect page scroll
@@ -96,14 +95,12 @@
         {
 //            alert(data.length);
             if(data.length == 456){
-            console.log(data.length);
             //notify user if nothing to load
             $('.ajax-loading').html("No hay más registros");
             return;
           }
           $('.ajax-loading').hide(); //hide loading animation once data is received
           $("#results").append(data); //append data into #results element          
-           console.log('data.length');
        })
        .fail(function(jqXHR, ajaxOptions, thrownError)
        {

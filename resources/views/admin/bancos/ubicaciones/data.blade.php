@@ -103,7 +103,6 @@
       data:{id:id, variedad:variedad},
       success: function(data){
         //alert(data.success);
-        console.log(variedad);
 
       }
     });
@@ -151,14 +150,12 @@
         {
             //alert(data.length);
             if(data.length == 325){
-            console.log(data.length);
             //notify user if nothing to load
             $('.ajax-loading').html("No hay más registros");
             return;
           }
           $('.ajax-loading').hide(); //hide loading animation once data is received
           $("#results").append(data); //append data into #results element          
-           console.log('data.length');
        })
        .fail(function(jqXHR, ajaxOptions, thrownError)
        {

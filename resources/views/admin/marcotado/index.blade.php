@@ -124,7 +124,6 @@ function guardarFecha(fecha,idtacho,posicion,campania){
             //console.log(data);
           },
           error: function(data){
-            console.log(data);
           }
       });
   }
@@ -138,7 +137,6 @@ function guardarFecha(fecha,idtacho,posicion,campania){
           method: 'POST',
           data: {id_tacho:id_tacho, _token:token, cantidad:cantidad},
           success: function(data) {
-                        console.log(data);
 
           }
       });
