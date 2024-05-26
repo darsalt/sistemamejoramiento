@@ -105,64 +105,41 @@
                                     @endif
                                 </td>
                                 <td class="sinPaddingCentrado"></td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'tallos-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->tallos, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'tallos-' . $seedling->id }}" value="{{ $seedling->tallos }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'altura-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->altura, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'altura-' . $seedling->id }}" value="{{ $seedling->altura }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'grosor-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->grosor, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'grosor-' . $seedling->id }}" value="{{ $seedling->grosor }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'vuelco-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->vuelco, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'vuelco-' . $seedling->id }}" value="{{ $seedling->vuelco }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'flor-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->flor, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'flor-' . $seedling->id }}" value="{{ $seedling->flor }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->brix, 1): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}" value="{{ $seedling->brix }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'escaldad-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->escaldad, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'escaldad-' . $seedling->id }}" value="{{ $seedling->escaldad }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'carbon-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->carbon, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'carbon-' . $seedling->id }}" value="{{ $seedling->carbon }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'roya-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->roya, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'roya-' . $seedling->id }}" value="{{ $seedling->roya }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'mosaico-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->mosaico, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'mosaico-' . $seedling->id }}" value="{{ $seedling->mosaico }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'estaria-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->estaria, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'estaria-' . $seedling->id }}" value="{{ $seedling->estaria }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control ultimoCampo sinPaddingCentrado" id="{{ 'amarilla-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesCampoSanidad()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->amarilla, 0): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}
-                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                                        value="{{ $seedling->amarilla }}" {{ $seedling->readonly ? 'readonly' : '' }} onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                 </td>
                             </tr>
                         @endforeach

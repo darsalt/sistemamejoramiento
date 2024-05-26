@@ -21,59 +21,61 @@ $(document).ready(function(){
         })
     });
 
-    $('.ultimoCampo').focusout(function(){
-        var fila = $(this).closest('tr');
-        var idSeedling = fila.find('.idSeedling').val();
-        var ruta = '';
+    $('input.sinPaddingCentrado').on('keydown', function(event){
+        if(event.key == 'Tab'){
+            var fila = $(this).closest('tr');
+            var idSeedling = fila.find('.idSeedling').val();
+            var ruta = '';
 
-        if(config.data.origen == 'pc')
-            ruta = config.routes.saveEvaluacionPC;
-        else{
-            if(config.data.origen == 'sc')
-                ruta = config.routes.saveEvaluacionSC;
-            else
-                ruta = config.routes.saveEvaluacionMET;
-        }
+            if(config.data.origen == 'pc')
+                ruta = config.routes.saveEvaluacionPC;
+            else{
+                if(config.data.origen == 'sc')
+                    ruta = config.routes.saveEvaluacionSC;
+                else
+                    ruta = config.routes.saveEvaluacionMET;
+            }
 
-        let mensajeError = validarDatosFila(idSeedling);
+            let mensajeError = validarDatosFila(idSeedling);
 
-        if(mensajeError == '')
-            $.ajax({
-                url: ruta,
-                method: 'POST',
-                data: {
-                    anio: config.data.evaluacion.anio,
-                    serie: config.data.evaluacion.idserie,
-                    sector: config.data.evaluacion.idsector,
-                    mes: config.data.evaluacion.mes,
-                    edad: config.data.evaluacion.idedad,
-                    fecha: $('#fecha').val(),
-                    idSeedling: idSeedling,
-                    //tipo: $('#tipo-'+idSeedling).val(),
-                    tallos: parseInt($('#tallos-'+idSeedling).val()),
-                    altura: parseInt($('#altura-'+idSeedling).val()),
-                    grosor: parseInt($('#grosor-'+idSeedling).val()),
-                    vuelco: parseInt($('#vuelco-'+idSeedling).val()),
-                    flor: parseInt($('#flor-'+idSeedling).val()),
-                    brix: $('#brix-'+idSeedling).val(),
-                    escaldad: parseInt($('#escaldad-'+idSeedling).val()),
-                    carbon: parseInt($('#carbon-'+idSeedling).val()),
-                    roya: parseInt($('#roya-'+idSeedling).val()),
-                    mosaico: parseInt($('#mosaico-'+idSeedling).val()),
-                    estaria: parseInt($('#estaria-'+idSeedling).val()),
-                    amarilla: parseInt($('#amarilla-'+idSeedling).val()),
-                },
-                success: function(response){
-                    //
-                }
-            });
-        else{
-            Swal.fire({
-                icon: 'warning',
-                title: 'Advertencia',
-                html: mensajeError,
-                confirmButtonText: 'Aceptar'
-              });
+            if(mensajeError == '')
+                $.ajax({
+                    url: ruta,
+                    method: 'POST',
+                    data: {
+                        anio: config.data.evaluacion.anio,
+                        serie: config.data.evaluacion.idserie,
+                        sector: config.data.evaluacion.idsector,
+                        mes: config.data.evaluacion.mes,
+                        edad: config.data.evaluacion.idedad,
+                        fecha: $('#fecha').val(),
+                        idSeedling: idSeedling,
+                        //tipo: $('#tipo-'+idSeedling).val(),
+                        tallos: parseInt($('#tallos-'+idSeedling).val()),
+                        altura: parseInt($('#altura-'+idSeedling).val()),
+                        grosor: parseInt($('#grosor-'+idSeedling).val()),
+                        vuelco: parseInt($('#vuelco-'+idSeedling).val()),
+                        flor: parseInt($('#flor-'+idSeedling).val()),
+                        brix: parseFloat($('#brix-'+idSeedling).val()),
+                        escaldad: parseInt($('#escaldad-'+idSeedling).val()),
+                        carbon: parseInt($('#carbon-'+idSeedling).val()),
+                        roya: parseInt($('#roya-'+idSeedling).val()),
+                        mosaico: parseInt($('#mosaico-'+idSeedling).val()),
+                        estaria: parseInt($('#estaria-'+idSeedling).val()),
+                        amarilla: parseInt($('#amarilla-'+idSeedling).val()),
+                    },
+                    success: function(response){
+                        //
+                    }
+                });
+            else{
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Advertencia',
+                    html: mensajeError,
+                    confirmButtonText: 'Aceptar'
+                });
+            }
         }
     });
 
@@ -83,7 +85,7 @@ $(document).ready(function(){
         let grosor = parseInt($('#grosor-'+idSeedling).val());
         let vuelco = parseInt($('#vuelco-'+idSeedling).val());
         let flor = parseInt($('#flor-'+idSeedling).val());
-        let brix = $('#brix-'+idSeedling).val();
+        let brix = parseFloat($('#brix-'+idSeedling).val());
         let escaldad = parseInt($('#escaldad-'+idSeedling).val());
         let carbon = parseInt($('#carbon-'+idSeedling).val());
         let roya = parseInt($('#roya-'+idSeedling).val());

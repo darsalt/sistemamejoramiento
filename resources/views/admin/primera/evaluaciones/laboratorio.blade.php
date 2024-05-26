@@ -103,52 +103,46 @@
                                     @endif
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'pesomuestra-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->peso_muestra: '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                        value="{{ $seedling->peso_muestra }}" {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'pesojugo-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->peso_jugo: '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'pesojugo-' . $seedling->id }}" value="{{ $seedling->peso_jugo }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
-                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->brix, 1): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'brix-' . $seedling->id }}" value="{{ $seedling->brix }}"
+                                        {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'polarizacion-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->polarizacion: '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                        value="{{ $seedling->polarizacion }}" {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado" id="{{ 'temperatura-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->temperatura, 1): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                        value="{{ $seedling->temperatura }}" {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
                                 <td class="sinPaddingCentrado"><input type="number" class="form-control sinPaddingCentrado ultimoCampo" id="{{ 'fibra-' . $seedling->id }}"
-                                        value="{{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? number_format($ev->fibra, 1): '' }}"
-                                        {{ auth()->user()->idambiente != $evaluacion->sector->subambiente->ambiente->id && auth()->user()->esAdmin != 1 ? 'readonly' : '' }}>
+                                        value="{{ $seedling->fibra }}" {{ $seedling->readonly ? 'readonly' : '' }}>
                                 </td>
                                 <td>
                                     <p id={{ 'brixcorregido-' . $seedling->id }}>
-                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->brix_corregido: '' }}
+                                        {{ $seedling->brix_corregido }}
                                     </p>
                                 </td>
                                 <td>
                                     <p id={{ 'polenjugo-' . $seedling->id }}>
-                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pol_jugo: '' }}
+                                        {{ $seedling->pol_jugo }}
                                     </p>
                                 </td>
                                 <td>
                                     <p id={{ 'pureza-' . $seedling->id }}>
-                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pureza: '' }}
+                                        {{ $seedling->pureza }}
                                     </p>
                                 </td>
                                 <td>
                                     <p id={{ 'rendimiento-' . $seedling->id }}>
-                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->rend_prob: '' }}
+                                        {{ $seedling->rend_prob }}
                                     </p>
                                 </td>
                                 <td>
                                     <p id={{ 'polencania-' . $seedling->id }}>
-                                        {{ ($ev = $seedling->evaluacionesLaboratorio()->where('idevaluacion', $evaluacion->id)->first())? $ev->pol_cania: '' }}
+                                        {{ $seedling->pol_cania }}
                                     </p>
                                 </td>
                             </tr>

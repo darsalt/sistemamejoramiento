@@ -278,6 +278,24 @@ class PrimeraClonalController extends Controller
             $q->where('idserie', $evaluacion->serie->id)->where('idsector', $evaluacion->sector->id);
         })->where('laboratorio', 0)->paginate($cantRegistros);
 
+        $user = auth()->user();
+
+        foreach($seedlings as $seedling){
+            $seedling->tallos = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'tallos');
+            $seedling->altura = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'altura');
+            $seedling->grosor = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'grosor');
+            $seedling->vuelco = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'vuelco');
+            $seedling->flor = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'flor');
+            $seedling->brix = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'brix', 1);
+            $seedling->escaldad = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'escaldad');
+            $seedling->carbon = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'carbon');
+            $seedling->roya = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'roya');
+            $seedling->mosaico = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'mosaico');
+            $seedling->estaria = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'estaria');
+            $seedling->amarilla = $seedling->getEvaluacionCampoSanidadAttribute($evaluacion, 'amarilla');
+            $seedling->readonly = $seedling->isReadonly($evaluacion, $user);
+        }
+
         return view('admin.primera.evaluaciones.campo_sanidad', compact('evaluacion', 'cantRegistros', 'seedlings', 'origen'));
     }
 
@@ -305,19 +323,28 @@ class PrimeraClonalController extends Controller
                     $evaluacionDetalle->idevaluacion = $evaluacion->id;
                     $evaluacionDetalle->idseedling = $request->idSeedling;
                 }
-                //$evaluacionDetalle->tipo = $request->tipo;
-                $evaluacionDetalle->tallos = $request->tallos;
-                $evaluacionDetalle->altura = $request->altura;
-                $evaluacionDetalle->grosor = $request->grosor;
-                $evaluacionDetalle->vuelco = $request->vuelco;
-                $evaluacionDetalle->flor = $request->flor;
-                $evaluacionDetalle->brix = $request->brix;
-                $evaluacionDetalle->escaldad = $request->escaldad;
-                $evaluacionDetalle->carbon = $request->carbon;
-                $evaluacionDetalle->roya = $request->roya;
-                $evaluacionDetalle->mosaico = $request->mosaico;
-                $evaluacionDetalle->estaria = $request->estaria;
-                $evaluacionDetalle->amarilla = $request->amarilla;
+
+                $campos = [
+                    'tallos' => $request->tallos,
+                    'altura' => $request->altura,
+                    'grosor' => $request->grosor,
+                    'vuelco' => $request->vuelco,
+                    'flor' => $request->flor,
+                    'brix' => $request->brix,
+                    'escaldad' => $request->escaldad,
+                    'carbon' => $request->carbon,
+                    'roya' => $request->roya,
+                    'mosaico' => $request->mosaico,
+                    'estaria' => $request->estaria,
+                    'amarilla' => $request->amarilla,
+                ];
+                
+                foreach ($campos as $campo => $valor) {
+                    if ($valor !== 'NaN') {
+                        $evaluacionDetalle->$campo = $valor;
+                    }
+                }
+                
                 $evaluacionDetalle->save();
             });
 
@@ -337,6 +364,23 @@ class PrimeraClonalController extends Controller
         $seedlings = PrimeraClonalDetalle::whereHas('primera', function($q) use($evaluacion){
             $q->where('idserie', $evaluacion->serie->id)->where('idsector', $evaluacion->sector->id);
         })->where('laboratorio', 1)->paginate($cantRegistros);
+
+        $user = auth()->user();
+
+        foreach($seedlings as $seedling){
+            $seedling->peso_muestra = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'peso_muestra');
+            $seedling->peso_jugo = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'peso_jugo');
+            $seedling->brix = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'brix', 1);
+            $seedling->polarizacion = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'polarizacion');
+            $seedling->temperatura = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'temperatura', 1);
+            $seedling->fibra = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'fibra', 1);
+            $seedling->brix_corregido = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'brix_corregido', 2);
+            $seedling->pol_jugo = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'pol_jugo', 2);
+            $seedling->pureza = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'pureza', 2);
+            $seedling->rend_prob = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'rend_prob', 2);
+            $seedling->pol_cania = $seedling->getEvaluacionLaboratorioAttribute($evaluacion, 'pol_cania', 2);
+            $seedling->readonly = $seedling->isReadonly($evaluacion, $user);
+        }
 
         return view('admin.primera.evaluaciones.laboratorio', compact('evaluacion', 'cantRegistros', 'seedlings', 'origen'));
     }
@@ -365,12 +409,21 @@ class PrimeraClonalController extends Controller
                     $evaluacionDetalle->idevaluacion = $evaluacion->id;
                     $evaluacionDetalle->idseedling = $request->idSeedling;
                 }
-                $evaluacionDetalle->peso_muestra = $request->pesomuestra;
-                $evaluacionDetalle->peso_jugo = $request->pesojugo;
-                $evaluacionDetalle->brix = $request->brix;
-                $evaluacionDetalle->polarizacion = $request->polarizacion;
-                $evaluacionDetalle->temperatura = $request->temperatura;
-                $evaluacionDetalle->fibra = $request->fibra;
+
+                $campos = [
+                    'peso_muestra' => $request->pesomuestra,
+                    'peso_jugo' => $request->pesojugo,
+                    'brix' => $request->brix,
+                    'polarizacion' => $request->polarizacion,
+                    'temperatura' => $request->temperatura,
+                    'fibra' => $request->fibra
+                ];
+                
+                foreach ($campos as $campo => $valor) {
+                    if ($valor !== 'NaN') {
+                        $evaluacionDetalle->$campo = $valor;
+                    }
+                }
                 
                 if($request->temperatura < 20)
                     $brix_corregido = +$request->brix-(((20-$request->polarizacion)*((0.00082*$request->temperatura)+0.042))-(((20-$request->temperatura)/50)*(20-$request->temperatura)/50));

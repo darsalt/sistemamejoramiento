@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class METDetalle extends Model
+class METDetalle extends ClonalDetalleModel
 {
     protected $table = 'met_detalle';
     public $timestamps = false;
@@ -15,10 +15,6 @@ class METDetalle extends Model
 
     public function parcelaSC(){
         return $this->belongsTo('App\SegundaClonalDetalle', 'idsegundaclonal_detalle', 'id');
-    }
-
-    public function variedad(){
-        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
     }
 
     public function evaluacionesCampoSanidad(){

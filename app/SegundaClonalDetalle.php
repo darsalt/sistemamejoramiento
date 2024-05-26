@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SegundaClonalDetalle extends Model
+class SegundaClonalDetalle extends ClonalDetalleModel
 {
     protected $table = 'segundasclonal_detalle';
     public $timestamps = false;
@@ -17,16 +17,8 @@ class SegundaClonalDetalle extends Model
         return $this->belongsTo('App\SegundaClonal', 'idsegundaclonal', 'id');
     }
 
-    public function sector(){
-        return $this->belongsTo('App\Sector', 'idsector', 'id');
-    }
-
     public function mets(){
         return $this->hasMany('App\METDetalle', 'idsegundaclonal_detalle', 'id');
-    }
-
-    public function variedad(){
-        return $this->belongsTo('App\Variedad', 'idvariedad', 'idvariedad');
     }
 
     public function evaluacionesCampoSanidad(){
